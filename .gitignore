@@ -6,6 +6,7 @@ index.php
 index.php.bckp
 index-test.php
 *.txt
+*.zip
 error_log
 assets/*
 logs/*
