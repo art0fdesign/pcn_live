@@ -42,9 +42,9 @@ class ListingPcnCategory extends CmsActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('expertize, level', 'numerical', 'integerOnly'=>true),
+			array('cat_title', 'required'),
+			array('expertize, level, order_by', 'numerical', 'integerOnly'=>true),
 			array('parent_id', 'length', 'max'=>10),
-			array('order_by', 'length', 'max'=>11),
 			array('cat_title', 'length', 'max'=>100),
 			// The following rule is used by search().            
 			// Please remove those attributes that should not be searched.
@@ -78,7 +78,7 @@ class ListingPcnCategory extends CmsActiveRecord
 			'parent_id' => 'Parent',
 			'level' => 'Level',
 			'order_by' => 'Order By',
-			'cat_title' => 'Cat Title',
+			'cat_title' => 'Title',
 		);
 	}
 
@@ -154,5 +154,14 @@ class ListingPcnCategory extends CmsActiveRecord
         } // foreach ( $filters )
         //
         return self::model()->findAll( array( 'order'=>$orderBy, 'condition'=>$condition, 'params'=>$params ) );
+    }
+
+    public function new_order_by() {
+    	$count = self::model()->count(
+    		$condition = 'parent_id=:parent_id', 
+    		$params = array('parent_id'=>$this->parent_id)
+    	);
+    	// MyFunctions::echoArray($count);
+    	return $count+1;
     }
 }

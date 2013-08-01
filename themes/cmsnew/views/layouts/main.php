@@ -170,7 +170,12 @@
             </li>
 
 <?php elseif($frontendTheme == 'pcn'): ?>
-            <li <? if($module == 'pcn' && $controler == 'listingPcnCategoryItem') echo "class='active'"; ?>><?php echo CHtml::link('Our team<span>Our team administration</span>', array('/aodListing/listingPcnCategoryItem/index'), array('class'=>'exp accordionButton catalog')) ?>
+            <li <?php if($module == 'pcn' && in_array($controler, array('listingPcnCategoryItem'))) echo 'class="active"' ?>><?php echo CHtml::link('Our team<span>Our team administration</span>', '#', array('class'=>'exp accordionButton catalog')) ?>
+                <ul class="menu1 accordionContent">
+                    <li><?php echo CHtml::link('Our team', array('/aodListing/listingPcnCategoryItem/index')) ?></li>
+                    <li><?php echo CHtml::link('Functional expertize', array('/aodListing/listingPcnCategory/index', 'parent_id'=>'1')) ?></li>
+                    <li><?php echo CHtml::link('Industry expertize', array('/aodListing/listingPcnCategory/index', 'parent_id'=>'2')) ?></li>
+                </ul>
             </li>
 <?php endif; ?>
 
