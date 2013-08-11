@@ -1317,7 +1317,7 @@ form dt{
 /*================ SIGNUP POP-UP STYLING ================*/
 .newsletter{
 	margin:0 auto;
-	padding:20px 45px 0 45px;
+	padding:20px 45px 20px 45px;
 	/*height:550px;*/
 	height:740px;
 	width:480px;
