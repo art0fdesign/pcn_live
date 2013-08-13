@@ -11,7 +11,7 @@ $countries = array(
 
 ?>
 
-<div class="wide floatL dotedL">
+<div class="wide wide1 floatL dotedR dotedL">
     <div class="pl20 pr0">
     <?php if($message != null) echo $message; ?>
     <?php echo Frontend::replaceAllTagsInContent(@$settings['text-before-form']['set_value']) ?>
@@ -336,5 +336,5 @@ $countries = array(
     </div>
 </div>
 
-<?php echo Frontend::replaceAllTagsInContent(@$settings['terms-and-conditions']['set_value']) ?>
+<?php //echo Frontend::replaceAllTagsInContent(@$settings['terms-and-conditions']['set_value']) ?>
 
