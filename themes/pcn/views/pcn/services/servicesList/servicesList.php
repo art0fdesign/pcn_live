@@ -14,6 +14,9 @@
             <li class="dotedB"><a <?php if($this->pars[1] == $cat['seo']) echo 'class="active"' ?> href="<?php echo $linkBaseUrl.'/'.$cat['seo'] ?>"><?php echo $cat['title']; ?></Php></a></li>
         <?php endforeach; ?>
     </ul>
+    <ul class="links download">
+        <li><a href="/upload/files/pcn-services-overview.pdf" target="_blank">Download our Services Overview here</a></li>
+    </ul>
 </div>
 
 <div class="wide floatL dotedL" style="width:780px;position:relative;">

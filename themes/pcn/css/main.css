@@ -1504,9 +1504,16 @@ ul.accordionMenuLevel2 a {
 .content .narrow1 ul.links li ul li.active,
 .content .narrow1 ul.links li ul li:hover{
 	background: url(../img/blueArrow.png) no-repeat scroll 2px 6px transparent;
-
 }
-
+.content .narrow1 ul.links.download{
+	margin-top: 40px;
+}
+.content .narrow1 ul.links.download li{
+	margin: 0;
+	padding: 0 15px 0 0;
+	background:none;
+	text-align: center;
+}
 /*================ FOOTER STYLING ================*/
 .footer{
 	position:relative;
