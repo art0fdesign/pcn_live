@@ -79,7 +79,7 @@ class DefaultController extends CController
         }*/
         // define frontend theme
         //$test = MyFunctions::parseForSEO('moje Ime neko bezveze');
-        //MyFunctions::echoArray( $_SERVER );
+        // MyFunctions::echoArray( $_SERVER );
         //$test = floatval(str_replace( ',', '.', ',12'))+10;
         /*
         // /home/art0fdes/public_html/subdomain/doctors
