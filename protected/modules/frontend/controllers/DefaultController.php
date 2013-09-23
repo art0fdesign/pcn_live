@@ -57,10 +57,7 @@ class DefaultController extends CController
         $this->pars[8] = !empty($par9)? $par9: '';
         $this->pars[9] = !empty($par10)? $par10: '';
         //
-//echo '<pre>';
-//	print_r($_SERVER);
-//die('</pre>');
-        if (empty($_SERVER['HTTPS']) && $par == 'process') {
+        if ($par == 'process' && empty($_SERVER['HTTPS'])) {
             if (empty($_SERVER['REQUEST_URI'])) {
                 $this->redirect(Yii::app()->request->getHostInfo('https'));
             }
@@ -72,26 +69,7 @@ class DefaultController extends CController
             }
             $this->redirect(Yii::app()->request->getHostInfo('http').$_SERVER['REQUEST_URI']);
         }
-        /*$https_url = Frontend::getPageDataByWidget(null, 'eWayRapid3');
-        if ($par == $https_url && empty($_SERVER['HTTPS'])) {
-            die('dont stop me now');
-            header('Location: https://... .php');
-            exit;
-        }*/
-        // define frontend theme
-        //$test = MyFunctions::parseForSEO('moje Ime neko bezveze');
-        // MyFunctions::echoArray( $_SERVER );
-        //$test = floatval(str_replace( ',', '.', ',12'))+10;
-        /*
-        // /home/art0fdes/public_html/subdomain/doctors
-        $p = Yii::getPathOfAlias( 'webroot.upload.doctors.profile.thumb' );
-        $p1 = Yii::getPathOfAlias( 'webroot' );
-        $p2 = Yii::app()->request->getBaseUrl();
-        $p3 = Yii::app()->request->getHostInfo();
-        MyFunctions::echoArray( array( $p, $p1, $p2, $p3 ), $_SERVER );
-        /**/
-        //print_r($this->pars);die;
-        //$theme = Yii::app()->params['theme_frontend'];
+
         //
         if( $par == 'ha' ){
             echo $this->widget('ext.webUser.socialAuth.SocialAuthWidget', array('pars'=>$this->pars))->html;
