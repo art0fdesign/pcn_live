@@ -53,6 +53,7 @@ class EWayRapid3Widget extends AodWidget
                 Yii::app()->session['events.registration.id'] = $_POST;
                 // I want to save selection to db
                 if (isset($_POST['EventsRegistration'])) {
+                    $_POST['EventsRegistration']['country'] = 'au';
                     $model = new EventsRegistration();
                     $model->attributes = $_POST['EventsRegistration'];
                     if (isset($_POST['Dietary'])) {

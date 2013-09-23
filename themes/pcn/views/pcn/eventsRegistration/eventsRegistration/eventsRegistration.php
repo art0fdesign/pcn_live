@@ -35,7 +35,7 @@ $countries = array(
             // 'enableAjaxValidation'=>true,
         ));
         ?>
-        <fieldset class="mt30 pb30 dotedB">
+        <fieldset class="pb30 dotedB">
         <dl class="floatL mb10">
             <dt class="floatL mr10">
                 <?php echo $form->labelEx($model, 'first_name'); ?>
@@ -119,7 +119,8 @@ $countries = array(
                     <?php echo $form->textField($model, 'postcode', array('class'=>'textbox', 'maxlength'=>70)); ?>
                     <?php echo $form->error($model, 'postcode'); ?>
                 </dd>
-            </dl>
+            </dl><br class="clear" />
+<!--
             <dl class="floatR mb10 mr10">
                 <dt class="floatL mr10">
                     <?php echo $form->labelEx($model, 'country'); ?>
@@ -130,6 +131,7 @@ $countries = array(
                     <?php echo $form->error($model, 'country'); ?>
                 </dd>
             </dl><br class="clear" />
+ -->
             <dl class="floatL mb10">
                 <dt class="floatL mr10">
                     <?php echo $form->labelEx($model, 'telephone'); ?>
@@ -183,11 +185,6 @@ $countries = array(
 
         <fieldset class="mt30 pb30">
         <h2 class="pt10">Registration Details</h2>
-        <em class="blue" style="font-size: 160%;">N.B. Please note that all prices quoted are in AUD and inclusive of GST. </em>
-            <br />
-            <br class="clear" />
-
-            <?php echo Frontend::replaceAllTagsInContent(@$settings['session-dates']['set_value']) ?>
 
             <?php $note = Frontend::replaceAllTagsInContent(@$settings['note']['set_value']); ?>
             <?php if (!empty($note)): ?>
@@ -203,7 +200,7 @@ $countries = array(
             </dl><br class="clear" />
             <?php endif; ?>
 
-            <dl class="floatL mt20 mb10 mr10">
+            <dl class="floatL mb10 mr10">
                 <dt class="floatL mr10" style="width: 100px;"><label>Choose City:</label></dt>
                 <dd class="floatL mt0">
                     <?php echo $form->dropDownList($session, 'city', $cities, array(
@@ -276,10 +273,10 @@ $countries = array(
                         'dataType'=>'json',
                         'success'=>'function(data){
                             $("#registration_price").val(data.standardPrice);
-                            $("#priceStandard em").html(data.standardPrice);
+                            $("#priceStandard em").html("$"+data.standardPrice);
                             if (data.showEarlyBirdPrice) {
                                 $("#registration_price").val(data.earlyBirdPrice);
-                                $("#priceEarlyBird em").html(data.earlyBirdPrice);
+                                $("#priceEarlyBird em").html("$"+data.earlyBirdPrice);
                                 $("#price_early_bird_wrapper").show();
                             }
                             $("#price_standard_wrapper").show();
@@ -303,7 +300,7 @@ $countries = array(
                     <em class="blue" style="font-size: 200%"></em>
                 </dt>
                 <dt class="floatL ml5">
-                    <label>Early bird cost for one location until <br />15/10/13</label>
+                    <label>Early bird price until 15/10/13</label>
                 </dt>
             </dl><br class="clear" />
             <?php endif; ?>
@@ -320,7 +317,7 @@ $countries = array(
                     <em class="blue<?php echo $showEarlyBirdDate? ' disabled': ''; ?>" style="font-size: 200%"></em>
                 </dt>
                 <dt class="floatL ml5">
-                    <label>Registration cost for one location<br />15/10/13-14/11/13</label>
+                    <label>Standard registration date 16/10/13-18/11/13</label>
                 </dt>
             </dl><br class="clear" />
 
@@ -331,7 +328,7 @@ $countries = array(
                     <!--<input name="EventsRegistration[terms]" class="styled" type="checkbox" />-->
                 </dd>
                 <dt class="floatL ml5">
-                    <label>I agree to the registration <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
+                    <label>I agree to the registration <a href="#" class="blue" id="popup_popUp" onclick="$('#popUp').bPopup(); return false;">Terms and Conditions</a></label>
                 </dt>
             </dl>
             <br class="clear" />
@@ -351,5 +348,5 @@ $countries = array(
     </div>
 </div>
 
-<?php //echo Frontend::replaceAllTagsInContent(@$settings['terms-and-conditions']['set_value']) ?>
+<?php echo Frontend::replaceAllTagsInContent(@$settings['terms-and-conditions']['set_value']) ?>
 

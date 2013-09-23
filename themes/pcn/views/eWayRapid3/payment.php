@@ -13,12 +13,12 @@
 <?php } ?>
 <?php //echo var_dump($Response) ?>
                 <div id="maincontent">
-				
+
                     <div class="transactioncustomer floatL" style="width:50%">
                         <div class="first">
                             <h3 class="blue mb10 pl40">Customer Address</h3>
                         </div>
-						
+
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblStreet">Street</label></dt>
                             <dd class="floatR mb10 mt10"><label id="lblStreet"><?php echo $Response->Customer->Street1 ?></label></dd>
@@ -51,7 +51,7 @@
                             <dt class="floatL mr20"><label for="lblMobile">Mobile</label></dt>
                             <dd class="floatR mb10 mt10"><label id="lblMobile"><?php echo $Response->Customer->Mobile ?></label></dd>
                         </dl><br class="clear" />
-						
+
                         <div class="mt30">
                             <h3 class="blue mb10 pl40">Payment Details</h3>
                         </div>
@@ -64,11 +64,11 @@
                             <dd class="floatR mb10 mt10"><label id="lblInvoiceReference"><?php echo $InvoiceReference ?></label></dd>
                         </dl><br class="clear" />
                     </div>
-					
+
                     <div class="transactioncard floatL" style="width:48%; padding-left:2%;">
                         <div class="first">
                             <h3 class="blue mb10 pl40">Customer Details</h3>
-						</div>
+                        </div>
                        <?php /* <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblTitle">Title</label></dt>
                              <dd class="floatR mb10 mt10"><label id="lblTitle"><?php echo $Response->Customer->Title ?></label></dd>
@@ -107,8 +107,8 @@
                         <dl class="floatL" style="position:relative">
                             <dt class="floatL mr20"><label for="EWAY_CARDEXPIRYMONTH">Expiry Date</label></dt>
                             <dd class="floatR mb10 mt10">
-							<div class="floatL mr10" style="margin-top:-10px;">
-							<select class="styled" ID="EWAY_CARDEXPIRYMONTH" name="EWAY_CARDEXPIRYMONTH">
+                            <div class="floatL mr10" style="margin-top:-10px;">
+                            <select class="styled" ID="EWAY_CARDEXPIRYMONTH" name="EWAY_CARDEXPIRYMONTH">
                                 <?php
                                    if (isset($Response->Customer->CardExpiryMonth)&& !empty($Response->Customer->CardExpiryMonth)) {
                                         $expiry_month = $Response->Customer->CardExpiryMonth;
@@ -125,10 +125,10 @@
                                     }
                                 ?>
                             </select>
-							</div>
+                            </div>
                             <span class="floatL mr10">/</span>
                            <div class="floatL mr10" style="margin-top:-10px;">
-							<select class="styled" ID="EWAY_CARDEXPIRYYEAR" name="EWAY_CARDEXPIRYYEAR">
+                            <select class="styled" ID="EWAY_CARDEXPIRYYEAR" name="EWAY_CARDEXPIRYYEAR">
                                 <?php
                                     $i = date("y");
                                     $j = $i+11;
@@ -141,12 +141,12 @@
                                     }
                                 ?>
                             </select>
-							</div></dd>
+                            </div></dd>
                         </dl><br class="clear" />
                         <?php /*<dl class="floatL" style="position:relative">
                             <dt class="floatL mr20"><label for="EWAY_CARDSTARTMONTH">Valid From Date</label></dt>
-							<dd class="floatR mb10 mt10">
-							<div class="floatL" style="margin:20px 0 0 -10px;">
+                            <dd class="floatR mb10 mt10">
+                            <div class="floatL" style="margin:20px 0 0 -10px;">
                             <select class="styled" ID="EWAY_CARDSTARTMONTH" name="EWAY_CARDSTARTMONTH">
                                 <?php
                                     if (isset($Response->Customer->CardStartMonth)&& !empty($Response->Customer->CardStartMonth )) {
@@ -155,7 +155,7 @@
                                         $expiry_month = "";//date('m');
                                     }
                                     echo  "<option></option>";
-                                    
+
                                     for($i = 1; $i <= 12; $i++) {
                                         $s = sprintf('%02d', $i);
                                         echo "<option value='$s'";
@@ -166,9 +166,9 @@
                                     }
                                 ?>
                             </select>
-							</div>
+                            </div>
                             <span class="floatL mr10">/</span>
-							<div class="floatL" style="margin:20px 0 0 -10px;">
+                            <div class="floatL" style="margin:20px 0 0 -10px;">
                             <select class="styled" ID="EWAY_CARDSTARTYEAR" name="EWAY_CARDSTARTYEAR">
                                 <?php
                                     $i = date("y");
@@ -186,9 +186,9 @@
                                     }
                                 ?>
                             </select>
-							</div>
-							</dd>
-						</dl>
+                            </div>
+                            </dd>
+                        </dl>
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="EWAY_CARDISSUENUMBER">Issue Number</label></dt>
                             <dd class="floatR mb10 mt10"><input type='text' class='textbox' name='EWAY_CARDISSUENUMBER' id='EWAY_CARDISSUENUMBER' value="<?php echo (isset($Response->Customer->CardIssueNumber) && !empty($Response->Customer->CardIssueNumber) ? $Response->Customer->CardIssueNumber:"") ?>" maxlength="2" style="width:40px;"/></dd> <!-- This field is optional but highly recommended -->
@@ -201,10 +201,11 @@
                     <div class="paymentbutton floatR mr40">
                         <br />
                         <br />
-                        <input type='submit' name='btnSubmitPayment' value="Submit" class="btn_blue"/>
-                        <br />
+                        <input type='submit' name='btnSubmitPayment' value="Submit" class="btn_blue floatR"/>
+                        <br class="clear" />
                         <br />
                         <a href="http://www.credit-card-logos.com">
+                            <img alt="" title="" src="<?php echo Yii::app()->theme->baseUrl; ?>/img/eway_logo.jpg" width="116" height="35" border="0" />
                             <img alt="" title="" src="http://www.credit-card-logos.com/images/visa_credit-card-logos/visa_mastercard_2.gif" width="116" height="35" border="0" />
                         </a>
                     </div>
@@ -214,5 +215,5 @@
             </div>
         </div>
     </form>
-	
+
 </div>
