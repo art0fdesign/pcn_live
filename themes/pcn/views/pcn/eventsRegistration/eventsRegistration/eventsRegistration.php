@@ -11,20 +11,19 @@ $countries = array(
 
 ?>
 
-<div class="wide wide1 floatL dotedR dotedL">
+<div class="wide wide1 floatL dotedR dotedL registration_wrapper">
     <div class="pl20 pr0">
     <?php if($message != null) echo $message; ?>
     <?php echo Frontend::replaceAllTagsInContent(@$settings['text-before-form']['set_value']) ?>
 
-<?php /*
     <h2 class="pt15">Your Details</h2>
         <?php
         // $url = Frontend::getPageDataByWidget(null, 'eWayRapid3');
         // MyFunctions::echoArray($url, $_SERVER);
-        if($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+        if($_SERVER['SERVER_ADDR'] == '127.0.0.1' || $_SERVER['SERVER_ADDR'] == '::1') {
             $url = Yii::app()->request->getHostInfo('http') . '/' . Frontend::getPageDataByWidget(null, 'eWayRapid3');
         } else {
-            $url = Yii::app()->request->getHostInfo('https') . '/' . Frontend::getPageDataByWidget(null, 'eWayRapid3');            
+            $url = Yii::app()->request->getHostInfo('https') . '/' . Frontend::getPageDataByWidget(null, 'eWayRapid3');
         }
         //$url = Yii::app()->request->getBaseUrl(true) . '/' . Frontend::getPageDataByWidget(null, 'eWayRapid3');
         $form=$this->beginWidget('CActiveForm', array(
@@ -159,27 +158,27 @@ $countries = array(
                 </dd>
             </dl>
             <br class="clear" />
-            <!--<label class="floatL ml10 mt10 mr40">Dietary requirements (if any)</label>
+            <label class="floatL ml10 mt10 mr40">Dietary requirements (if any)</label>
             <dl class="floatL mb10">
                 <dd class="floatL mt10">
-                    <input id="" class="styled" type="checkbox" />
+                    <input id="dietary_vegetarian" class="styled" type="checkbox" name="Dietary[Vegetarian]" value="vegetarian" />
                 </dd>
-                <dt class="floatL ml5"><label>Vegetarian</label></dt>
+                <dt class="floatL ml5"><label for="dietary_vegetarian">Vegetarian</label></dt>
+
                 <dd class="floatL mt10">
-                    <input id="" class="styled" type="checkbox" />
+                    <input id="dietary_gluten_free" class="styled" type="checkbox" name="Dietary[GlutenFree]" value="gluten_free" />
                 </dd>
-                <dt class="floatL ml5"><label>Gluten free</label></dt>
+                <dt class="floatL ml5"><label for="dietary_gluten_free">Gluten free</label></dt>
                 <dd class="floatL mt10">
-                    <input id="" class="styled" type="checkbox" />
+                    <input id="dietary_other" class="styled" type="checkbox" name="Dietary[Other]" value="other" />
                 </dd>
-                <dt class="floatL ml5"><label>Other, specify</label></dt>
+                <dt class="floatL ml5"><label for="dietary_other">Other, specify</label></dt>
             </dl>
-            <br class="clear" />
-            <dl>
-                <dd class="floatR">
-                    <input class="textbox" type="text" name="" value="" maxlength="70" />
+            <dl><br class="clear /">
+                <dd class="floatR mr10">
+                    <?php echo $form->textField($model, 'dietary_other', array('class'=>'textbox', 'style'=>'width:290px;', 'maxlength'=>70)); ?>
                 </dd>
-            </dl>-->
+            </dl>
         </fieldset>
 
         <fieldset class="mt30 pb30">
@@ -190,6 +189,8 @@ $countries = array(
 
             <?php echo Frontend::replaceAllTagsInContent(@$settings['session-dates']['set_value']) ?>
 
+            <?php $note = Frontend::replaceAllTagsInContent(@$settings['note']['set_value']); ?>
+            <?php if (!empty($note)): ?>
             <dl class="floatL mb10 mr10">
                 <dt class="floatL mb0 pb0" style="width: 100px;">
                     <label>Please note:</label>
@@ -197,9 +198,10 @@ $countries = array(
             </dl><br />
             <dl class="floatL mb10 mr10">
                 <dd class="floatL">
-                    <?php echo Frontend::replaceAllTagsInContent(@$settings['note']['set_value']) ?>
+                    <?php echo $note; ?>
                 </dd>
-            </dl><br />
+            </dl><br class="clear" />
+            <?php endif; ?>
 
             <dl class="floatL mt20 mb10 mr10">
                 <dt class="floatL mr10" style="width: 100px;"><label>Choose City:</label></dt>
@@ -215,11 +217,12 @@ $countries = array(
                         'dataType'=>'html',
                         'empty'=>'--select--',
                         'success'=>'function(data){
-                            $("#lowprice").hide();
-                            $("#id_box").hide();
+                            $("#price_early_bird_wrapper").hide();
+                            $("#price_standard_wrapper").hide();
+                            $("#registration_price").val(0);
                             $("#ticketType").html(data);
                             var ticket = $("#ticketType").attr("name");
-                            document.getElementById("select"+ticket).childNodes[0].nodeValue = "---select---";
+                            // document.getElementById("select"+ticket).childNodes[0].nodeValue = "---select---";
                             $("#ticket_box").show()
                             $(".ajax-loader").hide();
                         }'
@@ -239,10 +242,12 @@ $countries = array(
                     'onchange'=>'$(".ajax-loader").show()',
                     'ajax'=>array(
                         'type'=>'POST',
-                        'data'=>array('ticket'=>'js:this.value','city_name'=>'js:$("#cities").val()'),
+                        'data'=>array('ticket_type'=>'js:this.value','city_name'=>'js:$("#cities").val()'),
                         'dataType'=>'html',
                         'success'=>'function(data){
-                            $("#lowprice").hide();
+                            $("#price_early_bird_wrapper").hide();
+                            $("#price_standard_wrapper").hide();
+                            $("#registration_price").val(0);
                             var date = $("#sessId").attr("name");
                             document.getElementById("select" + date).childNodes[0].nodeValue = "---select---";
                             $("#sessId").html(data);
@@ -257,7 +262,7 @@ $countries = array(
 
             <dl class="floatL mb20 mr10" id="id_box" <?php if(empty($ids)):?>style="display:none;"<?php endif;?>>
                 <dt class="floatL mr10" style="width: 100px;">
-                    <label>Choose Date:</label>
+                    <label>Choose Session(s):</label>
                 </dt>
                 <dd class="floatL mt0">
                     <?php echo $form->dropDownList($session, 'id', $ids, array(
@@ -267,16 +272,17 @@ $countries = array(
                     'onchange'=>'$(".ajax-loader").show()',
                     'ajax'=>array(
                         'type'=>'POST',
-                        'data'=>array('sess_id'=>'js:this.value'),
+                        'data'=>array('sess_id'=>'js:this.value', 'ticket_type_value'=>'js:$("#ticketType").val()'),
                         'dataType'=>'json',
                         'success'=>'function(data){
-                            $("#lowprice").hide();
-                            $("#priceLow").html(data.lowPrice);
-                            $("#priceHigh").html(data.highPrice);
-                            $("#lowprice").show();
-                            $("#highprice").show();
-                            $("#hidden_price_high").val(data.highprice);
-                            $("#hidden_price_low").val(data.lowprice);
+                            $("#registration_price").val(data.standardPrice);
+                            $("#priceStandard em").html(data.standardPrice);
+                            if (data.showEarlyBirdPrice) {
+                                $("#registration_price").val(data.earlyBirdPrice);
+                                $("#priceEarlyBird em").html(data.earlyBirdPrice);
+                                $("#price_early_bird_wrapper").show();
+                            }
+                            $("#price_standard_wrapper").show();
                             $(".ajax-loader").hide();
                         }'
                     ),
@@ -284,32 +290,41 @@ $countries = array(
                 </dd>
             </dl>
             <br class="clear" />
-            <?php if(date('Y-m-d') > '2013-06-30'): ?>
-            <input type="hidden" id="hidden_price_high" name="EventsRegistration[price]" value="0"/>
-            <dl class="floatL mb40 ml15" id="highprice" style="display: none;">
+
+
+            <!-- <input type="hidden" id="hidden_price_high" name="EventsRegistration[price]" value="0"/> -->
+            <?php echo $form->hiddenField($model, 'price', array('id'=>'registration_price')); ?>
+            <?php if ($showEarlyBirdDate): ?>
+            <dl class="floatL mb40 ml15" id="price_early_bird_wrapper" style="display: none;">
                 <dd class="floatL mt10">
                     <?php echo CHtml::checkbox('price', 'price', array('class'=>'styled', 'checked'=>'checked', 'disabled'=>'disabled')) ?>
                 </dd>
-                <dt class="floatL ml5" id="priceHigh">
+                <dt class="floatL ml5" id="priceEarlyBird">
+                    <em class="blue" style="font-size: 200%"></em>
                 </dt>
                 <dt class="floatL ml5">
-                    <label>Registration cost for one location<br />1/7/13-17/3/13</label>
+                    <label>Early bird cost for one location until <br />15/10/13</label>
                 </dt>
             </dl><br class="clear" />
-            <?php else: ?>
-            <input type="hidden" id="hidden_price_low" name="EventsRegistration[price]" value="0"/>
-            <dl class="floatL mb40 ml15" id="lowprice" style="display: none;">
+            <?php endif; ?>
+
+            <dl class="floatL mb40 ml15" id="price_standard_wrapper" style="display: none;">
                 <dd class="floatL mt10">
-                    <?php echo CHtml::checkbox('price', 'price', array('class'=>'styled', 'checked'=>'checked', 'disabled'=>'disabled')) ?>
+                    <?php if (!$showEarlyBirdDate): ?>
+                    <?php echo CHtml::checkbox('price', 'price', array('class'=>'styled', 'checked'=>'checked', 'disabled'=>'disabled')); ?>
+                    <?php else: ?>
+                    <span style="display:block; width:19px;">&nbsp;</span>
+                    <?php endif; ?>
                 </dd>
-                <dt class="floatL ml5" id="priceLow">
+                <dt class="floatL ml5" id="priceStandard">
+                    <em class="blue<?php echo $showEarlyBirdDate? ' disabled': ''; ?>" style="font-size: 200%"></em>
                 </dt>
                 <dt class="floatL ml5">
-                    <label>Early bird cost for one location<br />to <?php echo @$settings['reg-date-earlybird']['set_value'] ?></label>
+                    <label>Registration cost for one location<br />15/10/13-14/11/13</label>
                 </dt>
-            </dl> 
-            <?php endif; ?>
-            <br class="clear" /> 
+            </dl><br class="clear" />
+
+
             <dl class="floatL mb20 ml15">
                 <dd class="floatL mt10">
                     <?php echo $form->checkBox($model, 'terms', array());  ?>

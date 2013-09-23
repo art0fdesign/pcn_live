@@ -1,4 +1,4 @@
-<?php 
+<?php
 class EWayRapid3Widget extends AodWidget
 {
     public $params = array();
@@ -10,50 +10,62 @@ class EWayRapid3Widget extends AodWidget
     private $response;
     private $TotalAmount = 0;
     private $InvoiceReference = '';
-     
+
     /** Do some initializations */
     public function init()
     {
         // initialize class and config file paths
         $rapidClassFile = Yii::getPathOfAlias('webroot.vendors.rapid3.Rapid3') . '.php';
-        $configFile = Yii::getPathOfAlias('webroot.vendors.rapid3.config') . '.ini';        
+        $configFile = Yii::getPathOfAlias('webroot.vendors.rapid3.config') . '.ini';
         require_once( $rapidClassFile );
         // establish connection with Rapid class
-    	try{    	   
-    		$this->service = new RapidAPI();
-    	} 
-    	catch( Exception $e ){
+        try{
+            $this->service = new RapidAPI();
+        }
+        catch( Exception $e ){
             // Some bad happens; display error and rip
             $ret = $this->render( 'conn_error', array( 'e'=>$e ), $return=true );
             //
-            $this->html = $ret; 
+            $this->html = $ret;
             return false;
         }
-    }    
-    
+    }
+
     /**
      * render widget
      * do not directly render, just set html in a public html parameter
      */
     public function run()
     {
-    
+
          if(isset($_POST['ajax']) && $_POST['ajax'] === 'events-registration-form'){
            $model = new EventsRegistration();
-            
-         	echo CActiveForm::validate(array($model));
+
+            echo CActiveForm::validate(array($model));
             Yii::app()->end();
         }
-        
-        
+
+
         $viewfile = 'payment';
         $params = array();
         if (Yii::app()->request->isPostRequest ) {
             if ($this->getAccessCode()) {
                 Yii::app()->session['events.registration.id'] = $_POST;
-                //MyFunctions::echoArray(Yii::app()->session['events.registration.id']); 
-                $params['Response'] = $this->response; 
-                $params['TotalAmount'] = $this->TotalAmount; 
+                // I want to save selection to db
+                if (isset($_POST['EventsRegistration'])) {
+                    $model = new EventsRegistration();
+                    $model->attributes = $_POST['EventsRegistration'];
+                    if (isset($_POST['Dietary'])) {
+                        $model->dietary_requirements = json_encode($_POST['Dietary']);
+                    }
+                    $model->ticket = json_encode($_POST['EventsRegistrationSession']);
+                    // MyFunctions::echoArray($model->attributes, Yii::app()->session['events.registration.id'], array('valid'=>$model->validate()));
+                    $model->f_status = 1;
+                    $model->f_deleted = 0;
+                    $model->save();
+                }
+                $params['Response'] = $this->response;
+                $params['TotalAmount'] = $this->TotalAmount;
                 $params['InvoiceReference'] = $this->InvoiceReference;
             } else {
                 $viewfile = 'payment_error';
@@ -61,7 +73,7 @@ class EWayRapid3Widget extends AodWidget
         } elseif (isset($_GET['AccessCode'])) {
             $success = $this->prepareShowResult();
             $viewfile = 'result';
-            
+
             $condition = 'mod_path = :path AND f_status=1 AND f_deleted=0';
             $params = array( 'path' => 'eWayRapid3');
             $module_id = ModRegister::model()->findByAttributes( array(), $condition, $params )->id;
@@ -86,28 +98,28 @@ class EWayRapid3Widget extends AodWidget
         //
         $this->html = $ret;
     }
-    
+
     private function getAccessCode() {
-       
+
                 // proveriti zasto nema price
-           	// otkomentariši ovo i pojaviće se cena
-		/******************************************************************
-		$session = EventsRegistrationSession::model()->findByPk($_POST	['EventsRegistrationSession']['id']);
-		$price = $session->getPrice($_POST['EventsRegistration']['price']);
-		*******************************************************************/
+            // otkomentariši ovo i pojaviće se cena
+        /******************************************************************
+        $session = EventsRegistrationSession::model()->findByPk($_POST  ['EventsRegistrationSession']['id']);
+        $price = $session->getPrice($_POST['EventsRegistration']['price']);
+        *******************************************************************/
             $this->InvoiceReference = date('Ymd').'-'.time();
-            
+
             $this->TotalAmount = $_POST['EventsRegistration']['price'] * 100 ;
             //$_POST['EventsRegistration']['price'] = $this->TotalAmount;
-            
+
             //Create AccessCode Request Object
             $request = new CreateAccessCodeRequest();
-        
+
             //Populate values for Customer Object
             //Note: TokenCustomerID is Required Field When Update an exsiting TokenCustomer
             if(!empty($_POST['txtTokenCustomerID']))
                 $request->Customer->TokenCustomerID = $_POST['txtTokenCustomerID'];
-            
+
             $request->Customer->Reference = $this->InvoiceReference;
             //Note: FirstName is Required Field When Create/Update a TokenCustomer
             $request->Customer->FirstName = $_POST['EventsRegistration']['first_name'];
@@ -127,8 +139,8 @@ class EWayRapid3Widget extends AodWidget
             $request->Customer->Comments = '';
             $request->Customer->Fax = '';
             $request->Customer->Url = '';
-            
-            //Populate values for ShippingAddress Object. 
+
+            //Populate values for ShippingAddress Object.
             /*//This values can be taken from a Form POST as well. Now is just some dummy data.
             $request->ShippingAddress->FirstName = $_POST['EventsRegistration']['first_name'];
             $request->ShippingAddress->LastName = $_POST['EventsRegistration']['surname'];
@@ -144,7 +156,7 @@ class EWayRapid3Widget extends AodWidget
             $request->ShippingAddress->ShippingMethod = "LowCost";
         */
             //Populate values for LineItems
-            $item1 = new LineItem();   
+            $item1 = new LineItem();
             $item1->SKU = "SKU1";
             $item1->Description = "Description1";
             //$item2 = new LineItem();
@@ -152,13 +164,13 @@ class EWayRapid3Widget extends AodWidget
             //$item2->Description = "Description2";
             $request->Items->LineItem[0] = $item1;
             //$request->Items->LineItem[1] = $item2;
-            
+
             //Populate values for Options
             $opt1 = new Option();
             $opt1->Value = '';
-            
+
             $request->Options->Option[0]= $opt1;
-            
+
             //Populate values for Payment Object
             //Note: TotalAmount is a Required Field When Process a Payment, TotalAmount should set to "0" or leave EMPTY when Create/Update A TokenCustomer
             //$request->Payment->TotalAmount = $_POST['EventsRegistration']['price'];
@@ -167,17 +179,17 @@ class EWayRapid3Widget extends AodWidget
             $request->Payment->InvoiceDescription = '';
             $request->Payment->InvoiceReference = $this->InvoiceReference;
             $request->Payment->CurrencyCode = 'AUD';
-            
+
             //Url to the page for getting the result with an AccessCode
             //Note: RedirectUrl is a Required Field For all cases
             $request->RedirectUrl = Yii::app()->request->getBaseUrl(true) . '/' . Frontend::getPageDataByWidget(null, 'eWayRapid3');
-          
+
             //Method for this request. e.g. ProcessPayment, Create TokenCustomer, Update TokenCustomer & TokenPayment
             $request->Method = 'ProcessPayment';
-        
+
             //Call RapidAPI
             $result = $this->service->CreateAccessCode($request);
-        
+
             //Save result into Session. payment.php and results.php will retrieve this result from Session
             $Response = $result;
             $TotalAmount = $_POST['EventsRegistration']['price'];
@@ -185,13 +197,13 @@ class EWayRapid3Widget extends AodWidget
             //$_SESSION['TotalAmount'] = (int) $_POST['EventsRegistration']['price'];
             //$_SESSION['InvoiceReference'] = date('Ymd').'-'.time();
             //$_SESSION['Response'] = $result;
-                
+
             //Check if any error returns
             if(isset($result->Errors))
             {
                 //Get Error Messages from Error Code. Error Code Mappings are in the Config.ini file
                 $ErrorArray = explode(",", $result->Errors);
-                
+
                 $lblError = "";
                 foreach ( $ErrorArray as $error )
                 {
@@ -200,24 +212,24 @@ class EWayRapid3Widget extends AodWidget
                     else
                         $lblError .= $error.'<br />';
                 }
-                
+
                 $this->errorHTML = $lblError;
                 //MyFunctions::echoArray($this->errorHTML);
                 return false;
             }
             $this->response = $result;
             return true;
-        
+
     }
-    
+
     private function prepareShowResult(){
         //Build request for getting the result with the access code.
         $request = new GetAccessCodeResultRequest();
-        
-        
-        
+
+
+
         $request->AccessCode = $_GET['AccessCode'];
-        
+
         //Call RapidAPI to get the result
         $result = $this->service->GetAccessCodeResult($request);
         //Check if any error returns
@@ -225,28 +237,28 @@ class EWayRapid3Widget extends AodWidget
         {
             //Get Error Messages from Error Code. Error Code Mappings are in the Config.ini file
             $ErrorArray = explode(",", $result->Errors);
-        
+
             //var_dump($ErrorArray);
-        
+
             $lblError = "";
-        
+
             foreach ( $ErrorArray as $error )
             {
                 $lblError .= $this->service->APIConfig[$error]."<br>";
             }
-            
+
             $this->errorHTML = $lblError;
-            
+
             return false;
         }
         $this->response = $result;
-        
+
         // Prepare message
         $this->systemMessage = $this->service->APIConfig[$result->ResponseMessage];
   //MyFunctions::echoArray($result, $result->ResponseMessage, $this->systemMessage);
-        
+
         return $result->TransactionStatus;
-        
+
     }
-    
+
  }

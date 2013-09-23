@@ -13,6 +13,12 @@ class EventsRegistrationWidget extends AodWidget
     protected $view_id = 0;
     protected $_settings = null;
 
+    protected $_prices = array(
+        'allday' => array('price_bird'=>1188, 'price_full'=>1320),
+        'halfday' => array('price_bird'=>675, 'price_full'=>750),
+        'session' => array('price_bird'=>500, 'price_full'=>550),
+    );
+    protected $_earlyBirdDate = '2013-10-15';
 
     public function init()
     {
@@ -31,14 +37,13 @@ class EventsRegistrationWidget extends AodWidget
 
     public function run()
     {
-        //session_start();
         $message = null;
         $this->model = new EventsRegistration();
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'events-registration-form'){
             echo CActiveForm::validate(array($this->model));
             Yii::app()->end();
         }
-        
+
         $this->session = new EventsRegistrationSession();
         $sessionsCity = $this->session->findAll('f_deleted = 0 AND f_status = 1');
         $cities = array();
@@ -46,19 +51,22 @@ class EventsRegistrationWidget extends AodWidget
             $cities[$sessCity->city] = $sessCity->city;
         }
         $tickets = array();
-		$ids = array();
+        $ids = array();
         if(isset($_POST['EventsRegistration']) && isset($_POST['EventsRegistrationSession'])){
             $this->model->attributes = $_POST['EventsRegistration'];
-            
+
             $this->session->city = $_POST['EventsRegistrationSession']['city'];
             $this->session->id = $_POST['EventsRegistrationSession']['id'];
             $this->session->ticket_type = $_POST['EventsRegistrationSession']['ticket_type'];
-            
-           
-            
+
+
+
             $this->model->session_id = $_POST['EventsRegistrationSession']['id'];
-            
+
+            // TODO: Resolve dietary reqirements
+
             $this->model->f_status = 1;
+            MyFunctions::echoArray($this->model->attributes, $_POST);
             if($this->model->save()){
                 if(isset($this->_settings['success']['set_value']))
                     $this->message = $this->_settings['success']['set_value'];
@@ -69,94 +77,88 @@ class EventsRegistrationWidget extends AodWidget
                 $this->session->ticket_type = '';
             }
         }
-        
+
         if(isset($this->session->city) && $this->session->city != '')
-        	$tickets = $this->getTicketsType($this->session->city);
-        		
+            $tickets = $this->getTicketsType($this->session->city);
+
         if(isset($this->session->city) && $this->session->city != '' && isset($this->session->ticket_type) && $this->session->ticket_type != ''){
-        		//print $this->session->city;
-    			//print $this->session->ticket_type;die;
-            	$ids = $this->getIds($this->session->city, $this->session->ticket_type);
+                //print $this->session->city;
+                //print $this->session->ticket_type;die;
+                $ids = $this->getIds($this->session->city, $this->session->ticket_type);
         }
         /*if(isset($this->model->session_id) && $this->model->session_id != ''){
-        	$prices = $this->getPrices;
+            $prices = $this->getPrices;
         }*/
-        	
 
-		
-		
+
+
+
         if(Yii::app()->request->isAjaxRequest && isset($_POST['city'])){
             $city = $_POST['city'];
             $models = $this->session->findAll(array("group"=>"name","condition"=>'f_deleted = 0 AND f_status = 1 AND city = :town', "params"=>array('town'=>$city)));
             //print_r($models);die;
-           
+
             $retAll = CHtml::tag('option', array('value'=>''), '--select--', true);
-           
-			$oneDay = '';
-			$oneSession = '';
-            foreach($models as $mod){
-                if($mod->type == 'all'){
-                    $retAll .= CHtml::tag('option', array('value'=>$mod->type.'_'.$mod->seo_name), $mod->name, true);
-                }
-                elseif($mod->type == 'day'){
-                    $oneDay .= CHtml::tag('option', array('value'=>$mod->type.'_'.$mod->seo_name), $mod->name, true);
-                }
-                else $oneSession .= CHtml::tag('option', array('value'=>$mod->type.'_'.$mod->seo_name), $mod->name, true);
-            }
-			if($oneDay != ''){
-				$retAll .= CHtml::tag('optgroup', array('label'=>'One day seminar'), '', false);
-				$retAll .= $oneDay;
-				$retAll .= CHtml::closeTag('optgroup');
-			}
-            
-			if($oneSession != ''){
-				$retAll .= CHtml::tag('optgroup', array('label'=>'One session'), '', false);
-				$retAll .= $oneSession;
-				$retAll .= CHtml::closeTag('optgroup');
-			}
-			
-            
+
+            $retAll .= CHtml::tag('option', array('value'=>'allday'), 'All Day', true);
+            $retAll .= CHtml::tag('option', array('value'=>'halfday'), 'Half Day', true);
+            $retAll .= CHtml::tag('option', array('value'=>'session'), 'Single Session', true);
+
+
+
             echo $retAll;
             Yii::app()->end();
         }
 
-        if(Yii::app()->request->isAjaxRequest && isset($_POST['ticket'])){
-            $ticket = explode("_",$_POST['ticket']);
+        if(Yii::app()->request->isAjaxRequest && isset($_POST['ticket_type'])){
+            $ticket = $_POST['ticket_type'];
             $city = $_POST['city_name'];
-            
+
             //Yii::app()->session['session_id'] = $id;
-            $session = $this->session->findAll(array("condition"=>'f_deleted = 0 AND f_status = 1 AND city = :town AND type=:type AND seo_name=:seo_name' , "params"=>array('town'=>$city,"type"=>$ticket[0],"seo_name"=>$ticket[1])));
+            // $session = $this->session->findAll(array("condition"=>'f_deleted = 0 AND f_status = 1 AND city = :town AND type=:type AND seo_name=:seo_name' , "params"=>array('town'=>$city,"type"=>$ticket[0],"seo_name"=>$ticket[1])));
             //print count($session);die;
             $ret = CHtml::tag('option', array('value'=>''), '--select--', true);
-            
-            foreach ($session as $sess){
-            	//print 'aaa';
-                if($sess->date_from != '0000-00-00 00:00:00'){
-                	//print 'bbb';
-                    if($sess->date_to != '0000-00-00 00:00:00'){
-                        $ret .= CHtml::tag('option', array('value'=>$sess->id), $this->formatDate($sess->date_from).' - '.$this->formatDate($sess->date_to), true);
-                    }
-                    else
-                    $ret .= CHtml::tag('option', array('value'=>$sess->id), $this->formatDate($sess->date_from), true);
-                }
+
+            switch ($ticket) {
+                case 'allday':
+                    $ret .= CHtml::tag('option', array('value'=>'all_sessions'), 'All sessions', true);
+                    break;
+                case 'halfday':
+                    $ret .= CHtml::tag('option', array('value'=>'sessions_1_2'), 'Sessions 1 &amp; 2', true);
+                    $ret .= CHtml::tag('option', array('value'=>'sessions_1_3'), 'Sessions 1 &amp; 3', true);
+                    $ret .= CHtml::tag('option', array('value'=>'sessions_1_4'), 'Sessions 1 &amp; 4', true);
+                    $ret .= CHtml::tag('option', array('value'=>'sessions_2_3'), 'Sessions 2 &amp; 3', true);
+                    $ret .= CHtml::tag('option', array('value'=>'sessions_2_4'), 'Sessions 2 &amp; 4', true);
+                    $ret .= CHtml::tag('option', array('value'=>'sessions_3_4'), 'Sessions 3 &amp; 4', true);
+                    break;
+                case 'session':
+                    $ret .= CHtml::tag('option', array('value'=>'session_1'), 'Session 1', true);
+                    $ret .= CHtml::tag('option', array('value'=>'session_2'), 'Session 2', true);
+                    $ret .= CHtml::tag('option', array('value'=>'session_3'), 'Session 3', true);
+                    $ret .= CHtml::tag('option', array('value'=>'session_4'), 'Session 4', true);
+                    break;
             }
-            //die;
+
             echo $ret;
             Yii::app()->end();
         }
 
         if(Yii::app()->request->isAjaxRequest && isset($_POST['sess_id'])){
             $id = $_POST['sess_id'];
+            $ticket_type = $_POST['ticket_type_value'];
             //MyFunctions::echoArray(array('date'=>$date, 'id'=>Yii::app()->session['session_id']));
-            $event = $this->session->findByPk($id);
+            // $event = $this->session->findByPk($id);
             //unset(Yii::app()->session['session_id']);
-            $priceLow = $event->price_low;
-            $priceHigh = $event->price_high;
+
+            $priceBird = $this->_prices[$ticket_type]['price_bird'];
+            $priceFull = $this->_prices[$ticket_type]['price_full'];
+            $showEarlyBirdPrice = date('Y-m-d') <= $this->_earlyBirdDate;
             echo CJSON::encode(array(
-                'lowPrice'=> '<em class="blue" style="font-size: 200%">$' .$priceLow. '</em>',
-                'highPrice'=>'<em class="blue" style="font-size: 200%">$' .$priceHigh. '</em>',
-                'lowprice'=>$priceLow,
-                'highprice'=>$priceHigh
+                'lowPrice'=> '<em class="blue" style="font-size: 200%">$' .$priceBird. '</em>',
+                'highPrice'=>'<em class="blue" style="font-size: 200%">$' .$priceFull. '</em>',
+                'earlyBirdPrice'=>$priceBird,
+                'standardPrice'=>$priceFull,
+                'showEarlyBirdPrice' => $showEarlyBirdPrice,
             ));
             Yii::app()->end();
         }
@@ -173,6 +175,7 @@ class EventsRegistrationWidget extends AodWidget
             'ids'=>$ids,
             'tickets'=>$tickets,
             'settings'=>$this->_settings,
+            'showEarlyBirdDate'=>date('Y-m-d')<=$this->_earlyBirdDate,
         ),true);
     }
 
@@ -214,10 +217,10 @@ class EventsRegistrationWidget extends AodWidget
 
         $subject = isset($this->_settings['subject']['set_value'])? $this->_settings['subject']['set_value']: 'New Event Registration';
         $message1 = '<html>
-			 			<head>
-						<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-						</head>
-						<body>
+                        <head>
+                        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                        </head>
+                        <body>
                             <h2>Event registration data:</h2> <br />
                             First Name: '.$data['first_name'].' <br />
                             Surname:  '.$data['surname'].' <br />
@@ -252,15 +255,15 @@ class EventsRegistrationWidget extends AodWidget
         //MyFunctions::echoArray( array( 'to'=>$to, 'subject'=>$subject ), $headers, $message1 );
         if( $_SERVER['HTTP_HOST'] != 'localhost' ) mail($to, $subject, $message1, $headers);
     }
-    
+
     function getTicketsType($city){
-    	$models = $this->session->findAll(array("group"=>"name","condition"=>'f_deleted = 0 AND f_status = 1 AND city = :town', "params"=>array('town'=>$city)));
+        $models = $this->session->findAll(array("group"=>"name","condition"=>'f_deleted = 0 AND f_status = 1 AND city = :town', "params"=>array('town'=>$city)));
             //print_r($models);die;
-           
+
             $retAll = array(""=>'--select--');
             $retAll = array();
-			$oneDay = array();
-			$oneSession = array();
+            $oneDay = array();
+            $oneSession = array();
             foreach($models as $mod){
                 if($mod->type == 'all'){
                     $retAll[$mod->type.'_'.$mod->seo_name] =  $mod->name;
@@ -270,34 +273,34 @@ class EventsRegistrationWidget extends AodWidget
                 }
                 else $oneSession[$mod->type.'_'.$mod->seo_name]= $mod->name;
             }
-			if(!empty($oneDay)){
-				$retAll['One day seminar']= $oneDay;
-			}
-            
-			if(!empty($oneSession)){
-				$retAll['One Session'] = $oneSession;
-				
-			}
-			return $retAll;
+            if(!empty($oneDay)){
+                $retAll['One day seminar']= $oneDay;
+            }
+
+            if(!empty($oneSession)){
+                $retAll['One Session'] = $oneSession;
+
+            }
+            return $retAll;
     }
-    
+
     function getIds($city, $type){
-    		//Yii::app()->session['session_id'] = $id;
-    		
-    		$ticket = explode("_", $type);
+            //Yii::app()->session['session_id'] = $id;
+
+            $ticket = explode("_", $type);
             $session = $this->session->findAll(array("condition"=>'f_deleted = 0 AND f_status = 1 AND city = :town AND type=:type AND seo_name=:seo_name' , "params"=>array('town'=>$city,"type"=>$ticket[0],"seo_name"=>$ticket[1])));
             //print count($session);die;
             $ret = array();
-            
+
             foreach ($session as $sess){
-            	//print 'aaa';
+                //print 'aaa';
                 if($sess->date_from != '0000-00-00 00:00:00'){
-                	//print 'bbb';
+                    //print 'bbb';
                     if($sess->date_to != '0000-00-00 00:00:00'){
                         $ret[$sess->id] = $this->formatDate($sess->date_from).' - '.$this->formatDate($sess->date_to);
                     }
                     else
-                    	$ret[$sess->id] =  $this->formatDate($sess->date_from);
+                        $ret[$sess->id] =  $this->formatDate($sess->date_from);
                 }
             }
             //die;
