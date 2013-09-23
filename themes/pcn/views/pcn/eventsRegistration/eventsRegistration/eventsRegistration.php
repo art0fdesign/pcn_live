@@ -53,7 +53,7 @@ $countries = array(
                     <?php echo $form->textField($model, 'surname', array('class'=>'textbox', 'maxlength'=>70)); ?>
                     <?php echo $form->error($model, 'surname'); ?>
                 </dd>
-            </dl>
+            </dl><br class="clear" />
             <dl class="floatL mb10">
                 <dt class="floatL mr10 mb0 mt0">
                     <label>Title/<br />Position*</label>
@@ -110,7 +110,7 @@ $countries = array(
                     <?php echo $form->textField($model, 'state', array('class'=>'textbox', 'maxlength'=>70)); ?>
                     <?php echo $form->error($model, 'state'); ?>
                 </dd>
-            </dl>
+            </dl><br class="clear" />
             <dl class="floatL mb10">
                 <dt class="floatL mr10">
                     <?php echo $form->labelEx($model, 'postcode'); ?>
@@ -129,7 +129,7 @@ $countries = array(
                     <?php //echo $form->textField($model, 'country', array('class'=>'textbox', 'maxlength'=>70)); ?>
                     <?php echo $form->error($model, 'country'); ?>
                 </dd>
-            </dl>
+            </dl><br class="clear" />
             <dl class="floatL mb10">
                 <dt class="floatL mr10">
                     <?php echo $form->labelEx($model, 'telephone'); ?>
@@ -147,7 +147,7 @@ $countries = array(
                     <?php echo $form->textField($model, 'mobile', array('class'=>'textbox', 'maxlength'=>70)); ?>
                     <?php echo $form->error($model, 'mobile'); ?>
                 </dd>
-            </dl>
+            </dl><br class="clear" />
             <dl class="floatL mb10">
                 <dt class="floatL mr10">
                     <?php echo $form->labelEx($model, 'email'); ?>
