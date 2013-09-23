@@ -58,7 +58,7 @@ class DefaultController extends CController
         $this->pars[9] = !empty($par10)? $par10: '';
         //
 
-        if (!empty($_SERVER['HTTPS']) && $par == 'process') {
+        if (!empty($_SERVER['HTTPS']) && $par == 'process' && substr($_SERVER['HTTP_REFERER'], 0, 5) != 'https') {
             if (empty($_SERVER['REQUEST_URI'])) {
                 $this->redirect(Yii::app()->request->getHostInfo('https'));
             }
