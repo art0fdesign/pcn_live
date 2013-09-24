@@ -89,7 +89,7 @@ class EWayRapid3Widget extends AodWidget
             $settings = ModSetting::getSettingsArray( $module_id );
             //MyFunctions::echoArray($settings);
             if ($success) {
-                if ($this->InvoiceReference == 'research-purchase-report') { // report purchase
+                if (substr($this->InvoiceReference, 0, 3) == 'rpt') { // report purchase
                     $this->message = $settings['report.purchase.api.aprooved']['value'];
                 } else {
                     $this->message = $settings['api.aprooved']['value'];
@@ -118,6 +118,11 @@ class EWayRapid3Widget extends AodWidget
             if (isset($_SERVER['HTTP_REFERER'])) {
                 $ref = $_SERVER['HTTP_REFERER'];
                 $ref = str_replace(Yii::app()->getBaseUrl(true).'/', '', $ref);
+            }
+            if ($ref == 'research-purchase-report') {
+                $ref = 'rpt-'.date('Ymd');
+            } else {
+                $ref = 'event-'.date('Ymd');
             }
                 // MyFunctions::echoArray($ref, $_POST, $_SERVER);
 
