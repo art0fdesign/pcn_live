@@ -1,7 +1,17 @@
+<?php
+if ($ShowDebugInfo) {
+    echo "CreateAccessCode Response Object From Current Session";
+    echo '<pre>';
+    print_r($Response);
+    echo '</pre><hr />';
+    // var_dump($Response);
+}
+?>
 <div class="wide floatL" style="margin-left:100px;">
 
 <h1 class="pt20 pb10 mb20 dotedB">Submit Payment</h1>
-    <form action="<?php echo $Response->FormActionURL.'&method=report-purchase' ?>" method='post'>
+<?php /*    <form action="<?php echo $Response->FormActionURL.'&method=report-purchase' ?>" method='post'> */ ?>
+    <form action="<?php echo $Response->FormActionURL ?>" method='post'>
         <div id="outer">
             <div id="main">
 <?php
@@ -11,7 +21,6 @@
         <label style="color:red"><?php echo $error ?></label>
     </div>
 <?php } ?>
-<?php //echo var_dump($Response) ?>
                 <div id="maincontent">
 
                     <div class="transactioncustomer floatL" style="width:50%">
@@ -57,11 +66,11 @@
                         </div>
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblAmount">Total Amount</label></dt>
-                            <dd class="floatR mb10 mt10"><label id="lblAmount">$<?php echo $TotalAmount/100 ?></label></dd>
+                            <dd class="floatR mb10 mt10"><label id="lblAmount">$<?php echo $TotalAmount ?></label></dd>
                         </dl><br class="clear" />
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblInvoiceReference">Invoice Reference</label></dt>
-                            <dd class="floatR mb10 mt10"><label id="lblInvoiceReference"><?php echo $InvoiceReference ?></label></dd>
+                            <dd class="floatR mb10 mt10"><label id="lblInvoiceReference"><?php echo $InvoiceNumber ?></label></dd>
                         </dl><br class="clear" />
                     </div>
 
@@ -89,6 +98,12 @@
                             <dt class="floatL mr20"><label for="lblJobDescription">Job Description</label></dt>
                              <dd class="floatR mb10 mt10"><label id="lblJobDescription"><?php echo $Response->Customer->JobDescription ?></label></dd>
                         </dl><br class="clear" />
+                        <?php if (!empty($DietaryRequirements)): ?>
+                        <dl class="floatL">
+                            <dt class="floatL mr20"><label for="lblDietaryRequirements">Dietary<br />Requirements</label></dt>
+                             <dd class="floatR mb10 mt10"><label id="lblDietaryRequirements"><?php echo $DietaryRequirements ?></label></dd>
+                        </dl><br class="clear" />
+                        <?php endif; ?>
                         <div class="mt30">
                             <h3 class="blue mb10 pl40">Card Details</h3>
                         </div>

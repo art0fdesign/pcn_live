@@ -193,4 +193,27 @@ class EventsRegistration extends CActiveRecord
         return self::model()->findAll( array( 'order'=>$orderBy, 'condition'=>$condition, 'params'=>$params ) );
     }
 
+    public function dietaryRequirementsText()
+    {
+        if (empty($this->dietary_requirements)) {
+            return false;
+        }
+        $return = '';
+        $arr = json_decode($this->dietary_requirements, true);
+        foreach ($arr as $key => $value) {
+            if (!empty($return)) {
+                $return .= ', ';
+            }
+            switch ($value) {
+                case 'vegetarian': $return .= 'Vegetarian'; break;
+                case 'gluten_free': $return .= 'Gluten free'; break;
+                case 'other': $return .= 'Other: '.$this->dietary_other; break;
+                default: $return .= $key;
+            }
+        }
+        return $return;
+        // Myfunctions::echoArray($arr, $return);
+        // die($this->dietary_requirements);
+    }
+
 }

@@ -39,6 +39,14 @@ class DefaultController extends CController
     }
 
     /**
+     * @return Boolean is host is localhost or live one
+     */
+    public function isLive()
+    {
+        return $_SERVER['SERVER_ADDR'] != '127.0.0.1' && $_SERVER['SERVER_ADDR'] != '::1';
+    }
+
+    /**
      * This is the default 'index' action that is invoked
      * when an action is not explicitly requested by users.
      */
@@ -57,7 +65,7 @@ class DefaultController extends CController
         $this->pars[8] = !empty($par9)? $par9: '';
         $this->pars[9] = !empty($par10)? $par10: '';
         //
-        if ($par == 'process' && empty($_SERVER['HTTPS'])) {
+        if ($par == 'process' && empty($_SERVER['HTTPS']) && $this->isLive()) {
             if (empty($_SERVER['REQUEST_URI'])) {
                 $this->redirect(Yii::app()->request->getHostInfo('https'));
             }

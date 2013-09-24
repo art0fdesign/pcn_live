@@ -9,7 +9,9 @@ class EWayRapid3Widget extends AodWidget
     private $systemMessage = '';
     private $response;
     private $TotalAmount = 0;
+    private $InvoiceNumber = '';
     private $InvoiceReference = '';
+    private $dietaryRequirements = '';
 
     /** Do some initializations */
     public function init()
@@ -63,11 +65,17 @@ class EWayRapid3Widget extends AodWidget
                     // MyFunctions::echoArray($model->attributes, Yii::app()->session['events.registration.id'], array('valid'=>$model->validate()));
                     $model->f_status = 1;
                     $model->f_deleted = 0;
-                    $model->save();
+                    if ($model->save()) {
+                        $this->dietaryRequirements = $model->dietaryRequirementsText();
+                    };
                 }
                 $params['Response'] = $this->response;
                 $params['TotalAmount'] = $this->TotalAmount;
+                $params['InvoiceNumber'] = $this->InvoiceNumber;
                 $params['InvoiceReference'] = $this->InvoiceReference;
+                $params['DietaryRequirements'] = $this->dietaryRequirements;
+                $params['ShowDebugInfo'] = $this->service->APIConfig['ShowDebugInfo'];
+                // MyFunctions::echoArray($params);
             } else {
                 $viewfile = 'payment_error';
             }
@@ -81,7 +89,11 @@ class EWayRapid3Widget extends AodWidget
             $settings = ModSetting::getSettingsArray( $module_id );
             //MyFunctions::echoArray($settings);
             if ($success) {
-                $this->message = $settings['api.aprooved']['value'];
+                if ($this->InvoiceReference == 'research-purchase-report') { // report purchase
+                    $this->message = $settings['report.purchase.api.aprooved']['value'];
+                } else {
+                    $this->message = $settings['api.aprooved']['value'];
+                }
             } else {
                 $this->message = $settings['api.not.aprooved']['value'];
             }
@@ -100,17 +112,19 @@ class EWayRapid3Widget extends AodWidget
         $this->html = $ret;
     }
 
-    private function getAccessCode() {
+    private function getAccessCode()
+    {
+            $ref = '';
+            if (isset($_SERVER['HTTP_REFERER'])) {
+                $ref = $_SERVER['HTTP_REFERER'];
+                $ref = str_replace(Yii::app()->getBaseUrl(true).'/', '', $ref);
+            }
+                // MyFunctions::echoArray($ref, $_POST, $_SERVER);
 
-                // proveriti zasto nema price
-            // otkomentariši ovo i pojaviće se cena
-        /******************************************************************
-        $session = EventsRegistrationSession::model()->findByPk($_POST  ['EventsRegistrationSession']['id']);
-        $price = $session->getPrice($_POST['EventsRegistration']['price']);
-        *******************************************************************/
-            $this->InvoiceReference = date('Ymd').'-'.time();
+            $this->InvoiceNumber = date('Ymd').'-'.time();
+            $this->InvoiceReference = $ref;
 
-            $this->TotalAmount = $_POST['EventsRegistration']['price'] * 100 ;
+            $this->TotalAmount = $_POST['EventsRegistration']['price'];
             //$_POST['EventsRegistration']['price'] = $this->TotalAmount;
 
             //Create AccessCode Request Object
@@ -121,7 +135,7 @@ class EWayRapid3Widget extends AodWidget
             if(!empty($_POST['txtTokenCustomerID']))
                 $request->Customer->TokenCustomerID = $_POST['txtTokenCustomerID'];
 
-            $request->Customer->Reference = $this->InvoiceReference;
+            $request->Customer->Reference = $this->InvoiceNumber;
             //Note: FirstName is Required Field When Create/Update a TokenCustomer
             $request->Customer->FirstName = $_POST['EventsRegistration']['first_name'];
             //Note: LastName is Required Field When Create/Update a TokenCustomer
@@ -139,7 +153,7 @@ class EWayRapid3Widget extends AodWidget
             $request->Customer->Mobile = $_POST['EventsRegistration']['mobile'];
             $request->Customer->Comments = '';
             $request->Customer->Fax = '';
-            $request->Customer->Url = '';
+            $request->Customer->Url = Yii::app()->getBaseUrl(true);
 
             //Populate values for ShippingAddress Object.
             /*//This values can be taken from a Form POST as well. Now is just some dummy data.
@@ -176,7 +190,7 @@ class EWayRapid3Widget extends AodWidget
             //Note: TotalAmount is a Required Field When Process a Payment, TotalAmount should set to "0" or leave EMPTY when Create/Update A TokenCustomer
             //$request->Payment->TotalAmount = $_POST['EventsRegistration']['price'];
             $request->Payment->TotalAmount = $this->TotalAmount;
-            $request->Payment->InvoiceNumber = $this->InvoiceReference;
+            $request->Payment->InvoiceNumber = $this->InvoiceNumber;
             $request->Payment->InvoiceDescription = '';
             $request->Payment->InvoiceReference = $this->InvoiceReference;
             $request->Payment->CurrencyCode = 'AUD';
@@ -193,7 +207,7 @@ class EWayRapid3Widget extends AodWidget
 
             //Save result into Session. payment.php and results.php will retrieve this result from Session
             $Response = $result;
-            $TotalAmount = $_POST['EventsRegistration']['price'];
+            $TotalAmount = $this->TotalAmount;
             $InvoiceReference = $this->InvoiceReference;
             //$_SESSION['TotalAmount'] = (int) $_POST['EventsRegistration']['price'];
             //$_SESSION['InvoiceReference'] = date('Ymd').'-'.time();
@@ -256,7 +270,8 @@ class EWayRapid3Widget extends AodWidget
 
         // Prepare message
         $this->systemMessage = $this->service->APIConfig[$result->ResponseMessage];
-  //MyFunctions::echoArray($result, $result->ResponseMessage, $this->systemMessage);
+        $this->InvoiceReference = $result->InvoiceReference;
+        // MyFunctions::echoArray($result, $result->ResponseMessage, $this->systemMessage);
 
         return $result->TransactionStatus;
 

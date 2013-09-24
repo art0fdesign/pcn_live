@@ -175,8 +175,8 @@ $countries = array(
                     <input id="dietary_other" class="styled" type="checkbox" name="Dietary[Other]" value="other" />
                 </dd>
                 <dt class="floatL ml5"><label for="dietary_other">Other, specify</label></dt>
-            </dl>
-            <dl><br class="clear /">
+            </dl><br class="clear /">
+            <dl>
                 <dd class="floatR mr10">
                     <?php echo $form->textField($model, 'dietary_other', array('class'=>'textbox', 'style'=>'width:290px;', 'maxlength'=>70)); ?>
                 </dd>
@@ -292,7 +292,7 @@ $countries = array(
             <!-- <input type="hidden" id="hidden_price_high" name="EventsRegistration[price]" value="0"/> -->
             <?php echo $form->hiddenField($model, 'price', array('id'=>'registration_price')); ?>
             <?php if ($showEarlyBirdDate): ?>
-            <dl class="floatL mb40 ml15" id="price_early_bird_wrapper" style="display: none;">
+            <dl class="floatL mb10 ml15" id="price_early_bird_wrapper" style="display: none;">
                 <dd class="floatL mt10">
                     <?php echo CHtml::checkbox('price', 'price', array('class'=>'styled', 'checked'=>'checked', 'disabled'=>'disabled')) ?>
                 </dd>
@@ -305,7 +305,7 @@ $countries = array(
             </dl><br class="clear" />
             <?php endif; ?>
 
-            <dl class="floatL mb40 ml15" id="price_standard_wrapper" style="display: none;">
+            <dl class="floatL mb10 ml15" id="price_standard_wrapper" style="display: none;">
                 <dd class="floatL mt10">
                     <?php if (!$showEarlyBirdDate): ?>
                     <?php echo CHtml::checkbox('price', 'price', array('class'=>'styled', 'checked'=>'checked', 'disabled'=>'disabled')); ?>
@@ -325,7 +325,7 @@ $countries = array(
             <dl class="floatL mb20 ml15">
                 <dd class="floatL mt10">
                     <?php echo $form->checkBox($model, 'terms', array());  ?>
-                    <!--<input name="EventsRegistration[terms]" class="styled" type="checkbox" />-->
+                    <?php //echo $form->error($model, 'terms') ?>
                 </dd>
                 <dt class="floatL ml5">
                     <label>I agree to the registration <a href="#" class="blue" id="popup_popUp" onclick="$('#popUp').bPopup(); return false;">Terms and Conditions</a></label>
@@ -333,15 +333,15 @@ $countries = array(
             </dl>
             <br class="clear" />
             <dl class="floatL mb20 ml15">
-                <dd class="floatL mt10">
-                    <?php echo $form->error($model, 'terms') ?>
-                </dd>
-            </dl>
-            <br class="clear" />
-            <dl class="floatL mb20 ml15">
                 <dd>
                     <?php echo CHtml::submitButton('SUBMIT', array('name'=>'submit', 'class'=>'submit btn_blue', 'style'=>'width: 100px;')) ?>
                 </dd>
+            </dl>
+            <dl class="floatL mt10 ml30">
+                <a href="http://www.credit-card-logos.com">
+                    <img alt="" title="" src="<?php echo Yii::app()->theme->baseUrl; ?>/img/eway_logo.jpg" width="116" height="35" border="0" />
+                    <img alt="" title="" src="http://www.credit-card-logos.com/images/visa_credit-card-logos/visa_mastercard_2.gif" width="116" height="35" border="0" />
+                </a>
             </dl>
         </fieldset>
         <?php $this->endWidget(); /**/?>
