@@ -71,7 +71,8 @@ class EventsRegistration extends CActiveRecord
             array('first_name, surname, title_position, company, division_department, street_address, suburb, state, country, telephone, mobile, email, dietary_other', 'length', 'max'=>100),
             array('email', 'email'),
             //array('terms', 'required', 'requiredValue' => 1, 'message' => 'You must agree the Terms and Conditions'),
-            array('terms', 'boolean', 'falseValue'=>'true', 'message' => 'You must agree to the registration Terms and Conditions'),
+            // array('terms', 'boolean', 'falseValue'=>'false', 'message' => 'You must agree to the registration Terms and Conditions'),
+            array('terms', 'in', 'range'=>array(1), 'message' => 'You must agree to the registration Terms and Conditions'),
             array('dietary_requirements, dietary_other, ticket', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.

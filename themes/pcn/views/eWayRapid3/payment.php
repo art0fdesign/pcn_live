@@ -10,7 +10,6 @@ if ($ShowDebugInfo) {
 <div class="wide floatL" style="margin-left:100px;">
 
 <h1 class="pt20 pb10 mb20 dotedB">Submit Payment</h1>
-<?php /*    <form action="<?php echo $Response->FormActionURL.'&method=report-purchase' ?>" method='post'> */ ?>
     <form action="<?php echo $Response->FormActionURL ?>" method='post'>
         <div id="outer">
             <div id="main">
@@ -216,7 +215,7 @@ if ($ShowDebugInfo) {
                     <div class="paymentbutton floatR mr40">
                         <br />
                         <br />
-                        <input type='submit' name='btnSubmitPayment' value="Submit" class="btn_blue floatR"/>
+                        <input type='submit' name='btnSubmit' value="Submit" class="btn_blue floatR"/>
                         <br class="clear" />
                         <br />
                         <a href="http://www.credit-card-logos.com">

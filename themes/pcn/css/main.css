@@ -1033,7 +1033,8 @@ button:hover{
 #popUpDiv form dl{
     display:block;
 }
-form dt{
+form dt,
+form dd label.checkBoxLabel{
     margin:9px 20px 11px 0;
     color:#4a4a4a;
     min-width:70px;

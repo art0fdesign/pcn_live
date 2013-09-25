@@ -183,7 +183,7 @@ $countries = array(
             </dl>
         </fieldset>
 
-        <fieldset class="mt30 pb30">
+        <fieldset class="mt30">
         <h2 class="pt10">Registration Details</h2>
 
             <?php $note = Frontend::replaceAllTagsInContent(@$settings['note']['set_value']); ?>
@@ -214,6 +214,7 @@ $countries = array(
                         'dataType'=>'html',
                         'empty'=>'--select--',
                         'success'=>'function(data){
+                            $("#priceErrorMessage").hide();
                             $("#price_early_bird_wrapper").hide();
                             $("#price_standard_wrapper").hide();
                             $("#registration_price").val(0);
@@ -242,6 +243,7 @@ $countries = array(
                         'data'=>array('ticket_type'=>'js:this.value','city_name'=>'js:$("#cities").val()'),
                         'dataType'=>'html',
                         'success'=>'function(data){
+                            $("#priceErrorMessage").hide();
                             $("#price_early_bird_wrapper").hide();
                             $("#price_standard_wrapper").hide();
                             $("#registration_price").val(0);
@@ -272,6 +274,7 @@ $countries = array(
                         'data'=>array('sess_id'=>'js:this.value', 'ticket_type_value'=>'js:$("#ticketType").val()'),
                         'dataType'=>'json',
                         'success'=>'function(data){
+                            $("#priceErrorMessage").hide();
                             $("#registration_price").val(data.standardPrice);
                             $("#priceStandard em").html("$"+data.standardPrice);
                             if (data.showEarlyBirdPrice) {
@@ -289,8 +292,8 @@ $countries = array(
             <br class="clear" />
 
 
-            <!-- <input type="hidden" id="hidden_price_high" name="EventsRegistration[price]" value="0"/> -->
-            <?php echo $form->hiddenField($model, 'price', array('id'=>'registration_price')); ?>
+            <input type="hidden" id="registration_price" name="EventsRegistration[price]" value="0"/>
+            <div class="errorMessage ml30" id="priceErrorMessage" style="display:none;">Please ensure that required session is selected</div>
             <?php if ($showEarlyBirdDate): ?>
             <dl class="floatL mb10 ml15" id="price_early_bird_wrapper" style="display: none;">
                 <dd class="floatL mt10">
@@ -324,20 +327,18 @@ $countries = array(
 
             <dl class="floatL mb20 ml15">
                 <dd class="floatL mt10">
-                    <?php echo $form->checkBox($model, 'terms', array());  ?>
-                    <?php //echo $form->error($model, 'terms') ?>
+                    <?php echo $form->checkBox($model, 'terms', array('id'=>'termsCheckBox'));  ?>
+                    <label class="checkBoxLabel">I agree to the registration <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
+                    <div class="errorMessage" id="termsErrorMessage" style="display:none;">You must agree to the registration Terms and Conditions</div>
                 </dd>
-                <dt class="floatL ml5">
-                    <label>I agree to the registration <a href="#" class="blue" id="popup_popUp" onclick="$('#popUp').bPopup(); return false;">Terms and Conditions</a></label>
-                </dt>
-            </dl>
-            <br class="clear" />
+            </dl><br class="clear" />
+
             <dl class="floatL mb20 ml15">
                 <dd>
-                    <?php echo CHtml::submitButton('SUBMIT', array('name'=>'submit', 'class'=>'submit btn_blue', 'style'=>'width: 100px;')) ?>
+                    <?php echo CHtml::submitButton('SUBMIT', array('id'=>'registrationSubmitButton', 'name'=>'submit', 'class'=>'submit btn_blue', 'style'=>'width: 100px;')) ?>
                 </dd>
-            </dl>
-            <dl class="floatL mt10 ml30">
+            </dl><br class="clear" />
+            <dl class="floatR mt10 mr10">
                 <a href="http://www.credit-card-logos.com">
                     <img alt="" title="" src="<?php echo Yii::app()->theme->baseUrl; ?>/img/eway_logo.jpg" width="116" height="35" border="0" />
                     <img alt="" title="" src="http://www.credit-card-logos.com/images/visa_credit-card-logos/visa_mastercard_2.gif" width="116" height="35" border="0" />
@@ -345,6 +346,8 @@ $countries = array(
             </dl>
         </fieldset>
         <?php $this->endWidget(); /**/?>
+        <script type="text/javascript">
+        </script>
     </div>
 </div>
 
