@@ -320,7 +320,7 @@ $countries = array(
                     <em class="blue<?php echo $showEarlyBirdDate? ' disabled': ''; ?>" style="font-size: 200%"></em>
                 </dt>
                 <dt class="floatL ml5">
-                    <label>Standard registration date 16/10/13-18/11/13</label>
+                    <label>Standard registration date 16/10/13-22/11/13</label>
                 </dt>
             </dl><br class="clear" />
 
