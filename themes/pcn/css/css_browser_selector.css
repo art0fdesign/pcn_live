@@ -1,0 +1,37 @@
+
+.ie7 .narrow ul, .ie8 .narrow ul{
+	margin-bottom:20px !important;
+}
+.ie7 .narrow .accordionContent, .ie8 .narrow .accordionContent{
+	margin-bottom:0px !important;
+	border-collapse: collapse;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+}
+.ie7 .accordionButton, .ie8 .accordionButton {
+	border-collapse: collapse;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	border-top: solid 1px #ccc;
+}
+.ie7 div.product_info a.btn_orange,
+.ie8 div.product_info a.btn_orange {
+	padding: 9px 22px 9px 16px;
+}
+.ie7 .basketH  .btn_orange, .ie7 tfoot  .btn_orange, .ie7 .btn_big,
+.ie8 .basketH  .btn_orange, .ie8 tfoot  .btn_orange, .ie8 .btn_big {
+	height:39px;
+}
+.ie7  tfoot td:first-child,
+.ie8  tfoot td:first-child{
+	display:none;
+}
+.ie7  tfoot td:last-child ,
+.ie8  tfoot td:last-child {
+	width:380px;
+}
+.ie .btn_orange:hover{
+	filter: progid:DXImageTransform.Microsoft.Shadow(color='#a5a5a5', Direction=180, Strength=2);
+}
+

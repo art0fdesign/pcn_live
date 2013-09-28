@@ -1,0 +1,16 @@
+assets/*
+logs/*
+parking/*
+upload/*
+vendors/*
+protected/runtime/*
+protected/config/*
+.DS_Store
+.ftpquota
+.htaccess
+.htaccess.default
+index.php
+index.php.bckp
+*.txt
+*.zip
+error_log
