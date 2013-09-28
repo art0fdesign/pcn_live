@@ -194,7 +194,7 @@ class EWayRapid3Widget extends AodWidget
             //Populate values for Payment Object
             //Note: TotalAmount is a Required Field When Process a Payment, TotalAmount should set to "0" or leave EMPTY when Create/Update A TokenCustomer
             //$request->Payment->TotalAmount = $_POST['EventsRegistration']['price'];
-            $request->Payment->TotalAmount = $this->TotalAmount;
+            $request->Payment->TotalAmount = $this->TotalAmount * 100;
             $request->Payment->InvoiceNumber = $this->InvoiceNumber;
             $request->Payment->InvoiceDescription = '';
             $request->Payment->InvoiceReference = $this->InvoiceReference;
@@ -211,9 +211,9 @@ class EWayRapid3Widget extends AodWidget
             $result = $this->service->CreateAccessCode($request);
 
             //Save result into Session. payment.php and results.php will retrieve this result from Session
-            $Response = $result;
-            $TotalAmount = $this->TotalAmount;
-            $InvoiceReference = $this->InvoiceReference;
+            // $Response = $result;
+            // $TotalAmount = $this->TotalAmount;
+            // $InvoiceReference = $this->InvoiceReference;
             //$_SESSION['TotalAmount'] = (int) $_POST['EventsRegistration']['price'];
             //$_SESSION['InvoiceReference'] = date('Ymd').'-'.time();
             //$_SESSION['Response'] = $result;
