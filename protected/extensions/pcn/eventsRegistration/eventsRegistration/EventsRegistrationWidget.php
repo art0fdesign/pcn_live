@@ -14,12 +14,9 @@ class EventsRegistrationWidget extends AodWidget
     protected $_settings = null;
 
     protected $_prices = array(
-        // 'allday' => array('price_bird'=>1188, 'price_full'=>1320),
-        // 'halfday' => array('price_bird'=>675, 'price_full'=>750),
-        // 'session' => array('price_bird'=>400, 'price_full'=>440),
-        'allday' => array('price_bird'=>5, 'price_full'=>1320),
-        'halfday' => array('price_bird'=>5, 'price_full'=>750),
-        'session' => array('price_bird'=>5, 'price_full'=>440),
+        'allday' => array('price_bird'=>1188, 'price_full'=>1320),
+        'halfday' => array('price_bird'=>675, 'price_full'=>750),
+        'session' => array('price_bird'=>400, 'price_full'=>440),
     );
     protected $_earlyBirdDate = '2013-10-15';
 
