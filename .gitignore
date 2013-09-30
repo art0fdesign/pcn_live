@@ -9,8 +9,8 @@ protected/config/*
 .ftpquota
 .htaccess
 .htaccess.default
-index.php
-index.php.bckp
+/index.php
+/index.php.bckp
 *.txt
 *.zip
 error_log
