@@ -5,8 +5,7 @@
  *
  * The followings are the available columns in table 'mod_registration':
  * @property integer $id
- * @property integer $session_id
- * @property integer $price  if this field is 0 it means high price, else if 1, it's low price
+ * @property integer $event_id
  * @property string $first_name
  * @property string $surname
  * @property string $title_position
@@ -24,9 +23,9 @@
  * @property string $dietary_other
  * @property string $ticket
  * @property integer $terms
+ * @property decimal $price
+ * @property string $invoice_description
  * @property string $created_dt
- * @property integer $f_status
- * @property integer $f_deleted
  */
 class EventsRegistration extends CActiveRecord
 {
@@ -67,17 +66,14 @@ class EventsRegistration extends CActiveRecord
         return array(
             //array('postcode, first_name, surname, title_position, company, street_address, suburb, state, country, telephone, mobile, email', 'required'),
             array('postcode, first_name, surname, title_position, company, street_address, suburb, state, country, telephone, mobile, email', 'required'),
-            array('session_id, price,  postcode,  f_status, f_deleted', 'numerical', 'integerOnly'=>true),
+            array('price', 'numerical', 'integerOnly'=>false),
+            array('event_id, postcode', 'numerical', 'integerOnly'=>true),
             array('first_name, surname, title_position, company, division_department, street_address, suburb, state, country, telephone, mobile, email, dietary_other', 'length', 'max'=>100),
             array('email', 'email'),
             //array('terms', 'required', 'requiredValue' => 1, 'message' => 'You must agree the Terms and Conditions'),
             // array('terms', 'boolean', 'falseValue'=>'false', 'message' => 'You must agree to the registration Terms and Conditions'),
             array('terms', 'in', 'range'=>array(1), 'message' => 'You must agree to the registration Terms and Conditions'),
-            array('dietary_requirements, dietary_other, ticket', 'safe'),
-            // The following rule is used by search().
-            // Please remove those attributes that should not be searched.
-            // Uncomment if needed
-            //array('id, session_id, first_name, surname, title_position, company, division_department, street_address, suburb, state, postcode, country, telephone, mobile, email, dietary_requirements, created_dt, f_status, f_deleted', 'safe', 'on'=>'search'),
+            array('id, dietary_requirements, dietary_other, ticket, invoice_description, created_dt', 'safe'),
         );
     }
 
@@ -99,8 +95,7 @@ class EventsRegistration extends CActiveRecord
     {
         return array(
             'id' => 'ID',
-            'session_id' => 'Session',
-            'price'=>'Price',
+            'event_id' => 'Event',
             'first_name' => 'First Name',
             'surname' => 'Surname',
             'title_position' => 'Title Position',
@@ -117,48 +112,12 @@ class EventsRegistration extends CActiveRecord
             'dietary_requirements' => 'Dietary Requirements',
             'dietary_other' => 'Dietary Requirements Other',
             'ticket' => 'Ticket',
+            'price'=>'Price',
+            'invoice_description' => 'Invoice Description',
             'terms'=>'Terms',
             'created_dt' => 'Created Time',
-            'f_status' => 'Status',
-            'f_deleted' => 'Deleted',
         );
     }
-
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-     */
-    /*// uncomment this line if search is needed
-    public function search()
-    {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
-
-        $criteria=new CDbCriteria;
-
-        $criteria->compare('id',$this->id);
-        $criteria->compare('session_id',$this->session_id);
-        $criteria->compare('first_name',$this->first_name,true);
-        $criteria->compare('surname',$this->surname,true);
-        $criteria->compare('title_position',$this->title_position,true);
-        $criteria->compare('company',$this->company,true);
-        $criteria->compare('division_department',$this->division_department,true);
-        $criteria->compare('street_address',$this->street_address,true);
-        $criteria->compare('suburb',$this->suburb,true);
-        $criteria->compare('state',$this->state,true);
-        $criteria->compare('postcode',$this->postcode);
-        $criteria->compare('country',$this->country,true);
-        $criteria->compare('telephone',$this->telephone,true);
-        $criteria->compare('mobile',$this->mobile,true);
-        $criteria->compare('email',$this->email,true);
-        $criteria->compare('dietary_requirements',$this->dietary_requirements,true);
-        $criteria->compare('f_status',$this->f_status);
-        $criteria->compare('f_deleted', 0);
-
-        return new CActiveDataProvider($this, array(
-            'criteria'=>$criteria,
-        ));
-    }/**/
 
     /**
      * Retrieves a list of models
@@ -194,6 +153,11 @@ class EventsRegistration extends CActiveRecord
         return self::model()->findAll( array( 'order'=>$orderBy, 'condition'=>$condition, 'params'=>$params ) );
     }
 
+    public function dietaryRequirements()
+    {
+        return CJSON::decode($this->dietary_requirements,false);
+    }
+
     public function dietaryRequirementsText()
     {
         if (empty($this->dietary_requirements)) {
@@ -215,6 +179,25 @@ class EventsRegistration extends CActiveRecord
         return $return;
         // Myfunctions::echoArray($arr, $return);
         // die($this->dietary_requirements);
+    }
+
+    /**
+    * Returns invoice description based on price selections
+    */
+    public function invoiceDescription()
+    {
+        $return = '';
+        if (empty($this->ticket)) {
+            return null;
+        }
+        $tickets = CJSON::decode($this->ticket);
+        foreach ($tickets as $key => $value) {
+            $priceModel = EventPrice::model()->findByPk($value);
+            if (empty($priceModel)) continue;
+            if (!empty($return)) $return .= '; ';
+            $return .= $priceModel->option_text;
+        }
+        return $return;
     }
 
 }

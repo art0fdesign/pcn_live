@@ -1634,9 +1634,8 @@ ul.accordionMenuLevel2 a {
     width: 32px;
     height: 32px;
     background: url('../img/loader4.gif') no-repeat center center;
-    left: 30%;
-    top: 75%;
-    margin-top: 100px;
+    margin: 60px;
+    margin-left: 250px;
 }
 
 /*================ REGISTRATION FORM STYLING ================*/

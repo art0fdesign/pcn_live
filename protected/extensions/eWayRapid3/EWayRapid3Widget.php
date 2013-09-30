@@ -11,6 +11,7 @@ class EWayRapid3Widget extends AodWidget
     private $TotalAmount = 0;
     private $InvoiceNumber = '';
     private $InvoiceReference = '';
+    private $InvoiceDescription = '';
     private $dietaryRequirements = '';
 
     /** Do some initializations */
@@ -51,33 +52,35 @@ class EWayRapid3Widget extends AodWidget
         $viewfile = 'payment';
         $params = array();
         if (Yii::app()->request->isPostRequest ) {
-            if ($this->getAccessCode()) {
-                Yii::app()->session['events.registration.id'] = $_POST;
-                // I want to save selection to db
-                if (isset($_POST['EventsRegistration'])) {
-                    $_POST['EventsRegistration']['country'] = 'au';
-                    $model = new EventsRegistration();
-                    $model->attributes = $_POST['EventsRegistration'];
-                    if (isset($_POST['Dietary'])) {
-                        $model->dietary_requirements = json_encode($_POST['Dietary']);
-                    }
-                    $model->ticket = json_encode($_POST['EventsRegistrationSession']);
-                    // MyFunctions::echoArray($model->attributes, Yii::app()->session['events.registration.id'], array('valid'=>$model->validate()));
-                    $model->f_status = 1;
-                    $model->f_deleted = 0;
-                    if ($model->save()) {
-                        $this->dietaryRequirements = $model->dietaryRequirementsText();
-                    };
+            if (isset($_POST['EventsRegistration'])) {
+                // MyFunctions::echoArray($_POST);
+                $_POST['EventsRegistration']['country'] = 'au';
+                $model = new EventsRegistration();
+                $model->attributes = $_POST['EventsRegistration'];
+                if (isset($_POST['Dietary'])) {
+                    $model->dietary_requirements = CJSON::encode($_POST['Dietary']);
                 }
-                $params['Response'] = $this->response;
-                $params['TotalAmount'] = $this->TotalAmount;
-                $params['InvoiceNumber'] = $this->InvoiceNumber;
-                $params['InvoiceReference'] = $this->InvoiceReference;
-                $params['DietaryRequirements'] = $this->dietaryRequirements;
-                $params['ShowDebugInfo'] = $this->service->APIConfig['ShowDebugInfo'];
-                // MyFunctions::echoArray($params);
-            } else {
-                $viewfile = 'payment_error';
+                $model->ticket = CJSON::encode($_POST['Price']);
+                $model->invoice_description = $model->invoiceDescription();
+                $model->created_dt=new CDbExpression('NOW()');
+                if ($model->save()) {
+                    $this->InvoiceDescription = $model->invoice_description;
+                    $this->dietaryRequirements = $model->dietaryRequirementsText();
+
+                    Yii::app()->session['events.registration.model'] = $model->attributes;
+
+                    if ($this->getAccessCode()) {
+                        $params['Response'] = $this->response;
+                        $params['TotalAmount'] = $this->TotalAmount;
+                        $params['InvoiceNumber'] = $this->InvoiceNumber;
+                        $params['InvoiceReference'] = $this->InvoiceReference;
+                        $params['DietaryRequirements'] = $this->dietaryRequirements;
+                        $params['ShowDebugInfo'] = $this->service->APIConfig['ShowDebugInfo'];
+                        // MyFunctions::echoArray($params);
+                    } else {
+                        $viewfile = 'payment_error';
+                    }
+                };
             }
         } elseif (isset($_GET['AccessCode'])) {
             $success = $this->prepareShowResult();
@@ -89,6 +92,9 @@ class EWayRapid3Widget extends AodWidget
             $settings = ModSetting::getSettingsArray( $module_id );
             //MyFunctions::echoArray($settings);
             if ($success) {
+
+                $this->sendConfirmationMail($settings);
+
                 if (substr($this->InvoiceReference, 0, 3) == 'rpt') { // report purchase
                     $this->message = $settings['report.purchase.api.aprooved']['value'];
                 } else {
@@ -120,17 +126,16 @@ class EWayRapid3Widget extends AodWidget
                 $ref = str_replace(Yii::app()->getBaseUrl(true).'/', '', $ref);
             }
             if ($ref == 'research-purchase-report') {
-                $ref = 'rpt-'.date('Ymd');
+                $ref = 'rpt-'.time();
             } else {
-                $ref = 'event-'.date('Ymd');
+                $ref = 'event-'.time();
             }
                 // MyFunctions::echoArray($ref, $_POST, $_SERVER);
 
-            $this->InvoiceNumber = date('Ymd').'-'.time();
+            $this->InvoiceNumber = $ref;
             $this->InvoiceReference = $ref;
 
             $this->TotalAmount = $_POST['EventsRegistration']['price'];
-            //$_POST['EventsRegistration']['price'] = $this->TotalAmount;
 
             //Create AccessCode Request Object
             $request = new CreateAccessCodeRequest();
@@ -196,7 +201,7 @@ class EWayRapid3Widget extends AodWidget
             //$request->Payment->TotalAmount = $_POST['EventsRegistration']['price'];
             $request->Payment->TotalAmount = $this->TotalAmount * 100;
             $request->Payment->InvoiceNumber = $this->InvoiceNumber;
-            $request->Payment->InvoiceDescription = '';
+            $request->Payment->InvoiceDescription = $this->InvoiceDescription;
             $request->Payment->InvoiceReference = $this->InvoiceReference;
             $request->Payment->CurrencyCode = 'AUD';
 
@@ -280,6 +285,63 @@ class EWayRapid3Widget extends AodWidget
 
         return $result->TransactionStatus;
 
+    }
+
+    private function sendConfirmationMail($settings)
+    {
+        if (!isset(Yii::app()->session['events.registration.model'])) {
+            return false;
+            //MyFunctions::echoArray($this->model->attributes);
+        }
+        $model = new EventsRegistration();
+        $model->attributes = Yii::app()->session['events.registration.model'];
+        $data = $model->attributes;
+
+        // prepare $to parameter
+        if(isset($settings['email']['set_value']))
+            $to = $settings['email']['set_value'];
+        else
+            $to = 'art0fdesign.test@gmail.com';
+        //
+
+        $subject = isset($settings['subject']['set_value'])? $settings['subject']['set_value']: 'New Event Registration';
+        $message1 = '<html>
+                        <head>
+                        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                        </head>
+                        <body>
+                            <h2>Event registration data:</h2> <br />
+                            First Name: '.$data['first_name'].' <br />
+                            Surname:  '.$data['surname'].' <br />
+                            Title/Position:  '.$data['title_position'].' <br />
+                            Company:  '.$data['company'].' <br />
+                            Address:  '.$data['street_address'].' <br />
+                            Suburb:  '.$data['suburb'].' <br />
+                            State:  '.$data['state'].' <br />
+                            Postcode:  '.$data['postcode'].' <br />
+                            Country:  '.$data['country'].' <br />
+                            Telephone:  '.$data['telephone'].' <br />
+                            Mobile:  '.$data['mobile'].' <br />
+                            Email:  '.$data['email'].' <br />
+                            Dietary Requirements:  '.$model->dietaryRequirementsText().' <br /><br /><br />
+                            Session/s:  '.$model->invoiceDescription().' <br />
+                            Price:  $'.$data['price'].
+                        '</body>
+                    </html>';
+
+        $headers = "MIME-Version: 1.0\n";
+        $headers .= "Content-type: text/html; charset=utf-8\n";
+
+        $headers .= "X-Sender: <" . $_SERVER["SERVER_ADMIN"] . ">\n";
+        $headers .= "X-Mailer: Updater <http://" . $_SERVER["SERVER_NAME"] . ">\n";
+        $headers .= "Return-Path: <  >\n";
+        if(isset($settings['from-email']['set_value']))
+            $headers .= 'From: '.$settings['from-email']['set_value']. "\r\n";
+        else
+            $headers .= 'From: Event Registration' . "\r\n";
+        // all prepared->continue
+        MyFunctions::echoArray( array( 'to'=>$to, 'subject'=>$subject ), $headers, $message1 );
+        if( !$this->controller->isLive() ) mail($to, $subject, $message1, $headers);
     }
 
  }

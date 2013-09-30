@@ -34,7 +34,7 @@
 <div class="wraper">
 
 <div class="headerWrapper">
-	<header>
+    <header>
 
         <span><?php echo Yii::app()->user->fullName; ?></span>
         <span class="spacer"></span>
@@ -46,17 +46,17 @@
         <span class="spacer"></span>
         <?php echo CHtml::link('Logout', array('/site/logout')); ?>
 
-		<div class="supervisor"><span></span></div>
-		<img class="floatR" src="<?php echo $baseurl;?>/img/bgr_left_version.png" alt="supervisor" />
+        <div class="supervisor"><span></span></div>
+        <img class="floatR" src="<?php echo $baseurl;?>/img/bgr_left_version.png" alt="supervisor" />
 
 
-	</header>
+    </header>
 </div>
 
 
 <div class="bottomlineWrapper">
-	<div class="bottomline">
-	       <div class="version" style="position: absolute;left: 10px;top:10px; font-size: 14px;font-weight: bold; color:#5FA2CB;">Admin Console: 1.3.<?php echo Yii::app()->user->getGitVersion(); ?> </div>
+    <div class="bottomline">
+           <div class="version" style="position: absolute;left: 10px;top:10px; font-size: 14px;font-weight: bold; color:#5FA2CB;">Admin Console: 1.3.<?php echo Yii::app()->user->getGitVersion(); ?> </div>
 
 
 
@@ -67,7 +67,7 @@
             <? endforeach; ?>
         <? endif; ?>
 
-	 </div>
+     </div>
 </div>
 
 
@@ -79,7 +79,7 @@
     <?php $controler = Yii::app()->controller->id; ?>
     <?php $module = @Yii::app()->controller->module->id; ?>
 
-	<nav id="menu" class="nav menu">
+    <nav id="menu" class="nav menu">
         <ul>
 
 <?php /** ======================================  DASHBOARD ======================================================= */?>
@@ -97,17 +97,20 @@
                     <li><?php echo CHtml::link('Menus', array('/menuBuilder/menu/list')) ?></li>
                     <li><?php echo CHtml::link('Assignment', array('/webAssign/index')) ?></li>
                     <li><?php echo CHtml::link('Mails', array('/modMail/list')) ?></li>
+    <?php if($frontendTheme == 'pcn'): ?>
+                    <li><?php echo CHtml::link('Events Registration', array('/eventsRegistration/index')); ?></li>
+    <?php endif; ?>
                 </ul>
             </li>
 
 <?php /** ======================================  FILE MANAGER ==================================================== */?>
             <li <?php if($controler == 'file') echo "class='active'";?>><?php echo CHtml::link('File manager<span>Edit files and docs</span>', array('/file/index'), array('class'=>'accordionButton filemanager')) ?></li>
-            
+
 <?php /** ======================================  USER SPECIFIC MENUS ============================================= */?>
 <?php if( $frontendTheme == 'doctors' ): ?>
             <li <? if($module == 'doctors' && $controler == 'doctor') echo "class='active'";?>><?php echo CHtml::link('Doctors<span>Doctors administration</span>', array('/doctors/doctor/index'), array('class'=>'exp accordionButton catalog')) ?>
             </li>
-            <?php $filterArray = array( 'surveyNames', 'surveyCategories', 'surveyQuestionsAvailable', 'surveyDoctorSurveys' ); ?> 
+            <?php $filterArray = array( 'surveyNames', 'surveyCategories', 'surveyQuestionsAvailable', 'surveyDoctorSurveys' ); ?>
             <li <? if($module == 'doctorRatings' && in_array( $controler, $filterArray )) echo "class='active'";?>><?php echo CHtml::link('Ratings<span>Ratings panel', '#', array('class'=>'exp accordionButton admin')) ?>
                 <ul class="menu1 accordionContent <? if( $module=='doctorRatings' && in_array( $controler, $filterArray ) ) echo "acc-on";?>">
                     <li><?php echo CHtml::link('Surveys', array('/doctorRatings/surveyNames')) ?></li>
@@ -116,7 +119,7 @@
                     <li><?php echo CHtml::link('DoctorSurveys', array('/doctorRatings/surveyDoctorSurveys')) ?></li>
                 </ul>
             </li>
-            <?php $filterArray = array( 'doctorLocation', 'doctorSpeciality', 'doctorSubspeciality', 'doctorDegree', 'healthIssue', 'insurance', 'doctorChoice', 'news', 'topDoctors', 'testimonials', 'surveyType', 'surveyResponseType' ); ?> 
+            <?php $filterArray = array( 'doctorLocation', 'doctorSpeciality', 'doctorSubspeciality', 'doctorDegree', 'healthIssue', 'insurance', 'doctorChoice', 'news', 'topDoctors', 'testimonials', 'surveyType', 'surveyResponseType' ); ?>
             <li <? if( in_array( $module, array( 'doctor', 'doctorRatings')) && in_array( $controler, $filterArray )) echo "class='active'";?>><?php echo CHtml::link('Settings<span>Settings panel', '#', array('class'=>'exp accordionButton admin')) ?>
                 <ul class="menu1 accordionContent <? if( in_array( $module, array( 'doctor', 'doctorRatings')) && in_array( $controler, $filterArray ) ) echo "acc-on";?>">
                     <li><?php echo CHtml::link('Locations', array('/doctors/doctorLocation')) ?></li>
@@ -180,7 +183,7 @@
 <?php endif; ?>
 
 <?php /** ======================================  ADMIN =========================================================== */?>
-            <?php if( Yii::app()->user->isAdmin ): ?>            
+            <?php if( Yii::app()->user->isAdmin ): ?>
             <li <?php if(in_array($controler,array('modRegister','template','user'))) echo "class='active'";?>><?php echo CHtml::link('Admin<span>Administrators panel', '#', array('class'=>'exp accordionButton admin')) ?>
                 <ul class="menu1 accordionContent">
                     <li><?php echo CHtml::link('Widget &amp; Module', array('/modRegister/index')) ?></li>
@@ -210,7 +213,7 @@
             <li <?php if($controler == 'user') echo "class='active'";?>><?php echo CHtml::link('Users<span>Users administration', array('/user/index'), array('class'=>'accordionButton users')) ?></li>
             <?php endif; ?>
         </ul>
-	</nav>
+    </nav>
 
 
 <!-- CONTENT -->
@@ -230,9 +233,9 @@
 
 <div class="footerWrapper">
 <footer>
-<span class="footertext">Copyright  
-	<a href="http://art0fdesign.com/" target="_blank" title="...the most powerful design..."> Art of Design</a> 
-	2003-<?php echo date('Y'); ?>. All Rights Reserved
+<span class="footertext">Copyright
+    <a href="http://art0fdesign.com/" target="_blank" title="...the most powerful design..."> Art of Design</a>
+    2003-<?php echo date('Y'); ?>. All Rights Reserved
 </span>
 </footer>
 </div>
