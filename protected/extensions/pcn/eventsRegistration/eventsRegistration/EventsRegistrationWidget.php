@@ -127,7 +127,7 @@ class EventsRegistrationWidget extends AodWidget
                     $priceOptions['price_high'] = $eventPrice->price_high;
                 }
             }
-            // MyFunctions::echoArray($this->model->attributes, $priceOptions);
+            MyFunctions::echoArray($this->model->attributes, $priceOptions);
         }
         $this->model->event_id = $eventMain->id;
         $this->html = $this->render('eventsRegistration', array(

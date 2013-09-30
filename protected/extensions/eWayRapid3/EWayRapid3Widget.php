@@ -340,7 +340,7 @@ class EWayRapid3Widget extends AodWidget
         else
             $headers .= 'From: Event Registration' . "\r\n";
         // all prepared->continue
-        MyFunctions::echoArray( array( 'to'=>$to, 'subject'=>$subject ), $headers, $message1 );
+        // MyFunctions::echoArray( array( 'to'=>$to, 'subject'=>$subject ), $headers, $message1 );
         if( !$this->controller->isLive() ) mail($to, $subject, $message1, $headers);
     }
 

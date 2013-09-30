@@ -85,6 +85,7 @@ class EventsRegistration extends CActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'event' => array(self::BELONGS_TO, 'EventMain', 'event_id'),
         );
     }
 
@@ -189,6 +190,9 @@ class EventsRegistration extends CActiveRecord
         $return = '';
         if (empty($this->ticket)) {
             return null;
+        }
+        if (isset($this->event)) {
+            $return = $this->event->name;
         }
         $tickets = CJSON::decode($this->ticket);
         foreach ($tickets as $key => $value) {

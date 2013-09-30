@@ -110,7 +110,7 @@
             <input type="hidden" id="registration_price" name="EventsRegistration[price]" value="<?php echo $eventMain->isEarlyBird()? $priceOptions['price_low']: $priceOptions['price_high']; ?>"/>
             <div class="errorMessage ml30" id="priceErrorMessage" style="display:none;">Please ensure that required session is selected</div>
             <?php if ($eventMain->isEarlyBird()): ?>
-            <dl class="floatL mb10 ml15" id="price_early_bird_wrapper"<?php if(!$priceOptions['displaySelect3'] && !$eventMain->isEarlyBird()):?> style="display:none;"<?php endif;?>>
+            <dl class="floatL mb10 ml15" id="price_early_bird_wrapper"<?php if(! ($priceOptions['displaySelect3'] && $eventMain->isEarlyBird())):?> style="display:none;"<?php endif;?>>
                 <dd class="floatL mt10">
                     <?php echo CHtml::checkbox('price', 'price', array('class'=>'styled', 'checked'=>'checked', 'disabled'=>'disabled')) ?>
                 </dd>
