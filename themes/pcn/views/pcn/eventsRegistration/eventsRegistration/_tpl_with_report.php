@@ -13,95 +13,83 @@
 
             <div class="ajax-loader"></div>
         <div id="overallPriceWrapper">
-            <dl class="floatL mb10 mr10">
-                <dt class="floatL mr10" style="width: 120px;"><label>Choose City:</label></dt>
+
+            <dl class="floatL mb20 mr10" id="option1_box">
+                <dt class="floatL mr10" style="width: 120px;">
+                    <label>Choose Ticket:</label>
+                </dt>
                 <dd class="floatL mt0">
+                    <input type="hidden" id="selected_registration_id" name="Ticket[selected_registration_id]" value="<?php echo $priceOptions['select1']; ?>"/>
                     <?php echo CHtml::dropDownList('Price[option1]', $priceOptions['select1'], $priceOptions['options1'], array(
                     'id'=>'price_option1',
                     'class'=>'styled',
-                    'empty'=>'---select---',
-                    'onchange'=>'$("#overallPriceWrapper").hide();$(".ajax-loader").show();',
-                    'ajax'=>array(
-                        'type'=>'POST',
-                        'data'=>array('price_option1'=>'js:this.value'),
-                        'dataType'=>'html',
-                        'empty'=>'--select--',
-                        'success'=>'function(data){
-                            $("#priceErrorMessage").hide();
-                            $("#price_early_bird_wrapper").hide();
-                            $("#price_standard_wrapper").hide();
-                            $("#registration_price").val(0);
-                            $("#price_option2").empty().html(data);
-                            var ticket = $("#price_option2").attr("name");
-                            // document.getElementById("select"+ticket).childNodes[0].nodeValue = "---select---";
-                            $("#option2_box").show();
-                            $(".ajax-loader").hide();
-                            $("#overallPriceWrapper").show();
-                        }'
-                    ),
-                )); ?>
-                </dd>
-            </dl>
-            <dl class="floatL mb10 mr10" id="option2_box"<?php if(!$priceOptions['displaySelect2']):?>style="display:none;"<?php endif;?>>
-                <dt class="floatL mr10" style="width: 120px;">
-                    <label>Ticket Type:</label>
-                </dt>
-                <dd class="floatL mt0">
-                    <?php echo CHtml::dropDownList('Price[option2]', $priceOptions['select2'], $priceOptions['options2'], array(
-                    'class'=>'styled',
-                    'id'=>'price_option2',
                     'empty'=>'--select--',
-                    'onchange'=>'$("#overallPriceWrapper").hide();$(".ajax-loader").show();',
+                    'onchange'=>'$("#overallPriceWrapper").hide();$(".ajax-loader").show();$("#selected_registration_id").val($(this).children("option:selected").val());',
                     'ajax'=>array(
                         'type'=>'POST',
-                        'data'=>array('price_option2'=>'js:this.value'),
-                        'dataType'=>'html',
-                        'success'=>'function(data){
-                            $("#priceErrorMessage").hide();
-                            $("#price_early_bird_wrapper").hide();
-                            $("#price_standard_wrapper").hide();
-                            $("#registration_price").val(0);
-                            var date = $("#price_option3").attr("name");
-                            document.getElementById("select" + date).childNodes[0].nodeValue = "---select---";
-                            $("#price_option3").empty().html(data);
-                            $("#option3_box").show();
-                            $(".ajax-loader").hide();
-                            $("#overallPriceWrapper").show();
-                        }'
-                    ),
-                )); ?>
-                </dd>
-            </dl>
-
-            <dl class="floatL mb20 mr10" id="option3_box"<?php if(!$priceOptions['displaySelect3']):?> style="display:none;"<?php endif;?>>
-                <dt class="floatL mr10" style="width: 120px;">
-                    <label>Choose Session(s):</label>
-                </dt>
-                <dd class="floatL mt0">
-                    <?php echo CHtml::dropDownList('Price[option3]', $priceOptions['select3'], $priceOptions['options3'], array(
-                    'id'=>'price_option3',
-                    'class'=>'styled',
-                    'empty'=>'--select--',
-                    'onchange'=>'$("#overallPriceWrapper").hide();$(".ajax-loader").show();',
-                    'ajax'=>array(
-                        'type'=>'POST',
-                        'data'=>array('price_option3'=>'js:this.value'),
+                        'data'=>array('price_option1'=>'js:this.value', 'selected_report_id'=>'js:document.getElementById("selected_report_id").value'),
                         'dataType'=>'json',
                         'success'=>'function(data){
                             $("#priceErrorMessage").hide();
                             $("#registration_price").val(data.standardPrice);
-                            $("#priceStandard em").html("$"+data.standardPrice);
-                             if (data.showEarlyBirdPrice) {
+                            $("#priceStandard em").html("$"+data.standardTotal);
+                            if (data.showEarlyBirdPrice) {
                                 $("#registration_price").val(data.earlyBirdPrice);
-                                $("#priceEarlyBird em").html("$"+data.earlyBirdPrice);
+                                $("#priceEarlyBird em").html("$"+data.earlyBirdTotal);
                                 $("#price_early_bird_wrapper").show();
-                             }
+                            }
                             $("#price_standard_wrapper").show();
                             $(".ajax-loader").hide();
                             $("#overallPriceWrapper").show();
                         }'
                     ),
                 )); ?>
+                </dd>
+                <dd class="floatL mt20">
+                    <?php echo $form->checkBox($model, 'terms', array('id'=>'registrationTermsCheckBox'));  ?>
+                    <label class="checkBoxLabel">I agree to the registration <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
+                    <div class="errorMessage" id="registrationTermsErrorMessage" style="display:none;">You must agree to the registration Terms and Conditions</div>
+                </dd>
+
+            </dl>
+            <br class="clear" />
+
+            <dl class="floatL mb20 mr10" id="option1_box">
+                <dt class="floatL mr10" style="width: 120px;">
+                    <label>Choose Report:</label>
+                </dt>
+                <dd class="floatL mt0">
+                    <input type="hidden" id="selected_report_id" name="Ticket[selected_report_id]" value="<?php echo $priceOptions['select2']; ?>"/>
+                    <?php echo CHtml::dropDownList('Price[option2]', $priceOptions['select2'], $priceOptions['options2'], array(
+                    'id'=>'price_option2',
+                    'class'=>'styled',
+                    'empty'=>'-- without report --',
+                    'onchange'=>'$("#overallPriceWrapper").hide();$(".ajax-loader").show();$("#selected_report_id").val($(this).children("option:selected").val());',
+                    'ajax'=>array(
+                        'type'=>'POST',
+                        'data'=>array('price_option2'=>'js:this.value', 'selected_registration_id'=>'js:document.getElementById("selected_registration_id").value'),
+                        'dataType'=>'json',
+                        'success'=>'function(data){
+                            $("#priceErrorMessage").hide();
+                            $("#registration_price").val(data.standardPrice);
+                            $("#priceStandard em").html("$"+data.standardTotal);
+                            if (data.showEarlyBirdPrice) {
+                                $("#registration_price").val(data.earlyBirdPrice);
+                                $("#priceEarlyBird em").html("$"+data.earlyBirdTotal);
+                                $("#price_early_bird_wrapper").show();
+                            }
+                            $("#price_standard_wrapper").show();
+                            $(".ajax-loader").hide();
+                            $("#overallPriceWrapper").show();
+                        }'
+                    ),
+                )); ?>
+                </dd>
+                <dd class="floatL mt20">
+                    <?php $model->terms_report = true; ?>
+                    <?php echo $form->checkBox($model, 'terms_report', array('id'=>'reportTermsCheckBox'));  ?>
+                    <label class="checkBoxLabel">I agree to the report <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
+                    <div class="errorMessage" id="reportTermsErrorMessage" style="display:none;">You must agree to the report Terms and Conditions</div>
                 </dd>
             </dl>
             <br class="clear" />
@@ -110,7 +98,7 @@
             <input type="hidden" id="registration_price" name="EventsRegistration[price]" value="<?php echo $eventMain->isEarlyBird()? $priceOptions['price_low']: $priceOptions['price_high']; ?>"/>
             <div class="errorMessage ml30" id="priceErrorMessage" style="display:none;">Please ensure that required session is selected</div>
             <?php if ($eventMain->isEarlyBird()): ?>
-            <dl class="floatL mb10 ml15" id="price_early_bird_wrapper"<?php if(! ($priceOptions['displaySelect3'] && $eventMain->isEarlyBird())):?> style="display:none;"<?php endif;?>>
+            <dl class="floatL mb10 ml15" id="price_early_bird_wrapper" style="display:none;">
                 <dd class="floatL mt10">
                     <?php echo CHtml::checkbox('price', 'price', array('class'=>'styled', 'checked'=>'checked', 'disabled'=>'disabled')) ?>
                 </dd>
@@ -139,11 +127,3 @@
                 </dt>
             </dl><br class="clear" />
         </div>
-
-            <dl class="floatL mb20 ml15">
-                <dd class="floatL mt10">
-                    <?php echo $form->checkBox($model, 'terms', array('id'=>'termsCheckBox'));  ?>
-                    <label class="checkBoxLabel">I agree to the registration <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
-                    <div class="errorMessage" id="termsErrorMessage" style="display:none;">You must agree to the registration Terms and Conditions</div>
-                </dd>
-            </dl><br class="clear" />

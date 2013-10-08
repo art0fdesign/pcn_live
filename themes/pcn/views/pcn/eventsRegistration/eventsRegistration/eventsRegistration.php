@@ -194,14 +194,6 @@ $countries = array(
             <?php require_once('_tpl_'.$eventMain->templateName().'.php'); ?>
 
             <dl class="floatL mb20 ml15">
-                <dd class="floatL mt10">
-                    <?php echo $form->checkBox($model, 'terms', array('id'=>'termsCheckBox'));  ?>
-                    <label class="checkBoxLabel">I agree to the registration <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
-                    <div class="errorMessage" id="termsErrorMessage" style="display:none;">You must agree to the registration Terms and Conditions</div>
-                </dd>
-            </dl><br class="clear" />
-
-            <dl class="floatL mb20 ml15">
                 <dd>
                     <?php echo CHtml::submitButton('SUBMIT', array('id'=>'registrationSubmitButton', 'name'=>'submit', 'class'=>'submit btn_blue', 'style'=>'width: 100px;')) ?>
                 </dd>

@@ -12,13 +12,27 @@ $(document).ready(function() {
 
     $(".popupMe").trigger('click');
 
-    $('#termsCheckBox').click(function(e){
+    $('#termsCheckBox, #reportTermsCheckBox, #registrationTermsCheckBox').click(function(e){
         $('#termsErrorMessage').hide();
+        $('#registrationTermsErrorMessage').hide();
+        $('#reportTermsErrorMessage').hide();
     });
 
     $('#registrationSubmitButton').click(function(e){
-        if (!$('#termsCheckBox').is(':checked')) {
+        var termsError = false;
+        if ($('#termsCheckBox').length>0 && !$('#termsCheckBox').is(':checked')) {
             $('#termsErrorMessage').show();
+            termsError = true;
+        }
+        if ($('#registrationTermsCheckBox').length>0 && !$('#registrationTermsCheckBox').is(':checked')) {
+            $('#registrationTermsErrorMessage').show();
+            termsError = true;
+        }
+        if ($('#reportTermsCheckBox').length>0 && !$('#reportTermsCheckBox').is(':checked')) {
+            $('#reportTermsErrorMessage').show();
+            termsError = true;
+        }
+        if (termsError) {
             return false;
         }
         if ($('#registration_price').val() == 0) {

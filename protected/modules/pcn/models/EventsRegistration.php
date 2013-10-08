@@ -23,6 +23,7 @@
  * @property string $dietary_other
  * @property string $ticket
  * @property integer $terms
+ * @property integer $terms_report
  * @property decimal $price
  * @property string $invoice_description
  * @property string $created_dt
@@ -72,7 +73,7 @@ class EventsRegistration extends CActiveRecord
             array('email', 'email'),
             //array('terms', 'required', 'requiredValue' => 1, 'message' => 'You must agree the Terms and Conditions'),
             // array('terms', 'boolean', 'falseValue'=>'false', 'message' => 'You must agree to the registration Terms and Conditions'),
-            array('terms', 'in', 'range'=>array(1), 'message' => 'You must agree to the registration Terms and Conditions'),
+            array('terms, terms_report', 'in', 'range'=>array(1), 'message' => 'You must agree to the registration Terms and Conditions'),
             array('id, dietary_requirements, dietary_other, ticket, invoice_description, created_dt', 'safe'),
         );
     }
@@ -116,6 +117,7 @@ class EventsRegistration extends CActiveRecord
             'price'=>'Price',
             'invoice_description' => 'Invoice Description',
             'terms'=>'Terms',
+            'terms_report'=>'Terms',
             'created_dt' => 'Created Time',
         );
     }

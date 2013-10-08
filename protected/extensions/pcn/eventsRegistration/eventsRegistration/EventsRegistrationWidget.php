@@ -58,6 +58,28 @@ class EventsRegistrationWidget extends AodWidget
                 foreach ($options as $key => $value) {
                     $retAll .= CHtml::tag('option', array('value'=>$key), $value, true);
                 }
+            } elseif ($eventMain->tickets_schema == 'with_report') {
+                $priceBird = 0;
+                $priceFull = 0;
+                $showEarlyBirdPrice = $eventMain->isEarlyBird();
+                $price = EventPrice::model()->findByPk(intval($_POST['price_option1']));
+                if (!empty($price)) {
+                    $priceBird = $price->price_low;
+                    $priceFull = $price->price_high;
+                }
+                if (!empty($_POST['selected_report_id'])) {
+                    $price = EventPrice::model()->findByPk(intval($_POST['selected_report_id']));
+                    $priceBird += $price->price_low;
+                    $priceFull += $price->price_high;
+                }
+                echo CJSON::encode(array(
+                    'earlyBirdPrice'=>$priceBird,
+                    'earlyBirdTotal'=>number_format($priceBird, 2),
+                    'standardPrice'=>$priceFull,
+                    'standardTotal'=>number_format($priceFull, 2),
+                    'showEarlyBirdPrice'=>$showEarlyBirdPrice,
+                ));
+                Yii::app()->end();
             }
             echo $retAll;
             Yii::app()->end();
@@ -70,6 +92,28 @@ class EventsRegistrationWidget extends AodWidget
                 foreach ($options as $key => $value) {
                     $retAll .= CHtml::tag('option', array('value'=>$key), $value, true);
                 }
+            } elseif ($eventMain->tickets_schema == 'with_report') {
+                $priceBird = 0;
+                $priceFull = 0;
+                $showEarlyBirdPrice = $eventMain->isEarlyBird();
+                $price = EventPrice::model()->findByPk(intval($_POST['price_option2']));
+                if (!empty($price)) {
+                    $priceBird = $price->price_low;
+                    $priceFull = $price->price_high;
+                }
+                if (!empty($_POST['selected_registration_id'])) {
+                    $price = EventPrice::model()->findByPk(intval($_POST['selected_registration_id']));
+                    $priceBird += $price->price_low;
+                    $priceFull += $price->price_high;
+                }
+                echo CJSON::encode(array(
+                    'earlyBirdPrice'=>$priceBird,
+                    'earlyBirdTotal'=>number_format($priceBird, 2),
+                    'standardPrice'=>$priceFull,
+                    'standardTotal'=>number_format($priceFull, 2),
+                    'showEarlyBirdPrice'=>$showEarlyBirdPrice,
+                ));
+                Yii::app()->end();
             }
             echo $retAll;
             Yii::app()->end();
@@ -93,6 +137,10 @@ class EventsRegistrationWidget extends AodWidget
             Yii::app()->end();
         }
 
+        $priceOptions2 = array();
+        if ($eventMain->tickets_schema == 'with_report') {
+            $priceOptions2 = $eventMain->getOptionsListByLevel(2);
+        }
         $priceOptions = array(
             'displaySelect2' => false,
             'displaySelect3' => false,
@@ -100,7 +148,7 @@ class EventsRegistrationWidget extends AodWidget
             'select2' => '',
             'select3' => '',
             'options1' => $eventMain->getOptionsListByLevel(1),
-            'options2' => array(),
+            'options2' => $priceOptions2,
             'options3' => array(),
             'price_low' => '0.00',
             'price_high' => '0.00',
@@ -127,7 +175,7 @@ class EventsRegistrationWidget extends AodWidget
                     $priceOptions['price_high'] = $eventPrice->price_high;
                 }
             }
-            MyFunctions::echoArray($this->model->attributes, $priceOptions);
+            // MyFunctions::echoArray($this->model->attributes, $priceOptions);
         }
         $this->model->event_id = $eventMain->id;
         $this->html = $this->render('eventsRegistration', array(
@@ -149,7 +197,7 @@ class EventsRegistrationWidget extends AodWidget
         } else
             $assetPath = Yii::getPathOfAlias('');
         //MyFunctions::echoArray( $assetPath );
-        $assetsFolder=Yii::app()->assetManager->publish( $assetPath );
+        $assetsFolder=Yii::app()->assetManager->publish( $assetPath, false, -1, true );
         Yii::app()->clientScript->registerScriptFile($assetsFolder.'/jquery.services.js');
     }
 
