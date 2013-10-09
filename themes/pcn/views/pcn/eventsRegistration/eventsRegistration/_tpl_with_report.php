@@ -47,8 +47,25 @@
                 </dd>
                 <dd class="floatL mt20">
                     <?php echo $form->checkBox($model, 'terms', array('id'=>'registrationTermsCheckBox'));  ?>
-                    <label class="checkBoxLabel">I agree to the registration <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
+                    <label class="checkBoxLabel">I agree to the registration <a href="#" class="blue" id="registration_popup_button">Terms and Conditions</a></label>
                     <div class="errorMessage" id="registrationTermsErrorMessage" style="display:none;">You must agree to the registration Terms and Conditions</div>
+                    <div id="terms_registration_popup" class="popUpDiv newsletter" style="display:none;">
+                        <a id="mc_back" class="back b-close"></a>
+                        <div class="top">
+                           <h1 class="black">Registration Terms &amp; Conditions</h1>
+                       </div>
+                    </div>
+                    <script type="text/javascript">
+                        /*<![CDATA[*/
+                        jQuery(function($) {
+                            jQuery("#registration_popup_button").click(function(e){
+                                e.preventDefault();
+                                $("#terms_registration_popup").bPopup({modalClose:false});
+                                return false;
+                            });
+                        });
+                        /*]]>*/
+                    </script>
                 </dd>
 
             </dl>
@@ -122,8 +139,25 @@
                 <dd class="floatL mt20">
                     <?php $model->terms_report = true; ?>
                     <?php echo $form->checkBox($model, 'terms_report', array('id'=>'reportTermsCheckBox'));  ?>
-                    <label class="checkBoxLabel">I agree to the report <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
+                    <label class="checkBoxLabel">I agree to the report <a href="#" class="blue" id="report_popup_button">Terms and Conditions</a></label>
                     <div class="errorMessage" id="reportTermsErrorMessage" style="display:none;">You must agree to the report Terms and Conditions</div>
+                    <div id="terms_report_popup" class="popUpDiv newsletter" style="display:none;">
+                        <a id="mc_back" class="back b-close"></a>
+                        <div class="top">
+                           <h1 class="black">Reports Terms &amp; Conditions</h1>
+                       </div>
+                    </div>
+                    <script type="text/javascript">
+                        /*<![CDATA[*/
+                        jQuery(function($) {
+                            jQuery("#report_popup_button").click(function(e){
+                                e.preventDefault();
+                                $("#terms_report_popup").bPopup({modalClose:false});
+                                return false;
+                            });
+                        });
+                        /*]]>*/
+                    </script>
                 </dd>
             </dl>
             <br class="clear" />
@@ -165,3 +199,4 @@
             <input type="hidden" id="registration_price" name="EventsRegistration[price]" value="<?php echo $eventMain->isEarlyBird()? $priceOptions['price_low']: $priceOptions['price_high']; ?>"/>
             <div class="errorMessage ml30" id="priceErrorMessage" style="display:none;">Please ensure that required session is selected</div>
         </div>
+
