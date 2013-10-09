@@ -189,7 +189,11 @@ $countries = array(
         </fieldset>
 
         <fieldset class="mt30">
+        <?php if ($eventMain->templateName() == 'with_report'): ?>
+        <h2 class="pt10">Registration and Report Purchase Details</h2>
+        <?php else: ?>
         <h2 class="pt10">Registration Details</h2>
+        <?php endif; ?>
 
             <?php require_once('_tpl_'.$eventMain->templateName().'.php'); ?>
 
