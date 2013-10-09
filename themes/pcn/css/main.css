@@ -1673,3 +1673,6 @@ ul.accordionMenuLevel2 a {
     margin:5%;
     height:auto;
 }
+#option1_box .select, #price_option1 {
+    width: 280px !important;
+}
