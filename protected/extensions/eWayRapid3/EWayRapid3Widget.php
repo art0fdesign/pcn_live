@@ -61,8 +61,9 @@ class EWayRapid3Widget extends AodWidget
                     $model->dietary_requirements = CJSON::encode($_POST['Dietary']);
                 }
                 $model->ticket = CJSON::encode($_POST['Price']);
-                $model->invoice_description = $model->invoiceDescription();
+                $model->invoice_description = substr($model->invoiceDescription(), 0, 60);
                 $model->created_dt=new CDbExpression('NOW()');
+                // MyFunctions::echoArray($model->attributes);
                 if ($model->save()) {
                     $this->InvoiceDescription = $model->invoice_description;
                     $this->dietaryRequirements = $model->dietaryRequirementsText();

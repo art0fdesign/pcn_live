@@ -59,24 +59,26 @@ class EventsRegistrationWidget extends AodWidget
                     $retAll .= CHtml::tag('option', array('value'=>$key), $value, true);
                 }
             } elseif ($eventMain->tickets_schema == 'with_report') {
-                $priceBird = 0;
-                $priceFull = 0;
+                $priceBird = 0; $priceBirdTotal = 0;
+                $priceFull = 0; $priceFullTotal = 0;
                 $showEarlyBirdPrice = $eventMain->isEarlyBird();
                 $price = EventPrice::model()->findByPk(intval($_POST['price_option1']));
                 if (!empty($price)) {
                     $priceBird = $price->price_low;
+                    $priceBirdTotal = $priceBird;
                     $priceFull = $price->price_high;
+                    $priceFullTotal = $priceFull;
                 }
                 if (!empty($_POST['selected_report_id'])) {
                     $price = EventPrice::model()->findByPk(intval($_POST['selected_report_id']));
-                    $priceBird += $price->price_low;
-                    $priceFull += $price->price_high;
+                    $priceBirdTotal += $price->price_low;
+                    $priceFullTotal += $price->price_high;
                 }
                 echo CJSON::encode(array(
                     'earlyBirdPrice'=>$priceBird,
-                    'earlyBirdTotal'=>number_format($priceBird, 2),
+                    'earlyBirdTotal'=>$priceBirdTotal,
                     'standardPrice'=>$priceFull,
-                    'standardTotal'=>number_format($priceFull, 2),
+                    'standardTotal'=>$priceFullTotal,
                     'showEarlyBirdPrice'=>$showEarlyBirdPrice,
                 ));
                 Yii::app()->end();
@@ -93,24 +95,26 @@ class EventsRegistrationWidget extends AodWidget
                     $retAll .= CHtml::tag('option', array('value'=>$key), $value, true);
                 }
             } elseif ($eventMain->tickets_schema == 'with_report') {
-                $priceBird = 0;
-                $priceFull = 0;
+                $priceBird = 0; $priceBirdTotal = 0;
+                $priceFull = 0; $priceFullTotal = 0;
                 $showEarlyBirdPrice = $eventMain->isEarlyBird();
                 $price = EventPrice::model()->findByPk(intval($_POST['price_option2']));
                 if (!empty($price)) {
                     $priceBird = $price->price_low;
+                    $priceBirdTotal = $priceBird;
                     $priceFull = $price->price_high;
+                    $priceFullTotal = $priceFull;
                 }
                 if (!empty($_POST['selected_registration_id'])) {
                     $price = EventPrice::model()->findByPk(intval($_POST['selected_registration_id']));
-                    $priceBird += $price->price_low;
-                    $priceFull += $price->price_high;
+                    $priceBirdTotal += $price->price_low;
+                    $priceFullTotal += $price->price_high;
                 }
                 echo CJSON::encode(array(
                     'earlyBirdPrice'=>$priceBird,
-                    'earlyBirdTotal'=>number_format($priceBird, 2),
+                    'earlyBirdTotal'=>$priceBirdTotal,
                     'standardPrice'=>$priceFull,
-                    'standardTotal'=>number_format($priceFull, 2),
+                    'standardTotal'=>$priceFullTotal,
                     'showEarlyBirdPrice'=>$showEarlyBirdPrice,
                 ));
                 Yii::app()->end();
