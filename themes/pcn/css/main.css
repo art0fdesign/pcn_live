@@ -1408,7 +1408,7 @@ form dd label.checkBoxLabel{
 }
 .content .teamItem  a.more{
    position:absolute;
-   bottom:30px;
+   bottom:5px;
    right:0px;
 }
 .content .teamItem  a.more.on{
@@ -1416,7 +1416,7 @@ form dd label.checkBoxLabel{
 }
 .content .teamItem .accordionContent{
     display:none;
-    margin-top:-20px;
+    margin-top:0px;
 }
 .content .teamItem .accordionContent .links li{
    color:#9f9f9f;
