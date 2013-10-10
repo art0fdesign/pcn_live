@@ -172,11 +172,25 @@
 
 <?php // ------- POPUP PROZORI ---------- ?>
 <?php // Registration ?>
-                    <div id="terms_registration_popup" class="popUpDiv newsletter" style="display:none;">
+                    <div id="terms_registration_popup" class="popUpDiv newsletter" style="display:none; height:auto !important;">
                         <a id="mc_back" class="back b-close"></a>
                         <div class="top">
                            <h1 class="black">Registration Terms and Conditions</h1>
                        </div>
+					<ul class="pt20 pb30">					   
+						<li><h3 class="black">Program:</h3>
+						Payments Consulting Network reserves the right to change the program at any time. Every effort will be made to ensure a program of equivalent standard is offered</li><br />
+						<li><h3 class="black">Event cancellation or postponement:</h3>
+						In the unlikely event that we have to cancel or postpone the event a full refund will be offered or registration at a subsequent event of equal value</li><br />
+						<li><h3 class="black">Cancellation policy:</h3>
+						Cancellations must be received in writing. AUD$100 administration fee will apply for all cancellations made before the registration closing date. No refunds given after the registration closing date (i.e. 11 November 2013).</li><br />
+						<li><h3 class="black">Substitutions:</h3>
+						Should a registrant be unable to attend, they may send a substitute in their place. Payments Consulting Network must be notified of all substitutions by 11 November 2013 or a AUD$100 administration fee may apply.</li><br />
+						<li><h3 class="black">Liability:</h3>
+						In the event of industrial disruptions or natural disasters, Payments Consulting Network accepts no responsibility for losses incurred by delegates or attendees.</li><br />
+						<li><h3 class="black">Privacy policy:</h3>
+						Payments Consulting Network is concerned with the protection of your privacy. View our full Privacy Policy <a href="http://paymentsconsulting.com/privacy-policy" target="_blank" class="blue"><strong>here</stong></a></li><br />
+					</ul>
                     </div>
                     <script type="text/javascript">
                         /*<![CDATA[*/
@@ -191,11 +205,22 @@
                     </script>
 
 <?php // Reports ?>
-                    <div id="terms_report_popup" class="popUpDiv newsletter" style="display:none;">
+                    <div id="terms_report_popup" class="popUpDiv newsletter" style="display:none; height:auto !important;">
                         <a id="mc_back" class="back b-close"></a>
                         <div class="top">
                            <h1 class="black">Reports Terms &amp; Conditions</h1>
                        </div>
+					   <ul class="pt20 pb30" style="color:grey;">
+						<li><strong class="blue pr5"> 1.) </strong> No part of this publication may be reproduced, resold, stored in or introduced into any retrieval system of any nature or transmitted in any form or by any means (electronic, mechanical, photocopying, recording or otherwise) without the prior consent of Payments Consulting Network (PCN).</li><br />
+						<li><strong class="blue pr5"> 2.) </strong> The Subscriber/User is responsible for any breach of copyright committed by accessing the PCN material.</li><br />
+						<li><strong class="blue pr5"> 3.) </strong> This report is sold as a single-user license which permits the following use of the material, without the prior written consent of PCN:<br /><br />
+							<ul class="pl20 pt5 pb5">
+								<li><strong class="blue pr5">a)</strong> Paper copy: allows the Authorised User to circulate the original paper issue within his/her organisation; and</li><br />
+								<li><strong class="blue pr5">b)</strong> Electronic copy: The Registered User only may access the PDF which cannot be published, circulated or redistributed electronically outside the Authorised User’s organisation.</li>
+							</ul>
+						</li><br />
+						<li><strong class="blue pr5"> 4.) </strong> Notwithstanding the above, the Subscriber/User is not permitted to make the material available to clients, consultants or to any other third parties.</li><br />
+					   </ul>
                     </div>
                     <script type="text/javascript">
                         /*<![CDATA[*/
