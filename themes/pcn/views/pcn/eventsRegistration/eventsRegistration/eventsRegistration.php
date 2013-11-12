@@ -161,7 +161,7 @@ $countries = array(
                 </dd>
             </dl>
             <br class="clear" />
-            <?php
+            <?php /*
                 $dietaryRequirements = $model->dietaryRequirements();
 
             ?>
@@ -186,11 +186,13 @@ $countries = array(
                     <?php echo $form->textField($model, 'dietary_other', array('class'=>'textbox', 'style'=>'width:290px;', 'maxlength'=>70)); ?>
                 </dd>
             </dl>
+*/ ?>
         </fieldset>
 
         <fieldset class="mt30">
         <?php if ($eventMain->templateName() == 'with_report'): ?>
-        <h2 class="pt10">Registration and Report Purchase Details</h2>
+<?php /*        <h2 class="pt10">Registration and Report Purchase Details</h2> */?>
+        <h2 class="pt10">Report Purchase Details</h2>
         <?php else: ?>
         <h2 class="pt10">Registration Details</h2>
         <?php endif; ?>

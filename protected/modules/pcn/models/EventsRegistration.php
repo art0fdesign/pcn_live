@@ -196,7 +196,11 @@ class EventsRegistration extends CActiveRecord
         if (isset($this->event)) {
             $return = $this->event->name;
         }
+
         $tickets = CJSON::decode($this->ticket);
+        if (!is_array($tickets)) {
+            return null;
+        }
         foreach ($tickets as $key => $value) {
             $priceModel = EventPrice::model()->findByPk($value);
             if (empty($priceModel)) continue;
