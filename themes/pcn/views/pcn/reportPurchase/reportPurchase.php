@@ -21,7 +21,7 @@ $countries = array(
 <?php
 // $url = Frontend::getPageDataByWidget(null, 'eWayRapid3');
 // MyFunctions::echoArray($url, $_SERVER);
-if($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+if($_SERVER['SERVER_ADDR'] == '127.0.0.1' || $_SERVER['SERVER_ADDR'] == '::1') {
   $url = Yii::app()->request->getHostInfo('http');
 } else {
   $url = Yii::app()->request->getHostInfo('https');

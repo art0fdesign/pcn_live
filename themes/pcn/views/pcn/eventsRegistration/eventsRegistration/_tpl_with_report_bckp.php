@@ -10,9 +10,8 @@
                 </dd>
             </dl><br class="clear" />
             <?php endif; ?>
-            <div class="ajax-loader"></div>
-<?php /*
 
+            <div class="ajax-loader"></div>
         <div id="overallPriceWrapper">
 
             <dl class="floatL mb20 mr10" id="option1_box">
@@ -54,8 +53,6 @@
 
             </dl>
             <br class="clear" />
-*/ ?>
-<?php echo $form->hiddenField($model, 'terms', array('id'=>'registrationTermsCheckBox', 'value'=>'1'));  ?>
 
         <div id="registrationPriceWrapper">
             <?php if ($eventMain->isEarlyBird()): ?>
@@ -104,8 +101,7 @@
                     'onchange'=>'$("#overallPriceWrapper").hide();$(".ajax-loader").show();$("#selected_report_id").val($(this).children("option:selected").val());',
                     'ajax'=>array(
                         'type'=>'POST',
-                        // 'data'=>array('price_option2'=>'js:this.value', 'selected_registration_id'=>'js:document.getElementById("selected_registration_id").value'),
-                        'data'=>array('price_option2'=>'js:this.value', 'selected_registration_id'=>'0'),
+                        'data'=>array('price_option2'=>'js:this.value', 'selected_registration_id'=>'js:document.getElementById("selected_registration_id").value'),
                         'dataType'=>'json',
                         'success'=>'function(data){
                             $("#priceErrorMessage").hide();
