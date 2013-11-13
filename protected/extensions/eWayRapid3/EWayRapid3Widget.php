@@ -105,6 +105,11 @@ class EWayRapid3Widget extends AodWidget
             } else {
                 $this->message = $settings['api.not.aprooved']['value'];
             }
+            // MyFunctions::echoArray(array(
+            //     'settings'=>$settings,
+            //     'message'=>$this->message,
+            //     'systemMessage'=>$this->systemMessage,
+            // ));
 
             $params['message'] = $this->message;
             $params['result'] = $this->response;// object
@@ -259,13 +264,17 @@ class EWayRapid3Widget extends AodWidget
 
         //Call RapidAPI to get the result
         $result = $this->service->GetAccessCodeResult($request);
+        $this->response = $result;
+        $this->InvoiceReference = $result->InvoiceReference;
         //Check if any error returns
-        if(isset($result->Errors))
+        // MyFunctions::echoArray(array('errors'=>$result->Errors, 'report message'=>$result->ResponseMessage));
+        // if(isset($result->Errors))
+        if(isset($result->ResponseMessage))
         {
             //Get Error Messages from Error Code. Error Code Mappings are in the Config.ini file
-            $ErrorArray = explode(",", $result->Errors);
+            $ErrorArray = explode(",", $result->ResponseMessage);
 
-            //var_dump($ErrorArray);
+            // var_dump($ErrorArray);
 
             $lblError = "";
 
@@ -275,15 +284,19 @@ class EWayRapid3Widget extends AodWidget
             }
 
             $this->errorHTML = $lblError;
+            $this->systemMessage = $lblError;
 
             return false;
         }
-        $this->response = $result;
 
         // Prepare message
         $this->systemMessage = $this->service->APIConfig[$result->ResponseMessage];
-        $this->InvoiceReference = $result->InvoiceReference;
-        // MyFunctions::echoArray($result, $result->ResponseMessage, $this->systemMessage);
+        // MyFunctions::echoArray(array(
+        //     'result'=>$result,
+        //     'ResponseMessage'=>$result->ResponseMessage,
+        //     'systemMessage'=>$this->systemMessage,
+        //     'errorHTML'=>@$this->errorHTML
+        // ));
 
         return $result->TransactionStatus;
 
