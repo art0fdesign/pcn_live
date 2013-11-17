@@ -246,6 +246,9 @@ body {
     position:relative;
     margin:-3px 5px 0 0;
 }
+#price_option2{
+    width: 280px !important;
+}
 /*
 button{
     border-radius:6px;
@@ -282,6 +285,36 @@ button:hover{
 }
 .header  a.logo:hover{
     opacity:0.9;
+}
+.header  .btn_h{
+    position:absolute;
+	display:block;
+    right:400px;
+    top:-5px;
+    height:17px;
+    min-width:65px;
+	width:auto;
+	text-transform:none;
+	font-size:120%;
+	font-weight:normal;
+	color:#f1f1f1;
+	padding:7px 6px 5px 28px;
+	background-image: url(../img/shop1.png),url(../img/bg_btn_blue.png); 
+	background-position: 7px center,left top;
+	background-repeat: no-repeat,repeat;
+    background-size: auto auto,100% 100%;
+}
+.header  .btn_h .no{
+	display:table;
+	position:relative;
+	float:right;
+	border-radius:2px;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+	background-color:#000000;
+	min-width:20px;
+	padding:2px;
+	margin:-2px 0 0 2px;
 }
 .header  .textbox{
     position:absolute;
@@ -1099,6 +1132,9 @@ form dd label.checkBoxLabel{
     overflow:hidden;
     margin-bottom:60px;
 }
+.content .news div a{
+
+}
 .content .news .btn_light_blue{
     position:absolute;
     right:15px;
@@ -1676,3 +1712,96 @@ ul.accordionMenuLevel2 a {
 #option1_box .select, #price_option1 {
     width: 280px !important;
 }
+
+/*================ TABLE FORM STYLING ================*/
+.order{
+    margin:30px 0 90px 0;
+	float:left;
+	width:100%;
+	font-size:14px;
+	color:#595959;
+	background-color:#ffffff;
+}
+.order .second{
+	background-color:#fcfcfc;
+}
+.order th {
+	padding:10px 0;
+	vertical-align: middle !important;
+}
+.order td {
+	padding:20px 0;
+	vertical-align: middle !important;
+}
+.order .text1{
+    text-align: left !important;
+    text-indent: 10px !important;
+}
+.order .numbers, .order .text, .order .commands {
+    text-align: center !important;
+    text-indent: 0 !important;
+	width:10%;
+}
+.order .numbers b {
+    background-color: #FFFFFF;
+    border: 1px solid #EFEFEF;
+    padding: 5px 20px;
+    text-align: center;
+}
+.order .commands .refresh, .order .commands .delete {
+    background: url(../img/com_refresh.png) no-repeat scroll left top rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 20px;
+    margin: 3px;
+    width: 20px;
+}
+.order .commands .delete {
+    background: url(../img/com_delete.png) no-repeat scroll left top rgba(0, 0, 0, 0);
+}
+.order .commands .refresh:hover,
+.order .commands .delete:hover{
+	background-position:left bottom;
+}
+.order thead{
+    color:#000000;
+	background-color: #f0f0f0;
+}
+.order thead th{
+    border-right: solid 1px #fff;
+}
+.order thead th.commands,
+.order tbody td.commands{
+    border-right: none;
+}
+.order tbody{
+    border-bottom: solid 1px #e0e0e0;
+	border-left: solid 1px #ededed;
+	border-right: solid 1px #ededed;
+}
+.order tbody td{
+    border-right: solid 1px #f5f5f5;
+}
+.order tfoot {
+	position:absolute;
+	right:0;
+	padding:15px 26px;
+	font-size:25px;
+	font-weight:bold;
+	color:#595959;
+	background-color:#ffffff;
+	border: solid 1px #ededed;
+	border-bottom: solid 5px #e0e0e0;
+	margin:15px 0 0 0;
+	width:24.5%;
+}
+.order tfoot td.text{
+	display:none;
+}
+.order tfoot td{
+	padding:10px;
+}
+.order tfoot td.numbers{
+	padding:10px 10px 10px 50px;
+}
+
+
