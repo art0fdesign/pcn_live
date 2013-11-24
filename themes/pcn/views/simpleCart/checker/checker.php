@@ -1,0 +1,1 @@
+<a href="/my-cart" class="btn_blue btn_h"> Cart <span class="no"><?php echo $itemsCount; ?></span></a>

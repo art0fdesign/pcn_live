@@ -34,14 +34,14 @@ class EventsRegistrationWidget extends AodWidget
     public function run()
     {
         $this->model = new EventsRegistration();
+
         if(isset($_POST['ajax']) && $_POST['ajax'] === 'events-registration-form'){
             echo CActiveForm::validate(array($this->model));
             Yii::app()->end();
         }
 
+        // What is this for?
         $eventMain = EventMain::model()->findByAttributes(array('page_id'=>$this->_page_id));
-
-
         if (!$eventMain || $eventMain->f_status == 0) {
             $this->html = $this->render('notPreparedYet', array(
                 'eventMain' => $eventMain,
@@ -141,26 +141,40 @@ class EventsRegistrationWidget extends AodWidget
             Yii::app()->end();
         }
 
+        if (Yii::app()->request->isPostRequest) {
+            $savedRegistrationID = $this->saveRegistrationData();
+            if ($savedRegistrationID) {
+                SimpleCart::setEventRegistrationID($savedRegistrationID);
+                $this->controller->redirect('/my-cart');
+            }
+            // MyFunctions::echoArray($_POST);
+        }
+
         $priceOptions2 = array();
         if ($eventMain->tickets_schema == 'with_report') {
             $priceOptions2 = $eventMain->getOptionsListByLevel(2);
         }
         $priceOptions = array(
-            'displaySelect2' => false,
-            'displaySelect3' => false,
-            'select1' => '',
-            'select2' => '',
-            'select3' => '',
-            'options1' => $eventMain->getOptionsListByLevel(1),
-            'options2' => $priceOptions2,
-            'options3' => array(),
-            'price_low' => '0.00',
-            'price_high' => '0.00',
+            'displaySelect2'    => false,
+            'displaySelect3'    => false,
+            'select1'           => '',
+            'select2'           => '',
+            'select3'           => '',
+            'options1'          => $eventMain->getOptionsListByLevel(1),
+            'options2'          => $priceOptions2,
+            'options3'          => array(),
+            'price_low'         => '0.00',
+            'price_high'        => '0.00',
         );
         // If loaded from session...
-        if (isset(Yii::app()->session['events.registration.model'])) {
-            $this->model->attributes = Yii::app()->session['events.registration.model'];
+        if ( ! is_null(SimpleCart::getEventRegistrationID())) {
+            $this->model->attributes = SimpleCart::getEventRegistrationAttributes();
+        }
+        // SKIP THIS, I DONT LIKE HOW IT WORKS!!!
+        if (false && !is_null(SimpleCart::getEventRegistrationID())) {
+            $this->model->attributes = SimpleCart::getEventRegistrationAttributes();
             $ticket = CJSON::decode($this->model->ticket, false);
+            // MyFunctions::echoArray(array('ticket'=>$ticket));
             if (isset($ticket->option1)) {
                 $priceOptions['select1'] = $ticket->option1;
             }
@@ -173,14 +187,19 @@ class EventsRegistrationWidget extends AodWidget
                 $priceOptions['select3'] = $ticket->option3;
                 $priceOptions['options3'] = $eventMain->getOptionsListByparentID(intval($ticket->option2));
                 $priceOptions['displaySelect3'] = true;
-                $eventPrice = EventPrice::model()->findByPk(intval($ticket->option3));
-                if (!empty($eventPrice)) {
-                    $priceOptions['price_low'] = $eventPrice->price_low;
-                    $priceOptions['price_high'] = $eventPrice->price_high;
+            }
+            if (isset($ticket->Tickets)) {
+            // MyFunctions::echoArray($ticket->Tickets);
+                foreach ($ticket->Tickets as $key=>$ticket) {
+                    $eventPrice = EventPrice::model()->findByPk($ticket);
+                    if (!empty($eventPrice)) {
+                        $priceOptions['price_low']  += $eventPrice->price_low;
+                        $priceOptions['price_high'] += $eventPrice->price_high;
+                    }
                 }
             }
-            // MyFunctions::echoArray($this->model->attributes, $priceOptions);
-        }
+        } // SKIPPED
+
         $this->model->event_id = $eventMain->id;
         $this->html = $this->render('eventsRegistration', array(
             'eventMain' => $eventMain,
@@ -203,6 +222,57 @@ class EventsRegistrationWidget extends AodWidget
         //MyFunctions::echoArray( $assetPath );
         $assetsFolder=Yii::app()->assetManager->publish( $assetPath, false, -1, true );
         Yii::app()->clientScript->registerScriptFile($assetsFolder.'/jquery.services.js');
+    }
+
+    /**
+     * Save event reegistration to DB
+     *
+     * @return registrationID|false
+     */
+    private function saveRegistrationData()
+    {
+        if ( ! isset($_POST['EventsRegistration'])) {
+            return false;
+        }
+
+        // MyFunctions::echoArray($_POST);
+        $_POST['EventsRegistration']['country'] = 'au';
+        $model = new EventsRegistration();
+        $model->attributes = $_POST['EventsRegistration'];
+        if (isset($_POST['Dietary'])) {
+            $model->dietary_requirements = CJSON::encode($_POST['Dietary']);
+        }
+
+        $model->ticket = CJSON::encode(array_merge($_POST['Price'], array('Tickets'=>$_POST['Ticket'])));
+        $model->invoice_description = substr($model->invoiceDescription(), 0, 60);
+        $model->created_dt=new CDbExpression('NOW()');
+        if ( ! isset($_POST['EventsRegistration']['terms_report'])) {
+            $model->terms_report = 1;
+        }
+        // MyFunctions::echoArray($_POST, $model->attributes);
+        if ( ! $model->save() ) {
+            return false;
+        };
+
+        // Add items to cart
+        if (!empty($_POST['Ticket']) && is_array($_POST['Ticket'])) {
+            foreach ($_POST['Ticket'] as $key => $value) {
+                $eventPriceModel = EventPrice::model()->findByPk($value);
+                if (!$eventPriceModel) {
+                    continue;
+                }
+
+                $cartItem = new SimpleCartItem();
+                $cartItem->category = ($key == 'selected_report_id') ? 'Report' : 'Seminar';
+                $cartItem->name = $eventPriceModel->option_text;
+                $cartItem->description = '';
+                $cartItem->quantity = 1;
+                $cartItem->price = $earlyBirdPrice ? $eventPriceModel->price_low : $eventPriceModel->price_high;
+                SimpleCart::addCartItem($cartItem);
+            }
+        }
+
+        return $model->id;
     }
 
 }

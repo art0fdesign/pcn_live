@@ -108,6 +108,7 @@
 
 
             <input type="hidden" id="registration_price" name="EventsRegistration[price]" value="<?php echo $eventMain->isEarlyBird()? $priceOptions['price_low']: $priceOptions['price_high']; ?>"/>
+            <input type="hidden" id="registration_price_type" name="Price[EarlyBird]" value="<?php echo $eventMain->isEarlyBird() ? 'yes' : 'no'; ?>"/>
             <div class="errorMessage ml30" id="priceErrorMessage" style="display:none;">Please ensure that required session is selected</div>
             <?php if ($eventMain->isEarlyBird()): ?>
             <dl class="floatL mb10 ml15" id="price_early_bird_wrapper"<?php if(! ($priceOptions['displaySelect3'] && $eventMain->isEarlyBird())):?> style="display:none;"<?php endif;?>>
@@ -142,6 +143,7 @@
 
             <dl class="floatL mb20 ml15">
                 <dd class="floatL mt10">
+                    <?php $model->terms = false; ?>
                     <?php echo $form->checkBox($model, 'terms', array('id'=>'termsCheckBox'));  ?>
                     <label class="checkBoxLabel">I agree to the registration <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
                     <div class="errorMessage" id="termsErrorMessage" style="display:none;">You must agree to the registration Terms and Conditions</div>
