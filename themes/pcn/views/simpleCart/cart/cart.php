@@ -23,9 +23,9 @@
         <thead>
         <tr>
             <th class="text">Type</th>
-            <th class="text1">Service name</th>
+            <th class="text1">Item</th>
             <th class="text">Price</th>
-            <th class="text">Pcs</th>
+            <th class="text">Qty</th>
             <th class="text">Total</th>
             <th class="commands">Controls</th>
         </tr>
