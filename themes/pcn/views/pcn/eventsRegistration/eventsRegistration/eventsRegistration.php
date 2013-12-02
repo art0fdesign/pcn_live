@@ -28,7 +28,7 @@ $countries = array(
         }
         $form=$this->beginWidget('CActiveForm', array(
             'id'=>'events-registration-form',
-            'action' => $url,
+            // 'action' => $url,
             'enableClientValidation' => true,
             'clientOptions'=> array('validateOnSubmit'=>true),
             // 'htmlOptions'=>array('class'=>'form'),

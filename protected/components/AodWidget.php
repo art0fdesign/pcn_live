@@ -1,46 +1,104 @@
-<?php //0046a
-if(!extension_loaded('ionCube Loader')){$__oc=strtolower(substr(php_uname(),0,3));$__ln='ioncube_loader_'.$__oc.'_'.substr(phpversion(),0,3).(($__oc=='win')?'.dll':'.so');if(function_exists('dl')){@dl($__ln);}if(function_exists('_il_exec')){return _il_exec();}$__ln='/ioncube/'.$__ln;$__oid=$__id=realpath(ini_get('extension_dir'));$__here=dirname(__FILE__);if(strlen($__id)>1&&$__id[1]==':'){$__id=str_replace('\\','/',substr($__id,2));$__here=str_replace('\\','/',substr($__here,2));}$__rd=str_repeat('/..',substr_count($__id,'/')).$__here.'/';$__i=strlen($__rd);while($__i--){if($__rd[$__i]=='/'){$__lp=substr($__rd,0,$__i).$__ln;if(file_exists($__oid.$__lp)){$__ln=$__lp;break;}}}if(function_exists('dl')){@dl($__ln);}}else{die('The file '.__FILE__." is corrupted.\n");}if(function_exists('_il_exec')){return _il_exec();}echo('Site error: the file <b>'.__FILE__.'</b> requires the ionCube PHP Loader '.basename($__ln).' to be installed by the website operator. If you are the website operator please use the <a href="http://www.ioncube.com/lw/">ionCube Loader Wizard</a> to assist with installation.');exit(199);
-?>
-HR+cPstYb52nJcrdM5C1SxF3tnleErgQ/YfGiA6iVvAt0G8m7hVA1y6NXbnqrxK9/jNm7sMgWQGu
-mUsdoTPV47+bcYfuCUKQmLKrkXOMMPrUZI3cjH+m6y6v+5es6zwxSFTV4/BRdduVv4PTyFpu8z7M
-MYIA8MetyX3BhEcqik6LG+8f2OxmuXAyeMCPFScSzIDiJDX/tbujA7/65lxsvOUm8Ac9GefAf+HT
-o5KwomWFOwopUy2IdG65BOhcaRbZbF0s762wVj7ZwTbc7KvXLZ6JzfRwV7k1dsDKifbGURrqdLJ0
-XnLJ7IbppYC26iUAyaO6JFn187pdPPoMRYl5S/CquulGd/ww0HZBwmTazml20dxfRWL2RrwiRa/U
-JQuHHjqt0BYMm7F5DyqO7IAHBl083muO+ZqtIrp6RQYhIUn/pAJUXJiB28IkQ/AL6yZTLH/q2jxN
-8ayj3C4j6tP6NSOXOXijETfqCRVNhlx+heD63iGrtRgWM6guUjFgBdqRfxxg60wMYpgvzeQBBcYK
-92vC/8F5ua/TrVzUdO9ZYnb2DWUstnnHhzxLAAPrWiOUUOxP4JZ3wjCf5vslObPdTsOrmQ96yC1+
-ncZjbata+LP1H5QejORC2WhsmZ27itZ0k436GwGPj7Rhpjns8FlrXErIJOhMl0CQxMd+4AuRK49h
-7OlvhsCtrj1OQZF5yhB3O/Qyv56tMmZI5cKuwo8v6sXhOHrsad1Ry3lDvkprMtagXn47hMk16WmN
-uEgciLL5gwmm+AV/JEEEomQ0yQh6bWxcCC6LkMdZkVIOCazRJI4sL39e5oVDDu0fJ4SpcuC4YRyM
-p0P1X5xpeAjLA0wiBFH/UUGI0C+pPJvElpPvvXnGe3Pme8eZyMIiXXZwGj6Pc4j2FWeY3O/196mh
-K46Oe3w/683rhm1ceTPA5tdwd9zsVVHBZkp60QL63VkBUBloICXfaizZC/icewn4tRTRe9FuVpXz
-BIdUXZiD68gXq2maCQ5SayVZrvApCa1HV9MFLWCVRXqFW8H7Bb6gTVlVEcJp6n3SoTQLpkNkdPzN
-1nGXBmjlxlHruded/20b1gjnhgQ2l8V3KAs17nq8m8+aAPql26T0fumQA+D+prZcfnyhySIOaaMr
-wtqzoo2yHytop0Us+Ub+mWFF6uSa9pCmbvYi+cBPrR9tTzDmuOsgMPMkvQKsxmp7IZJLkxOr9R30
-KSkiBMkC5R+QjYBXoqyWrPWHMqSmmXd3GyvGP8Zqm4COt2iVQGw2LoaajSqPgoOFsWCkvSHUqdaT
-Womq6Uip7Rv/2RlQwsIYHDv7OSxpvF+oqwnKN91/OGF3chz8NB8V8aiprwxK1XPOHYN+Zz74JHYh
-vwUACnpqmyNywdEztCWBB7DepNhPXxqYecXvb3G8vQnDGhy47VcboH3XPz7DZ9y4YnA4aonQuY4z
-+lXHR8sdNssAlBSrDf4wY29weZ12hoAllUt8c6YTc62OJIKiL/pfyHrwS/48yMUboz6XaVJPJ5U2
-nYyxPE69gytyPe3YdxTAikvJ/2c8q8CKi8j2yilsj7CJ5vUSvY/1b0s7Vu7E74jnZO/Ifv2X0jgY
-JjnU48Wnzs79PgJMucZ/nDCe/euF6s09uxcxC+UO5z9VxQUil5HmkXEgTFqBe2CEPBL1n8p+jNX9
-QmDUarUKet5B57HA5Vzk0hJ/+jRMuqsoIkbaKOOsq1fSNvcdQNl5CY+rqdEUq4luluge13l7vYYW
-J9dJ/lV+RPifXlKkLYqvUXle7iRzOoHhk9gZrwAKiXz/IQoj6Kh4dBkGnqjDe0nQH0Ei1NOrDLJl
-FoAObdgWUSJi/RRd4HkD9wdwDD8hcMC4OzddxYu9wc+2m39BVLXliQ5R0c3ymDqhqoFZrfcBiCBq
-UKp4KHIFequim/1tKh8wHoRVKuAF11JiSrZlxrR3iO+sFnqktb/9yMBmuooqI9yDcGqXCmO6z+hm
-PsABmnJEHg3fKVr9FxXeott1mWCDaYzPsh9vuHChJErfo5Cl8+5OxTHpTdqO9NXj8j5qENHEdDvd
-thbkPT+ABqHfE2uXg7GFuYmGOw5Ok/B8XTfE7lBP4PWUHFRWL6gIrci8cTm/JJ6fImRXxzMbpT8a
-OsFDeAAif+i2Cwh9Yp3BELL1TvfLZczlbyc/b9K9DcIBLWY7GVRhbBsrBvX4T97pP117gbKhqmQy
-X5pdJDB887uVtZXXYQGGCZumXAaIJuynrcoSd6Kg+k+nAe93vE5XuYD7GNJg66Wko87DmTWL0DNF
-yi3gwn116jJO/1EGzdxF+LuSCgHs7LaGDEbf1S7HpgTJ9O8fBSXhA3rdp4ekG71IPOGSZuBwrr2/
-wc9qxsVKKl1ly0E4Sd+jphogrTTRSmEGMQEJMbdxQ74NVmVoS7zoEWWZXR/bnw4RcmfyVFtGLpwb
-aYgUdwcRnC3SX1JxOcnMExZ8xh3To70kV+srlerKDG3j9eYc0OXOQxgnvrQrP7WQTTNbr57nVRSx
-9nKRyt7znc5iFGLjKzE1z4dFeOW6BBLLgbt/gUtILzfmuxsTc6zNA7WnaFJgxda7KnxP6+Y/Y5tv
-6sBixaV3f9KT1dQUbzmhQZI2ehGkqt3BvlUwO29pe7NlpPqmIQY2aufbCjeSTOtXo1x68qXp5tOV
-4+JuU4zXKme0ivV4VaYsOLgWn1YO43j20dKOeczKUs8MH9R1pR+IUBHePIa100MoNWxWKwrbcqyZ
-E6xvTvhUQpAg7YV+QrXsTlNI0pP+DvTsXlBImHM0PEmJ1+rUDNae6KEJBxxAO3wLzcz2Xijt21SL
-9zWMBFaP5IxHgyckQ4kbJZTKp7L9IeUYEz0NlvAO9wggBATkx2E+NAM6dxGdtISp494x0vGFRCzC
-zUzBNHWG8jMn8nMD1GDfqL2qIvp4NmYDYb6ZcRDgD97yR+Wzi+3FXRCEAc/VNmyX29vVjZQ0deXn
-Z43qHlf98t5qwqjhwEtFB6cqTSz86CjJIgk/NOxqDpZ3Ugy0TCG4Ezacl4FBjiXOEUwZzus9onOw
-QbV3vUXT269aW6O0ZWjywawoaeQkh7DAtuXpeSSKwGS8OQzBktem5jQ7znr2rSa3zhdYgUKShggh
-WAvIlTdoTUG8QSwH6BYTAAzilEBoLkTEm8Txs03X49rMvv31i9ncNIL2EpR8tPzObdidTGxpjLqw
-Ugm=
+<?php
+/**
+ * ArtOfDesign Widget class file
+ *
+ * @author newtash <newtash@yahoo.com>
+ * @link http://www.art0fdesign.com
+ * @copyright Copyright &copy; 2010-2013 Art0fDesign
+ * @license http://www.art0fdesign.com/license/
+ */
+/**
+ * AodWidget should be a base class for aod created widgets
+ *
+ * It wrapps basic parameters:
+ * pars array ( loads it in __construct() )
+ * - put as public because of backward compatibility; not in use
+ *   later when calling widget call with pars parameter
+ *   now it is no need to explicitly define it is loaded in contructor
+ * html returning value
+ */
+class AodWidget extends CWidget
+{
+    public $pars = array();
+    public $html = ''; // returning value
+    //
+    public $params = array();
+    public $type = 'frontend';
+    //
+    private $_pars = array();
+
+    /**
+     * Constructor.
+     * Load pars array
+     */
+    public function __construct()
+    {
+        $this->_pars = isset(Yii::app()->getController()->pars)? Yii::app()->getController()->pars: array();
+        if (!empty($this->_pars) && empty($this->pars)) {
+            $this->pars = $this->_pars;
+        }
+    }
+
+    /**
+     * Getter for pars array
+     */
+    public function getPars()
+    {
+        return $this->_pars;
+    }
+
+    /**
+     * Overrides default widget function to implement AoD theming
+     * widget view file's path is:
+     * theme/views/moduleName/widgetName
+     */
+    public function getViewPath(){
+        /*
+        $array = array();
+        $array['theme_name'] = Yii::app()->getTheme()->name;
+        $array['theme_is_object'] = is_object(Yii::app()->getTheme());
+        $array['theme_viewPath'] = Yii::app()->getTheme()->viewPath;
+        $array['parent_viewPath'] = parent::getViewPath(false);
+        $array['parent_paths'] = parent::getViewPath(true);
+        $array['ext_path'] = Yii::getPathOfAlias('ext');
+        $array['file_dirname'] = dirname(__FILE__);
+        $array['class_name'] = get_class($this);
+        $class=new ReflectionClass($array['class_name']);
+        $array['class_filename'] = $class->getFileName();
+        $array['class_dirname'] = dirname($class->getFileName());
+        MyFunctions::echoArray( $array, $this->controller->pars );
+        /**/
+        if( ($theme=Yii::app()->getTheme())!==null ){
+            // create dir as: /moduleName/widgetPath under theme's views path
+            $class = new ReflectionClass( get_class($this) );
+            $dir = str_replace( Yii::getPathOfAlias('ext'), '', dirname( $class->getFilename() ) );
+            return Yii::app()->getTheme()->viewPath . $dir;
+        } else { // return default viewPath
+            return parent::getViewPath(false);
+        }
+    }
+
+    /**
+     * Prepares & retrieves prepared assets folder
+     * @param String Alias to assets folder
+     * @return String Path to assets folder with published scripts
+     */
+    public function retrieveAssetsFolder( $alias = null )
+    {
+        if( $alias == null ){
+            $assetPath = parent::getViewPath();
+            if( ($theme=Yii::app()->getTheme())!==null ){
+                $assetPath = self::getViewPath() . DIRECTORY_SEPARATOR . 'js';
+            }
+        } else $assetPath = Yii::getPathOfAlias( $alias );
+        // publish files to assets folder and return assets path
+        if( $this->controller->isLive() )
+            // do refresh assets in localhost
+            $assetsFolder = Yii::app()->assetManager->publish( $assetPath, false, -1, true );
+        else
+            $assetsFolder = Yii::app()->assetManager->publish( $assetPath );
+        //
+        return $assetsFolder;
+    }
+
+}

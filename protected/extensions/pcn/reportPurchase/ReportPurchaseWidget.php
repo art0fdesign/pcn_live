@@ -1,6 +1,6 @@
 <?php
 class ReportPurchaseWidget extends AodWidget {
-    
+
     public $params;
     public $type;
     public $model;
@@ -9,6 +9,8 @@ class ReportPurchaseWidget extends AodWidget {
     protected $module_id = 0;
     protected $view_id = 0;
     protected $_settings = null;
+
+    protected $_validationErrors = array();
 
 
     public function init()
@@ -24,14 +26,45 @@ class ReportPurchaseWidget extends AodWidget {
 
     public function run()
     {
-        $this->model = new EventsRegistration();
-        if(isset($_POST['ajax']) && $_POST['ajax'] === 'events-registration-form'){
-            echo CActiveForm::validate(array($this->model));
-            Yii::app()->end();
+        // $this->model = new EventsRegistration();
+        // if(isset($_POST['ajax']) && $_POST['ajax'] === 'events-registration-form'){
+        //     echo CActiveForm::validate(array($this->model));
+        //     Yii::app()->end();
+        // }
+        if (Yii::app()->request->isPostRequest) {
+            if (isset($_POST['ReportPurchase'])) {
+        // MyFunctions::echoArray($_POST);
+                if (empty($_POST['ReportPurchase']['terms'])) {
+                    $this->_validationErrors['terms'] = 'Please confirm that you agree to Terms & Conditions';
+                }
+                if (empty($_POST['ReportPurchase']['items'])) {
+                    $this->_validationErrors['items'] = 'Please select at least one report to purchase';
+                }
+                // MyFunctions::echoArray($this->_validationErrors, $_POST);
+                if (empty($this->_validationErrors)) {
+                    foreach ($_POST['ReportPurchase']['items'] as $item) {
+                        if (empty(Yii::app()->params['pcnPurchaseReports'][$item])) {
+                            continue;
+                        }
+                        $report = Yii::app()->params['pcnPurchaseReports'][$item];
+                        // MyFunctions::echoArray($report);
+
+                        $cartItem = new SimpleCartItem();
+                        $cartItem->category     = $report['category'];
+                        $cartItem->name         = $report['name'];
+                        $cartItem->description  = $report['description'];
+                        $cartItem->quantity     = (int)$report['quantity'];
+                        $cartItem->price        = (int)$report['price'];
+                        SimpleCart::addCartItem($cartItem);
+                    }
+                }
+
+            }
         }
         // MyFunctions::echoArray($this->_settings);
         $this->html = $this->render('reportPurchase', array(
             'settings'=>$this->_settings,
+            'validationErrors' => $this->_validationErrors,
         ),true);
     }
 
@@ -102,5 +135,5 @@ class ReportPurchaseWidget extends AodWidget {
         //MyFunctions::echoArray( array( 'to'=>$to, 'subject'=>$subject ), $headers, $message1 );
         if( $_SERVER['SERVER_ADDR'] != '127.0.0.1' ) mail($to, $subject, $message1, $headers);
     }
-    
+
 }
