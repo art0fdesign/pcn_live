@@ -5,6 +5,7 @@
  * Time: 7:56 PM
  */?>
 <div class="socialShare">
+    <?php if ($this->controller->isLive()): ?>
     <ul class="soc" id="socialShareLinks">
         <li><script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
             <script type="IN/FollowCompany" data-id="2884818" data-counter="none"></script>
@@ -21,7 +22,8 @@
                 po.src = 'https://apis.google.com/js/plusone.js';
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
               })();
-            </script>        
+            </script>
         </li>
     </ul>
+    <?php endif; ?>
 </div>
