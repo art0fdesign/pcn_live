@@ -1,6 +1,6 @@
 <?php
 
-abstract class Frontend 
+abstract class Frontend
 {
     /**
      * --- Content HTML tags in functions ---
@@ -8,7 +8,7 @@ abstract class Frontend
      * {menu_id}:       replaceMenuTagInContent
      * {file:seo-name}  replaceFileTagInContent
      */
-     
+
     /**
      * --- Content HTML tags ---
      * @baseUrl: Path to home folder ( Yii::app()->request->baseUrl )
@@ -17,7 +17,7 @@ abstract class Frontend
      * @thumbUrl: Path to images thumb folder ( '/upload/thumb/' )
      * @catalogUrl: Path to catalogs thumb folder ( '/upload/catalog/thumb/' )
      */
-     
+
     /**
      * Retrieves CMS Setting value
      * @param string settingKey: name of set_key to search
@@ -26,7 +26,7 @@ abstract class Frontend
      */
     public function getCMSSetting($settingKey = null, $exceptionValue = '')
     {
-        $row = Yii::app()->db->createCommand()            
+        $row = Yii::app()->db->createCommand()
             ->from('cms_settings')
             ->where(array('and', 'set_key=:sk', 'f_deleted=0'), array('sk'=>$settingKey))
             ->order('id DESC')
@@ -34,15 +34,15 @@ abstract class Frontend
         /** *************************************/
         try{
             return $row['set_value'];
-        } 
+        }
         catch(Exception $e){
             return $exceptionValue;
         }
     }
-    
+
     /**
      * Retrieves Home page ID
-     * @langCode: language code for specify page's language 
+     * @langCode: language code for specify page's language
      */
     public function getHomePageID($langCode = 'en')
     {
@@ -83,7 +83,7 @@ abstract class Frontend
         }
         return $retVal;
     }
-    
+
     /**
      * Retrieves pageID By containing Specific Widget
      * @widgetPath: widget's path
@@ -107,10 +107,10 @@ abstract class Frontend
                 ->select('id')
                 ->from('cms_mod_view')
                 ->where('view_action=:action', array('action'=>$moduleWidgetAction))
-                ->queryScalar();           
-            $ctype = 'V'; 
+                ->queryScalar();
+            $ctype = 'V';
         }
-        
+
         if( $id ){
 
            $lang_id=self::getLangIdByCode($lang);
@@ -131,10 +131,10 @@ abstract class Frontend
         //
         return intval($retVal);
     }
-    
+
     /**
      * Retrieves Page's Data
-     * @pageID: 
+     * @pageID:
      * @fieldName:
      */
     public function getPageData($pageID, $fieldName = 'url')
@@ -147,7 +147,7 @@ abstract class Frontend
         /** *************************************/
         return $result;
     }
-    
+
     /**
      * Retrieves pageID By containing Specific Widget
      * @widgetPath: widget's path
@@ -171,15 +171,15 @@ abstract class Frontend
                 ->select('id')
                 ->from('cms_mod_view')
                 ->where('view_action=:action', array('action'=>$moduleWidgetAction))
-                ->queryScalar();           
-            $ctype = 'V'; 
+                ->queryScalar();
+            $ctype = 'V';
         }
-        
+
         if( $id ){
 
            $lang_id=self::getLangIdByCode($lang);
                 // search in web_template_content
-                try {                    
+                try {
                     $retVal = Yii::app()->db->createCommand()
                         ->select( 'p.' . $fieldName )
                         ->from('web_assign as t')
@@ -191,7 +191,7 @@ abstract class Frontend
                         )
                         ->order('p.id DESC')
                         ->queryScalar();
-                } 
+                }
                 catch(Exception $e){
                     throw new CHttpException( 0, "Field '$fieldName' does not existst in page table!" );
                 }
@@ -200,10 +200,10 @@ abstract class Frontend
         //
         return $retVal;
     }
-    
+
     /**
      * Retrieves Page's Layout ID
-     * @pageID: 
+     * @pageID:
      */
     public function getPageLayoutID($pageID)
     {
@@ -215,10 +215,10 @@ abstract class Frontend
         /** *************************************/
         return $result;
     }
-    
+
     /**
      * Retrieves Array of Contents specific to template
-     * @pageID: 
+     * @pageID:
      */
     protected function getPageTemplateContents( $pageID, $lang )
     {
@@ -244,8 +244,8 @@ abstract class Frontend
 
                 ->order('tc.sector_id, tc.content_order')
                 ->queryAll();
-        
-        //MyFunctions::echoArray( $rows ); 
+
+        //MyFunctions::echoArray( $rows );
            // print "<pre>"; print_r($rows);die;
             foreach($rows as $item){
                 // retrieve html code
@@ -270,12 +270,12 @@ abstract class Frontend
                 }
             }// foreach($rows as $item)
         }// if(!empty($tplID))
-        //        
+        //
         return $retRow;
     }
-    
+
     /**
-     * Retrieves Page Specific Contents 
+     * Retrieves Page Specific Contents
      * @pageID:
      */
     protected function getPageSpecificContents( $pageID, $lang )
@@ -303,23 +303,30 @@ abstract class Frontend
                     $html = self::getContentHtml(intval($item['content_id']), $pageID, $lang); break;
                     //MyFunctions::echoArray( $html );
                 case 'W': // widget
-                    $html = self::getWidgetHtml( intval($item['content_id']) ); break;                    
+                    $html = self::getWidgetHtml( intval($item['content_id']) ); break;
                 case 'V': // modul view
                     $html = self::getModuleWidgetHtml( intval($item['content_id']) ); break;
                 case 'M': // menu
                     $html = self::getMenuHtml( $item['content_id'], array('page_id' => $pageID), $lang); break;
+                case 'E': // event registration
+                case 'R': // report purchase
+                    // echo 'before<br />';
+                    // echo "Market id: " . $item['content_id'] . "<br />"
+                    $html = self::getMarketHtml( $item['content_id'] );
+                    // die('sta');
+                    break;
             }
             // add it to array
             if(!array_key_exists($item['sector_name'], $retRow)){
-                $retRow[$item['sector_name']] = $html;                    
+                $retRow[$item['sector_name']] = $html;
             } else {
                 $retRow[$item['sector_name']] .= $html;
             }
-        }            
-        //        
+        }
+        //
         return $retRow;
     }
-    
+
     /**
      * Content Generator
      * Generates Html Output for Content
@@ -328,14 +335,14 @@ abstract class Frontend
      */
     protected function getContentHtml( $contentID=0, $pageID, $lang )
     {
-        $retRow = array();        
+        $retRow = array();
         //
         if($contentID != 0){
             $row = Yii::app()->db->createCommand()
                 ->from('web_content')
                 ->where('id=:id and lang_id=:lang', array('id'=>$contentID,'lang'=>$lang))
                 ->queryRow();
-            //     
+            //
             if(!empty($row)){
                 /** display content */
                 $retRow[] = self::getContentHtml_Html($row, $pageID, $lang) . "\n";
@@ -344,7 +351,7 @@ abstract class Frontend
         //
         return implode("\n", $retRow);
     }
-    
+
     /**
      * Retrieves Content's Html Code if type of content is 'html'
      * @return array contentRow: Content Row Array
@@ -356,7 +363,7 @@ abstract class Frontend
         $retRow = array();
         if($contentRow !== null){
             $t = self::replaceAllTagsInContent( $contentRow['content'], $pageID, $lang );
-            $retRow[] = $t; // CHtml::encode($t);            
+            $retRow[] = $t; // CHtml::encode($t);
         }// if($contentRow !== null)
         //
         return implode("\n", $retRow);
@@ -390,13 +397,13 @@ abstract class Frontend
             // find-out file src
             $t = self::replaceFileTagInContent( $t );
             //
-            $retRow[] = $t; // CHtml::encode($t);            
+            $retRow[] = $t; // CHtml::encode($t);
         }// if($contentRow !== null)
         //
         return implode("\n", $retRow);
     }
 /**/
-    
+
     /**
      * Retrieves Content's Html Code if type of content is 'image'
      * @contentRow: Content Row Array
@@ -439,7 +446,7 @@ abstract class Frontend
         }
         return $this->_thumbUrl;
     }
-    
+
     /**
      * Widget Generator
      * Generates Html Output for Specified Standalone Widget
@@ -459,8 +466,8 @@ abstract class Frontend
                 ->queryRow();
             //MyFunctions::echoArray( $row );
             // return parameters
-            // Uncheck this to add params functionality 
-            /**/           
+            // Uncheck this to add params functionality
+            /**/
             $paramsAll = Yii::app()->db->createCommand()
                 ->select('set_key, set_name, set_value, set_default')
                 ->from('cms_mod_setting')
@@ -472,17 +479,17 @@ abstract class Frontend
             }
             //Myfunctions::echoArray( $params );
             /**/
-            //            
+            //
             if(!empty($row)){
                 /** resolve path/widget name */
                 $path = str_replace( '/', '.', $row['mod_path'] ); // replace failed '/' signs in path
                 $path = str_replace( '\\', '.', $path ); // replace failed '\' signs in path
                 $pos = strrpos( $path, '.' ); // retrieve last occurence of '.'
-                //MyFunctions::echoArray( array('pos'=>$pos, 'pos_is_null'=>$pos===false, 'path'=>$path, 'mod_path'=>$row['mod_path'] ) );              
+                //MyFunctions::echoArray( array('pos'=>$pos, 'pos_is_null'=>$pos===false, 'path'=>$path, 'mod_path'=>$row['mod_path'] ) );
                 if( $pos === false ) $widget = $path; // there is no separator; path iz widget class name
                 else $widget = substr( $path, strrpos( $path, '.' ) + 1 ); // cut-off last part of setting
                 $widget = ucfirst( $widget ) . 'Widget'; // Upper case for widget class name
-                /** display content */  
+                /** display content */
                 $address = 'ext.' . $path . '.' . $widget;
                 //$address = 'ext.' . $row['mod_path'] . '.' . ucfirst($row['mod_path']) . 'Widget';
                 //return $address;
@@ -493,7 +500,7 @@ abstract class Frontend
         //
         return $ret;
     }
-    
+
     /**
      * Module Widget Generator
      * Generates Html Output for Specified Module Widget
@@ -530,7 +537,7 @@ abstract class Frontend
         //
         return $ret;
     }
-    
+
     /**
      * Menu Generator
      * Generates Html Output for Specified Menu
@@ -562,7 +569,7 @@ abstract class Frontend
         }//
         return implode("\n", $ret);
     }
-    
+
     /**
      * Retrieves Html Output for Specified Menu Item
      * Also made recursion for childs...
@@ -580,7 +587,7 @@ abstract class Frontend
         //
         if( !empty($item) ){
             $t = '<li';
-            // 
+            //
             $isActive = ''; // check is this page is active
             //
             if( $item['li_type'] == 2 ){
@@ -588,9 +595,9 @@ abstract class Frontend
                 //
                 if( $pageId != 0 && $pageId == $item['li_page'] ) $isActive = ' active';
                 // eventually check page's parent
-                if( $pageId != 0 && empty( $isActive ) ){                    
+                if( $pageId != 0 && empty( $isActive ) ){
                     $parentID = self::getPageData( $pageId, 'parent_id' );
-                    if( $parentID != 0 && $parentID == $item['li_page'] ){ 
+                    if( $parentID != 0 && $parentID == $item['li_page'] ){
                         $isActive = ' active';
                     }
                 }
@@ -598,7 +605,7 @@ abstract class Frontend
             //
             if( !empty( $item['description'] ) || !empty( $isActive ) ) {
                 $t .= ' class="' . $item['description'] . $isActive . '"';}
-            // add other html options 
+            // add other html options
             if( !empty( $item['li_options'] ) ) $t .= ' ' . $item['li_options'];
             $t .= '>';
             $ret[] = $t;
@@ -626,7 +633,7 @@ abstract class Frontend
 
                     $t = '<a href="' . $t . '"  class="' . $isActive . '" >' . $item['caption'] . '</a>';
                     $ret[] = $t;
-                    break;                    
+                    break;
             }
 
             if( !empty( $childs ) ){
@@ -634,10 +641,10 @@ abstract class Frontend
                 foreach( $childs as $child ){
                     $ret[] = self::getMenuItemHtml( $child , $pageId , $lang );
                 }
-                $ret[] = "\n</ul>\n"; 
+                $ret[] = "\n</ul>\n";
             }
             // close parent li tag
-            $ret[] = "</li>";           
+            $ret[] = "</li>";
         }
         //
         return implode("", $ret);
@@ -659,9 +666,9 @@ abstract class Frontend
         }
         return $ret;
     }
-    
+
     /**
-     * Retrieves information does any child menu is referenced to this page 
+     * Retrieves information does any child menu is referenced to this page
      */
     protected function getMenuChildActive( $menuId, $pageId )
     {
@@ -672,7 +679,24 @@ abstract class Frontend
             ->queryScalar();
         return $item;
     }
-    
+
+    /**
+     * Market content Generator
+     * Generates Html Output for Specified Market Item
+     * @itemID: menu ID to generate
+     */
+    public function getMarketHtml( $marketID=0, $lang=1 )
+    {
+        $ret = '<h3>Market item could not be loaded</h3>';
+        $params = array();
+        // MyFunctions::echoArray( array('marketID' => $marketID), $this->pars );
+        //
+        $ret = $this->widget('ext.pcn.market.marketWidget', array('marketID' => $marketID))->html;
+        // MyFunctions::echoArray( array('marketID' => $marketID, 'ret'=>$ret), $this->pars );
+        //
+        return $ret;
+    }
+
     /**
      * Retrieves Html code for Script in Head Sector
      * @pageID:
@@ -688,7 +712,7 @@ abstract class Frontend
         return $retRows;
     }
     /** --------------------------- REPLACEMENT FUNCTIONS ----------------------------- */
-    
+
     /**
      * Retrieves Content's Html Code if type of content is 'html'
      * @param String $content String to consider replacements
@@ -709,19 +733,19 @@ abstract class Frontend
             if( strpos( $t, '{baseUrl}' ) !== false )
                 $t = str_ireplace('{baseUrl}', $baseUrl, $t);
             // {imgUrl} -> design img path
-            if( strpos( $t, '{imgUrl}' ) !== false ){            
+            if( strpos( $t, '{imgUrl}' ) !== false ){
                 $imgUrl = $baseUrl . '/img/';
                 $t = str_ireplace('{imgUrl}', $imgUrl, $t);
             }
             //
             // Upload dir is ALWAYS upload
             //$uploadUrl = $baseUrl . '/upload/';
-            if( strpos( $t, '{uploadUrl}' ) !== false ){            
+            if( strpos( $t, '{uploadUrl}' ) !== false ){
                 $uploadUrl = Yii::app()->request->baseUrl . '/upload/';
                 $t = str_ireplace('{uploadUrl}', $uploadUrl, $t);
             }
             //$thumbUrl = $uploadUrl . 'thumb/';
-            if( strpos( $t, '{thumbUrl}' ) !== false ){            
+            if( strpos( $t, '{thumbUrl}' ) !== false ){
                 $thumbUrl = self::getUploadedImagesThumbPath() . '/';
                 $t = str_ireplace('{thumbUrl}', $thumbUrl, $t);
             }
@@ -734,12 +758,12 @@ abstract class Frontend
             // find-out file src
             $t = self::replaceFileTagInContent( $t );
             //
-            $ret = $t; // CHtml::encode($t);            
+            $ret = $t; // CHtml::encode($t);
         }// if($contentRow !== null)
         //
         return $ret;
     }
-        
+
     /**
      * @return string Content pageUrl creation...
      * Search for {pageUrl_id} and creates link to that page
@@ -754,7 +778,7 @@ abstract class Frontend
             for( $i = 1; $pos_open != 0 || substr($content, 0, strlen($needle))==$needle; $i++){
                 $pos_open = stripos( $content, $needle );
                 $pos_close = stripos( $content, '}', $pos_open );
-                $search = substr( $content, $pos_open , $pos_close-$pos_open+1 ); 
+                $search = substr( $content, $pos_open , $pos_close-$pos_open+1 );
                 $id = intval(substr( $search, strlen($needle), strlen($search)-strlen($needle)-1 ));
                 //
                 $replace = $baseUrl . '/' . self::getPageData( $id );
@@ -766,7 +790,7 @@ abstract class Frontend
         //
         return $content;
     }
-    
+
     /**
      * @return string Content pageUrl creation...
      * Search for {menu_id} and creates link to that page
@@ -784,7 +808,7 @@ abstract class Frontend
             for( $i = 1; $pos_open != 0 || substr($content, 0, strlen($needle))==$needle; $i++){
                 $pos_open = stripos( $content, $needle );
                 $pos_close = stripos( $content, '}', $pos_open );
-                $search = substr( $content, $pos_open , $pos_close-$pos_open+1 ); 
+                $search = substr( $content, $pos_open , $pos_close-$pos_open+1 );
                 $id = intval(substr( $search, strlen($needle), strlen($search)-strlen($needle)-1 ));
                 //
                 $replace = self::getMenuHtml( $id, array('page_id'=>$pageID), $lang );
@@ -801,7 +825,7 @@ abstract class Frontend
     /**
      * Retrieves fileID For Specified URL and language
      * @param String file's seo name
-     * @return Integer file id 
+     * @return Integer file id
      */
     public function getFileID( $seoName = null)
     {
@@ -816,10 +840,10 @@ abstract class Frontend
         //
         return $retVal;
     }
-    
+
     /**
      * Retrieves File's Data
-     * @param Integer fileID 
+     * @param Integer fileID
      * @param String fieldName
      */
     public function getFileSrc( $fileID = 0, $fileSeo = null)
@@ -827,12 +851,12 @@ abstract class Frontend
         if( $fileID == 0 ){
             return self::replaceFileTagInContent( $fileSeo );
         }
-        //        
+        //
         $result = File::model()->findByPk($fileID)->getFileUrl();
         /** *************************************/
         return $result;
     }
-    
+
     /**
      * @return string Content fileUrl creation...
      * Search for {file:seo-name} and creates link to that file
@@ -848,12 +872,12 @@ abstract class Frontend
             for( $i = 1; $pos_open != 0 || substr($content, 0, strlen($needle))==$needle; $i++){
                 $pos_open = stripos( $content, $needle );
                 $pos_close = stripos( $content, '}', $pos_open );
-                $search = substr( $content, $pos_open , $pos_close-$pos_open+1 ); 
+                $search = substr( $content, $pos_open , $pos_close-$pos_open+1 );
                 $seo = substr( $search, strlen($needle), strlen($search)-strlen($needle)-1 );
-                $replace = ''; // if url is not found replace it with empty string 
-                //                
-                $fileID = self::getFileID( $seo ); 
-                //MyFunctions::echoArray( array( 'content'=>$content, 'file_id'=>$fileID, 'is null'=>empty($fileID) ) );                       
+                $replace = ''; // if url is not found replace it with empty string
+                //
+                $fileID = self::getFileID( $seo );
+                //MyFunctions::echoArray( array( 'content'=>$content, 'file_id'=>$fileID, 'is null'=>empty($fileID) ) );
                 if( $fileID != 0 ){
                     $replace = self::getFileSrc( $fileID );
                 }

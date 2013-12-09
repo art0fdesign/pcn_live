@@ -4,8 +4,8 @@ setlocale(LC_ALL,'english');
 if( (Yii::app()->getTheme())!==null ) $baseUrl = Yii::app()->theme->baseUrl;
 else $baseUrl = Yii::app()->request->baseUrl . '/' . $this->publicPath;
 // register some core scripts
-Yii::app()->clientScript->registerCoreScript('jquery'); 
-Yii::app()->clientScript->registerCoreScript('bpopup'); 
+Yii::app()->clientScript->registerCoreScript('jquery');
+Yii::app()->clientScript->registerCoreScript('bpopup');
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
@@ -22,14 +22,15 @@ Yii::app()->clientScript->registerCoreScript('bpopup');
 
     <title><?php echo $this->blocks['title']; ?></title>
 
+<?php /*
     <script src="<?php echo $baseUrl; ?>/js/fbook/fb-script.js"></script>
-
+*/ ?>
     <script src="<?php echo $baseUrl; ?>/js/browser-selector/css_browser_selector.js"></script>
     <script src="<?php echo $baseUrl; ?>/js/selectform/form_element.js"></script>
     <script src="<?php echo Yii::app()->request->getBaseUrl()?>/js/popup/jquery.bpopup.min.js"></script>
 
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-    
+
 </head>
 
 <body>

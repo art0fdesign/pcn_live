@@ -121,6 +121,10 @@ $form=$this->beginWidget('CActiveForm', array(
                 case "M":
                     $items = Menu::getMenusOptions();
                     break;
+                case "E":
+                case "R":
+                    $items = WebshopMain::getContentsOptions($model->content_type);
+                    break;
 
             }
             ?>
@@ -161,7 +165,7 @@ $form=$this->beginWidget('CActiveForm', array(
         <div id="tplSectorImage" style="margin: 40px 0 0 17px;">
             <?php if( !$model->isNewRecord ) echo CHtml::image( $model->getSectorsImageSrc(), '' ); ?>
         </div>
-        
+
     </div>
 
     <div class="rightWidget widget">

@@ -33,6 +33,24 @@ class DefaultController extends CController
      */
     public function beforeAction($action)
     {
+        $arr = array(
+            'step1' => array(
+                'label' => 'Choose city:',
+
+            ),
+            'step2' => array(
+                'label' => 'Ticket Type:',
+
+            ),
+            'step3' => array(
+                'label' => 'Choose Session(s):',
+
+            ),
+        );
+        // die(CJSON::encode($arr));
+
+
+
         $this->_theme = Yii::app()->params['theme_frontend'];
         Yii::app()->theme = $this->_theme;
         return true;

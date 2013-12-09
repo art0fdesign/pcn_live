@@ -755,6 +755,11 @@ button:hover{
     padding:3px 0 20px 0;
     line-height:120%;
 }
+.content h2 a{
+    float: right;
+    margin-right: 10px;
+    font-size: 0.75em;
+}
 .content h3{
     font-size:14px;
     font-weight:bold;
@@ -1675,4 +1680,8 @@ ul.accordionMenuLevel2 a {
 }
 #option1_box .select, #price_option1 {
     width: 280px !important;
+}
+/*  */
+.hidden {
+    display: none !important;
 }

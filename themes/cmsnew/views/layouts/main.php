@@ -94,6 +94,10 @@
                     <li><?php echo CHtml::link('Contents',array('/webContent/index'))?></li>
                     <li><?php echo CHtml::link('Modules', array('/modMain/modulesList')) ?></li>
                     <li><?php echo CHtml::link('Widgets', array('/modMain/widgetsList')) ?></li>
+                    <?php if ($frontendTheme == 'pcn'): ?>
+                    <li><?php echo CHtml::link('Event Registrations', array('/pcn/market/ListEvents')) ?></li>
+                    <li><?php echo CHtml::link('Report Purchases', array('/pcn/market/ListReports')) ?></li>
+                    <?php endif; ?>
                     <li><?php echo CHtml::link('Menus', array('/menuBuilder/menu/list')) ?></li>
                     <li><?php echo CHtml::link('Assignment', array('/webAssign/index')) ?></li>
                     <li><?php echo CHtml::link('Mails', array('/modMail/list')) ?></li>
