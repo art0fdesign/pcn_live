@@ -145,7 +145,7 @@
                 <dd class="floatL mt10">
                     <?php $model->terms = false; ?>
                     <?php echo $form->checkBox($model, 'terms', array('id'=>'termsCheckBox'));  ?>
-                    <label class="checkBoxLabel">I agree to the registration <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
+                    <label class="checkBoxLabel" for="termsCheckBox">I agree to the registration <a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></label>
                     <div class="errorMessage" id="termsErrorMessage" style="display:none;">You must agree to the registration Terms and Conditions</div>
                 </dd>
             </dl><br class="clear" />

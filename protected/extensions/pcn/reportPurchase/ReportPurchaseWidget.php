@@ -6,6 +6,7 @@ class ReportPurchaseWidget extends AodWidget {
     public $model;
     public $session;
     public $message = null;
+    protected $_page_id = 0;
     protected $module_id = 0;
     protected $view_id = 0;
     protected $_settings = null;
@@ -15,22 +16,27 @@ class ReportPurchaseWidget extends AodWidget {
 
     public function init()
     {
-        $condition = 'mod_path = :path AND f_status=1 AND f_deleted=0';
-        $params = array( 'path' => 'pcn.reportPurchase');
-        $this->module_id = ModRegister::model()->findByAttributes( array(), $condition, $params )->id;
+        // $condition = 'mod_path = :path AND f_status=1 AND f_deleted=0';
+        // $params = array( 'path' => 'pcn.reportPurchase');
+        // $this->module_id = ModRegister::model()->findByAttributes( array(), $condition, $params )->id;
 
-        $this->_settings = ModSetting::getSettingsArray( $this->module_id);
+        // $this->_settings = ModSetting::getSettingsArray( $this->module_id);
+
+        $this->_page_id = Frontend::getPageId($this->pars[0]);
 
         $this->registerScripts();
     }
 
     public function run()
     {
-        // $this->model = new EventsRegistration();
-        // if(isset($_POST['ajax']) && $_POST['ajax'] === 'events-registration-form'){
-        //     echo CActiveForm::validate(array($this->model));
-        //     Yii::app()->end();
-        // }
+        $model = null;
+        if (isset(Yii::app()->params['pcnPurchaseReports']['page_' . $this->_page_id])) {
+            $model = Yii::app()->params['pcnPurchaseReports']['page_' . $this->_page_id];
+        }
+        if (is_null($model)) {
+            return;
+        }
+
         if (Yii::app()->request->isPostRequest) {
             if (isset($_POST['ReportPurchase'])) {
         // MyFunctions::echoArray($_POST);
@@ -43,18 +49,29 @@ class ReportPurchaseWidget extends AodWidget {
                 // MyFunctions::echoArray($this->_validationErrors, $_POST);
                 if (empty($this->_validationErrors)) {
                     foreach ($_POST['ReportPurchase']['items'] as $item) {
-                        if (empty(Yii::app()->params['pcnPurchaseReports'][$item])) {
+                        if (empty($model['items'][$item])) {
                             continue;
                         }
-                        $report = Yii::app()->params['pcnPurchaseReports'][$item];
-                        // MyFunctions::echoArray($report);
+                        // Prepare report 'model'
+                        $report = $model['items'][$item];
 
-                        $cartItem = new SimpleCartItem();
+                        // Try to load already added item
+                        $cartItem = SimpleCartItem::model()->findByAttributes(array(
+                            'cart_id' => SimpleCart::cartID(),
+                            'item_id' => $item,
+                            'price'   => (int)$report['price'],
+                        ));
+                        if (empty($cartItem)) {
+                            $cartItem = new SimpleCartItem();
+                        }
+
+                        $cartItem->item_id      = $item;
                         $cartItem->category     = $report['category'];
                         $cartItem->name         = $report['name'];
                         $cartItem->description  = $report['description'];
-                        $cartItem->quantity     = (int)$report['quantity'];
+                        $cartItem->quantity    += (int)$report['quantity'];
                         $cartItem->price        = (int)$report['price'];
+                        // MyFunctions::echoArray($cartItem);
                         SimpleCart::addCartItem($cartItem);
                     }
                 }
@@ -63,7 +80,7 @@ class ReportPurchaseWidget extends AodWidget {
         }
         // MyFunctions::echoArray($this->_settings);
         $this->html = $this->render('reportPurchase', array(
-            'settings'=>$this->_settings,
+            'model' => $model,
             'validationErrors' => $this->_validationErrors,
         ),true);
     }

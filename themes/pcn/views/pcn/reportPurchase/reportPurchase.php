@@ -1,15 +1,15 @@
 <?php
 
 $reportItems = array();
-if ( ! empty(Yii::app()->params['pcnPurchaseReports'])) {
-    $reportItems = Yii::app()->params['pcnPurchaseReports'];
+if (isset($model['items'])) {
+    $reportItems = $model['items'];
 }
 // MyFunctions::echoArray($reportItems);
 
 ?>
 <div class="wide floatL dotedL">
 <div class="pl20 pr0">
-<h1 class="dotedB contactTitle aboutTitle mb15">Select Report(s) to Purchase</h1>
+<h1 class="dotedB contactTitle aboutTitle mb15"><?php echo empty($model['header']) ? 'Select Report(s) to Purchase' : $model['header'] ?></h1>
 <?php
 
 $form=$this->beginWidget('CActiveForm', array(
@@ -23,11 +23,12 @@ $form=$this->beginWidget('CActiveForm', array(
 ?>
 
 <fieldset class="mt30 pb30">
-    <em class="grey" style="font-size: 140%;">N.B. Please note that all prices quoted are in AUD and inclusive of GST. </em><br /><br class="clear" />
+    <em class="grey" style="font-size: 140%;">N.B. Please note that all prices quoted are in AUD and exclusive of GST. </em><br /><br class="clear" />
     <p class="mb0" style="font-size: 100%;">I would like to order:</p>
-    <br class="clear" />
+    <div id ="reportItemsWrapper">
 <?php foreach ($reportItems as $key => $reportItem): ?>
-    <dl class="floatL mb20 ml15">
+    <div class="clear"></div>
+    <dl class="floatL mt20 ml15">
 
         <dd class="floatL mt10">
             <input id="" class="styled" type="checkbox" name="ReportPurchase[items][]" value="<?php echo $key; ?>" />
@@ -39,43 +40,27 @@ $form=$this->beginWidget('CActiveForm', array(
         <dt class="floatL ml5">
             <label><?php echo $reportItem['label']?></label>
         </dt>
-    </dl><br class="clear" />
+    </dl>
 <?php endforeach; ?>
-<?php if ( ! empty($validationErrors['items'])): ?>
-    <dl class="floatL mb0 ml15">
-        <dd class="floatL">
-            <div class="errorMessage"><?php echo $validationErrors['items']; ?></div>
-        </dd>
-    </dl><br class="clear" />
-<?php endif; ?>
+    </div>
+    <div class="clear"></div>
+
+    <div class="errorMessage ml40 blue" id="priceErrorMessage"<?php if (empty($validationErrors['items'])): ?> style="display:none;"<?php endif; ?>><?php echo empty($model['price_error_msg']) ? 'Please select at least one report to purchase' : $model['price_error_msg'] ?></div>
+
+    <br class="clear" />
 
 
     <dl class="floatL mb0 ml15">
         <dd class="floatL mt10">
             <input id="ytReportPurchase_terms" type="hidden" value="0" name="ReportPurchase[terms]" />
-            <input id="" class="styled" type="checkbox" value="1" name="ReportPurchase[terms]" />
+            <input id="terms" class="styled" type="checkbox" value="1" name="ReportPurchase[terms]" />
         </dd>
         <dt class="floatL ml5 mr5">
-            <label for="ytReportPurchase_terms">I agree to the </label>
+            <label for="terms">I agree to the <a href="#" class="blue" id="terms_popup_button">Terms and Conditions</a></label>
         </dt>
     </dl>
-    <p class="accordionButton pt10"><a href="#" class="blue" id="popup_popUp">Terms and Conditions</a></p>
-    <!--<div class="accordionContent mt30 mb20">
-        <ul class="links">
-            <li>No part of this publication may be reproduced, resold, stored in or introduced into any retrieval system of any nature or transmitted in any form or by any means (electronic, mechanical, photocopying, recording or otherwise) without the prior consent of Payments Consulting Network (PCN).</li>
-            <li>The Subscriber/User is responsible for any breach of copyright committed by accessing the PCN material.</li>
-            <li>This report is sold as a single-user license which permits the following use of the material, without the prior written consent of PCN:<br /> a) Paper copy: allows the Authorised User to circulate the original paper issue within his/her organisation; and<br /> b) Electronic copy: The Registered User only may access the PDF which cannot be published, circulated or redistributed electronically outside the Authorised User&rsquo;s organisation.</li>
-            <li>Notwithstanding the above, the Subscriber/User is not permitted to make the material available to clients, consultants or to any other third parties.</li>
-        </ul>
-    </div>--><br class="clear" />
-<?php if ( ! empty($validationErrors['terms'])): ?>
-    <dl class="floatL mb0 ml15">
-        <dd class="floatL">
-            <div class="errorMessage"><?php echo $validationErrors['terms']; ?></div>
-        </dd>
-    </dl><br class="clear" />
-<?php endif; ?>
-
+    <div class="clear"></div>
+    <div class="errorMessage ml40 blue" id="termsErrorMessage"<?php if (empty($validationErrors['terms'])): ?> style="display:none;"<?php endif; ?>><?php echo empty($model['terms_error_msg']) ? 'Please confirm that you agree to Terms & Conditions' : $model['terms_error_msg'] ?></div>
 
     <dl class="floatL mb20 ml15">
         <dd>
@@ -86,6 +71,34 @@ $form=$this->beginWidget('CActiveForm', array(
 <?php $this->endWidget(); /**/?>
 </div>
 </div>
+<?php
+if (!empty($model['terms_popup_file']) && file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . $model['terms_popup_file'])) {
+    require_once($model['terms_popup_file']);
+} else {
+    require_once('_terms_common.php');
+}
+?>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    jQuery(function($) {
+        jQuery("#terms_popup_button").click(function(e){
+            e.preventDefault();
+            $("#terms_popup").bPopup({modalClose:false});
+            return false;
+        });
 
-<?php echo Frontend::replaceAllTagsInContent(@$settings['terms-and-conditions']['set_value']) ?>
-
+        jQuery("#report-purchase-form").submit(function(){
+            jQuery("#termsErrorMessage").hide();
+            jQuery("#priceErrorMessage").hide();
+            if ( ! jQuery("#terms").is(':checked')) {
+                jQuery("#termsErrorMessage").show();
+                return false;
+            }
+            if (jQuery("#reportItemsWrapper input:checked").length == 0) {
+                jQuery("#priceErrorMessage").show();
+                return false;
+            }
+        });
+    });
+    /*]]>*/
+</script>

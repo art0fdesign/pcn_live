@@ -53,19 +53,55 @@ class EWayRapid3Widget extends AodWidget
         $params = array();
         if (Yii::app()->request->isPostRequest ) {
             if (isset($_POST['EventsRegistration'])) {
+                    $model = new EventsRegistration();
 
-                    $this->TotalAmount = SimpleCart::total();
-                    $this->InvoiceNumber = time();
-                    $this->InvoiceReference = SimpleCart::getEventRegistrationID();
+                    $model->attributes = $_POST['EventsRegistration'];
+                    $model->country_title = Country::getCountryName($model->country);
 
-                    if ( ! empty($this->InvoiceReference)) {
-                        $model = EventsRegistration::model()->findByPk($this->InvoiceReference);
-                        if ( ! empty($model)) {
-                            $this->InvoiceDescription = $model->invoice_description;
-                        }
-                    } else {
-                        $this->InvoiceReference = time();
+                    // Include VAT if user is from australia
+                    $vatMultiplicator = 1.00;
+                    if ($model->country == 'au') {
+                        $vatMultiplicator = 1.10;
                     }
+
+                    $sum = 0.00;
+                    $ticket = array();
+                    foreach (SimpleCart::fullCartItemsList() as $cartItem) {
+                        $itemAttributes = $cartItem->attributes;
+                        $itemAttributes['price'] = $cartItem->price($vatMultiplicator);
+                        $ticket[] = $itemAttributes;
+
+                        $sum += $cartItem->total($vatMultiplicator);
+                    }
+
+                    $model->ticket = CJSON::encode($ticket);
+                    $model->price = $sum;
+
+                    $model->invoice_no = $model->getMaxInvoiceNumber() + 1;
+                    $model->invoice_date = date('Y-m-d');
+                    $model->invoice_reference = $model->invoice_no . date('-y');
+                    $model->invoice_description = $model->invoiceDescription();
+
+                    $model->terms = 1;
+                    $model->terms_report = 1;
+
+// MyFunctions::echoArray($model->attributes, $_POST, $ticket);
+// MyFunctions::echoArray($model->attributes, $_POST, SimpleCart::fullCartItemsList());
+
+                    if (!$model->save()) {
+                        $this->controller->redirect('/');
+                        Yii::app()->end();
+                    }
+
+                    SimpleCart::setEventRegistrationID($model->id);
+
+// MyFunctions::echoArray($model->attributes, $model->errors);
+
+                    $this->TotalAmount = $sum;
+                    $this->InvoiceNumber = $model->id;
+                    $this->InvoiceReference = $model->invoice_reference;
+                    $this->InvoiceDescription = $model->invoice_description;
+
                     //Populate values for LineItems
                     foreach (SimpleCart::fullCartItemsList() as $cartItem) {
                         $item = new LineItem();
@@ -100,6 +136,8 @@ class EWayRapid3Widget extends AodWidget
             //MyFunctions::echoArray($settings);
             if ($success) {
 
+
+                // Reset cart
                 SimpleCart::resetCart();
 
                 $this->sendConfirmationMail($settings);
@@ -153,7 +191,7 @@ class EWayRapid3Widget extends AodWidget
             $request->Customer->State = $_POST['EventsRegistration']['state'];
             $request->Customer->PostalCode = $_POST['EventsRegistration']['postcode'];
             //Note: Country is Required Field When Create/Update a TokenCustomer
-            $request->Customer->Country = 'AU';// $_POST['EventsRegistration']['country'];
+            $request->Customer->Country = strtoupper($_POST['EventsRegistration']['country']);
             $request->Customer->Email = $_POST['EventsRegistration']['email'];
             $request->Customer->Phone = $_POST['EventsRegistration']['telephone'];
             $request->Customer->Mobile = $_POST['EventsRegistration']['mobile'];

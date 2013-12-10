@@ -1,30 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "mod_simplecart_item".
+ * This is the model class for table "tmp_countries".
  *
- * The followings are the available columns in table 'mod_simplecart_item':
- * @property string $id
- * @property string $cart_id
- * @property string $item_id
- * @property string $category
+ * The followings are the available columns in table 'tmp_countries':
+ * @property integer $id
  * @property string $name
- * @property string $description
- * @property string $quantity
- * @property string $price
- * @property string $created_dt
- * @property string $changed_dt
+ * @property string $alpha_2
+ * @property string $alpha_3
  *
  * The followings are the available model relations:
  * @property User $creator
  * @property User $editor
  */
-class SimpleCartItem extends CActiveRecord
+class Country extends CmsActiveRecord
 {
     /**
      * Returns the static model of the specified AR class.
      * @param string $className active record class name.
-     * @return SimpleCartItem the static model class
+     * @return Countries the static model class
      */
     public static function model($className=__CLASS__)
     {
@@ -36,7 +30,7 @@ class SimpleCartItem extends CActiveRecord
      */
     public function tableName()
     {
-        return 'mod_simplecart_item';
+        return 'tmp_countries';
     }
 
     /**
@@ -47,27 +41,28 @@ class SimpleCartItem extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('cart_id', 'required'),
-            array('cart_id', 'length', 'max'=>32),
-            array('category', 'length', 'max'=>100),
-            array('name, item_id', 'length', 'max'=>255),
-            array('quantity, price', 'numerical'),
-            array('description, created_dt, changed_dt', 'safe'),
+            array('name', 'length', 'max'=>50),
+            array('alpha_2', 'length', 'max'=>2),
+            array('alpha_3', 'length', 'max'=>3),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            // Uncomment if needed
+            //array('id, name, alpha_2, alpha_3', 'safe', 'on'=>'search'),
         );
     }
 
     /**
      * @return array relational rules.
      */
-    // public function relations()
-    // {
+    public function relations()
+    {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
-        // return array(
-            // 'creator' => array(self::BELONGS_TO, 'User', 'created_id'),
-            // 'editor' => array(self::BELONGS_TO, 'User', 'changed_id'),
-        // );
-    // }
+        return array(
+            'creator' => array(self::BELONGS_TO, 'User', 'created_id'),
+            'editor' => array(self::BELONGS_TO, 'User', 'changed_id'),
+        );
+    }
 
     /**
      * @return array customized attribute labels (name=>label)
@@ -76,17 +71,33 @@ class SimpleCartItem extends CActiveRecord
     {
         return array(
             'id' => 'ID',
-            'cart_id' => 'Cart',
-            'item_id' => 'Item Identificator',
-            'category' => 'Category',
             'name' => 'Name',
-            'description' => 'Description',
-            'quantity' => 'Quantity',
-            'price' => 'Price',
-            'created_dt' => 'Created Time',
-            'changed_dt' => 'Changed Time',
+            'alpha_2' => 'Alpha 2',
+            'alpha_3' => 'Alpha 3',
         );
     }
+
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    /*// uncomment this line if search is needed
+    public function search()
+    {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria=new CDbCriteria;
+
+        $criteria->compare('id',$this->id);
+        $criteria->compare('name',$this->name,true);
+        $criteria->compare('alpha_2',$this->alpha_2,true);
+        $criteria->compare('alpha_3',$this->alpha_3,true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
+    }/**/
 
     /**
      * Override cms function because there is no created->changed fields in table
@@ -131,14 +142,37 @@ class SimpleCartItem extends CActiveRecord
         return self::model()->findAll( array( 'order'=>$orderBy, 'condition'=>$condition, 'params'=>$params ) );
     }
 
-    public function price($vatMultiplicator = 1.00)
+    public function getAlpha2OptionsList()
     {
-        return $this->price * $vatMultiplicator;
+        $ret = array();
+        $countries = self::model()->findAll();
+        foreach($countries as $country) {
+            $ret[$country->alpha_2] = $country->name;
+        }
+        return $ret;
     }
 
-    public function total($vatMultiplicator = 1.00)
+    public function getCountryName($abbr = null)
     {
-        return $this->price * $this->quantity * $vatMultiplicator;
+        if (is_null($abbr)) {
+            return null;
+        }
+
+        $criteria = new CDbCriteria();
+        $criteria->addCondition('alpha_2 = :abbr or alpha_3 = :abbr');
+        $criteria->params = array(':abbr' => $abbr);
+
+        if (!self::model()->exists($criteria)) {
+            return null;
+        }
+
+        $model = self::model()->find($criteria);
+        if (empty($model)) {
+            return false;
+        }
+
+        return $model->name;
+
     }
 
 }

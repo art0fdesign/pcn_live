@@ -2,7 +2,7 @@
 <div class="center">
 
     <div class="floatL">
-        <img src="img/shop.png" alt="shop" class="pt20 pr10 pl30 floatL">
+        <img src="/themes/pcn/img/shop.png" alt="shop" class="pt20 pr10 pl30 floatL">
         <h1 class="floatL">Cart</h1>
     </div>
 
@@ -18,7 +18,7 @@
 <div class="content">
 <div class="center">
 
-    <table class="order">
+    <table id="cartTable" class="order">
 
         <thead>
         <tr>
