@@ -1,8 +1,9 @@
 <?php
 
-$countries = array(
-    'au' => 'Australia',
-);
+$countries = Country::getAlpha2OptionsList();
+if (empty($model->country)) {
+    $model->country = 'au';
+}
 
 if(!$this->controller->isLive()) {
   $url = Yii::app()->request->getHostInfo('http');

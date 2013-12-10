@@ -48,7 +48,7 @@
                 <dd class="floatL mt20">
                     <?php $model->terms = false; ?>
                     <?php echo $form->checkBox($model, 'terms', array('id'=>'registrationTermsCheckBox'));  ?>
-                    <label class="checkBoxLabel">I agree to the registration <a href="#" class="blue" id="registration_popup_button">Terms and Conditions</a></label>
+                    <label class="checkBoxLabel" for="registrationTermsCheckBox">I agree to the registration <a href="#" class="blue" id="registration_popup_button">Terms and Conditions</a></label>
                     <div class="errorMessage" id="registrationTermsErrorMessage" style="display:none;">You must agree to the registration Terms and Conditions</div>
                 </dd>
 
@@ -124,7 +124,7 @@
                 <dd class="floatL mt20">
                     <?php $model->terms_report = false; ?>
                     <?php echo $form->checkBox($model, 'terms_report', array('id'=>'reportTermsCheckBox'));  ?>
-                    <label class="checkBoxLabel">I agree to the report <a href="#" class="blue" id="report_popup_button">Terms and Conditions</a></label>
+                    <label class="checkBoxLabel" for="reportTermsCheckBox">I agree to the report <a href="#" class="blue" id="report_popup_button">Terms and Conditions</a></label>
                     <div class="errorMessage" id="reportTermsErrorMessage" style="display:none;">You must agree to the report Terms and Conditions</div>
                 </dd>
             </dl>

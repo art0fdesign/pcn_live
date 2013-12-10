@@ -5,13 +5,15 @@
  * Time: 8:32 PM
  */
 
-$countries = array(
-    'au' => 'Australia',
-);
+$countries = Country::getAlpha2OptionsList();
+if (empty($model->country)) {
+    $model->country = 'au';
+}
 
 ?>
 
-<div class="wide wide1 floatL dotedR dotedL registration_wrapper">
+<!-- <div class="wide wide1 floatL dotedR dotedL registration_wrapper"> -->
+<div class="wide floatL dotedL">
     <div class="pl20 pr0">
     <?php if($message != null) echo $message; ?>
     <?php echo Frontend::replaceAllTagsInContent($eventMain->content_above); ?>
@@ -120,9 +122,9 @@ $countries = array(
                     <?php echo $form->textField($model, 'postcode', array('class'=>'textbox', 'maxlength'=>70)); ?>
                     <?php echo $form->error($model, 'postcode'); ?>
                 </dd>
-            </dl><br class="clear" />
-<!--
-            <dl class="floatR mb10 mr10">
+            </dl>
+
+             <dl class="floatR mb10 mr10">
                 <dt class="floatL mr10">
                     <?php echo $form->labelEx($model, 'country'); ?>
                 </dt>
@@ -132,7 +134,7 @@ $countries = array(
                     <?php echo $form->error($model, 'country'); ?>
                 </dd>
             </dl><br class="clear" />
- -->
+
             <dl class="floatL mb10">
                 <dt class="floatL mr10">
                     <?php echo $form->labelEx($model, 'telephone'); ?>
@@ -161,9 +163,10 @@ $countries = array(
                 </dd>
             </dl>
             <br class="clear" />
-            <?php /*
-                $dietaryRequirements = $model->dietaryRequirements();
+            <?php
+                if ($eventMain->f_dietary):
 
+                $dietaryRequirements = $model->dietaryRequirements();
             ?>
             <label class="floatL ml10 mt10 mr40">Dietary requirements (if any)</label>
             <dl class="floatL mb10">
@@ -186,13 +189,16 @@ $countries = array(
                     <?php echo $form->textField($model, 'dietary_other', array('class'=>'textbox', 'style'=>'width:290px;', 'maxlength'=>70)); ?>
                 </dd>
             </dl>
-*/ ?>
+        <?php endif; ?>
+
         </fieldset>
 
         <fieldset class="mt30">
         <?php if ($eventMain->templateName() == 'with_report'): ?>
 <?php /*        <h2 class="pt10">Registration and Report Purchase Details</h2> */?>
         <h2 class="pt10">Report Purchase Details</h2>
+        <?php elseif ($eventMain->templateName() == 'report_only'): ?>
+        <h2 class="pt10">Payment Details</h2>
         <?php else: ?>
         <h2 class="pt10">Registration Details</h2>
         <?php endif; ?>

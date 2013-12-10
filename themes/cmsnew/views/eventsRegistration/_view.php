@@ -36,6 +36,13 @@ $form=$this->beginWidget('CActiveForm', array(
             <?php echo $form->textArea($model,'content_above',CMap::mergeArray($readOnly,array('style'=>'width:468px;height:150px;'))); ?>
         </div>
     </fieldset>
+
+    <fieldset>
+        <div class="widget">
+            <div class="title"><h6>Comming Soon Message</h6></div>
+            <?php echo $form->textArea($model,'comming_soon',CMap::mergeArray($readOnly,array('style'=>'width:468px;height:150px;'))); ?>
+        </div>
+    </fieldset>
 </div>
 <div class="rightContent">
     <div class="rightWidget widget">

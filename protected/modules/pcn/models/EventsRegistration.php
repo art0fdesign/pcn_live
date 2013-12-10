@@ -16,6 +16,7 @@
  * @property string $state
  * @property integer $postcode
  * @property string $country
+ * @property string $country_title
  * @property string $telephone
  * @property string $mobile
  * @property string $email
@@ -25,6 +26,9 @@
  * @property integer $terms
  * @property integer $terms_report
  * @property decimal $price
+ * @property string $invoice_no
+ * @property string $invoice_reference
+ * @property string $invoice_date
  * @property string $invoice_description
  * @property string $created_dt
  */
@@ -66,7 +70,7 @@ class EventsRegistration extends CActiveRecord
         // will receive user inputs.
         return array(
             //array('postcode, first_name, surname, title_position, company, street_address, suburb, state, country, telephone, mobile, email', 'required'),
-            array('postcode, first_name, surname, title_position, company, street_address, suburb, state, country, telephone, mobile, email', 'required'),
+            array('postcode, first_name, surname, street_address, suburb, country, telephone, mobile, email', 'required'),
             array('price', 'numerical', 'integerOnly'=>false),
             array('event_id, postcode', 'numerical', 'integerOnly'=>true),
             array('first_name, surname, title_position, company, division_department, street_address, suburb, state, country, telephone, mobile, email, dietary_other', 'length', 'max'=>100),
@@ -75,6 +79,7 @@ class EventsRegistration extends CActiveRecord
             // array('terms', 'boolean', 'falseValue'=>'false', 'message' => 'You must agree to the registration Terms and Conditions'),
             array('terms, terms_report', 'in', 'range'=>array(1), 'message' => 'You must agree to the registration Terms and Conditions'),
             array('id, dietary_requirements, dietary_other, ticket, invoice_description, created_dt', 'safe'),
+            array('invoice_no, invoice_reference, invoice_date', 'safe'),
         );
     }
 
@@ -115,6 +120,9 @@ class EventsRegistration extends CActiveRecord
             'dietary_other' => 'Dietary Requirements Other',
             'ticket' => 'Ticket',
             'price'=>'Price',
+            'invoice_no' => 'Invoice Number',
+            'invoice_reference' => 'Invoice Reference',
+            'invoice_date' => 'Invoice Date',
             'invoice_description' => 'Invoice Description',
             'terms'=>'Terms',
             'terms_report'=>'Terms',
@@ -184,6 +192,19 @@ class EventsRegistration extends CActiveRecord
         // die($this->dietary_requirements);
     }
 
+    public function getMaxInvoiceNumber()
+    {
+        $max = Yii::app()->db
+            ->createCommand("SELECT MAX(invoice_no) FROM " . self::tableName())
+            // ->where('cond1=:cond1', array(':cond1'=>$cond1))
+            // ->andWhere('cond2=:cond2', array(':cond2'=>$cond2))
+            ->queryScalar();
+        if (empty($max)) {
+            $max = 0;
+        }
+        return $max;
+    }
+
     /**
     * Returns invoice description based on price selections
     */
@@ -201,13 +222,21 @@ class EventsRegistration extends CActiveRecord
         if (!is_array($tickets)) {
             return null;
         }
-        foreach ($tickets as $key => $value) {
-            $priceModel = EventPrice::model()->findByPk($value);
-            if (empty($priceModel)) continue;
-            if (!empty($return)) $return .= '; ';
-            $return .= $priceModel->option_text;
+        foreach ($tickets as $ticket) {
+            if (!empty($return)) $return .= ' ';
+            $return .= $ticket['name'] . '(';
+            $return .= (int)$ticket['quantity'] . 'x' . (int)$ticket['price'] . ');';
         }
         return $return;
     }
 
+    public static function countries()
+    {
+        $arr = array(
+            'au' => 'Australia',
+            'nz' => 'New Zeland',
+        );
+
+        return $arr;
+    }
 }

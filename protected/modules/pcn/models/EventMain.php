@@ -8,6 +8,7 @@
  * @property string $name
  * @property string $page_id
  * @property string $date_start
+ * @property string $f_early_bird
  * @property string $date_early_bird
  * @property string $date_end
  * @property string $description
@@ -15,6 +16,9 @@
  * @property string $tickets_note
  * @property string $tickets_schema
  * @property string $template
+ * @property string $comming_soon
+ * @property integer $f_dietary
+ * @property integer $f_price_list
  * @property integer $f_status
  * @property string $created_dt
  * @property string $created_id
@@ -55,11 +59,12 @@ class EventMain extends CmsActiveRecord
         // will receive user inputs.
         return array(
             array('name', 'length', 'max'=>255),
-            array('page_id', 'numerical', 'integerOnly'=>true),
+            array('page_id, f_early_bird, f_price_list', 'numerical', 'integerOnly'=>true),
             array('template', 'length', 'max'=>40),
             array('date_start, date_early_bird, date_end', 'safe'),
             array('content_above, tickets_note, tickets_schema, f_status, f_deleted', 'safe'),
-            array('date_start, date_early_bird, date_end, description, created_id, changed_id, changed_dt, created_dt', 'safe'),
+            array('date_start, date_early_bird, date_end, description, comming_soon', 'safe'),
+            array('f_dietary, created_id, changed_id, changed_dt, created_dt', 'safe'),
         );
     }
 
@@ -88,6 +93,7 @@ class EventMain extends CmsActiveRecord
             'name' => 'Event Name',
             'page_id' => 'Page Reference',
             'date_start' => 'Start Date',
+            'f_early_bird' => 'Use Early Bird Date',
             'date_early_bird' => 'Date Early Bird Date',
             'date_end' => 'End Date',
             'description' => 'Description',
@@ -95,6 +101,9 @@ class EventMain extends CmsActiveRecord
             'tickets_note' => 'Note Above Tickets',
             'tickets_schema' => 'Tickets Schema',
             'template' => 'Template',
+            'comming_soon' => 'Comming Soon',
+            'f_dietary' => 'Dietary',
+            'f_price_list' => 'Price List',
             'f_status' => 'Status',
             'created_dt' => 'Created Time',
             'created_id' => 'Created By',
@@ -144,6 +153,14 @@ class EventMain extends CmsActiveRecord
     */
     public function isEarlyBird()
     {
+        if ($this->f_early_bird == 0) {
+            return false;
+        }
+
+        if (empty($this->date_early_bird)) {
+            return false;
+        }
+
         return (date('Y-m-d') <= $this->date_early_bird);
     }
 
@@ -184,6 +201,23 @@ class EventMain extends CmsActiveRecord
             $return[$option->id] = $option->option_text;
         }
         return $return;
+    }
+
+    /**
+    * Retrieve collection of report items
+    */
+    public function getReportItems($eventID = null)
+    {
+        $criteria = new CDbCriteria();
+        $criteria->condition = 'event_id = :event and f_status = 1 and f_deleted = 0';
+        $criteria->order = 'order_by';
+        $criteria->params = array(':event' => $eventID);
+
+        $models = EventPrice::model()->findAll($criteria);
+        if (empty($models)) {
+            return array();
+        }
+        return $models;
     }
 
 }
