@@ -12,7 +12,7 @@ class EWayRapid3Widget extends AodWidget
     private $InvoiceNumber = '';
     private $InvoiceReference = '';
     private $InvoiceDescription = '';
-    private $dietaryRequirements = '';
+    private $InvoiceItems = array();
 
     /** Do some initializations */
     public function init()
@@ -42,7 +42,7 @@ class EWayRapid3Widget extends AodWidget
     {
 
          if(isset($_POST['ajax']) && $_POST['ajax'] === 'events-registration-form'){
-           $model = new EventsRegistration();
+            $model = new EventsRegistration();
 
             echo CActiveForm::validate(array($model));
             Yii::app()->end();
@@ -53,36 +53,77 @@ class EWayRapid3Widget extends AodWidget
         $params = array();
         if (Yii::app()->request->isPostRequest ) {
             if (isset($_POST['EventsRegistration'])) {
-                // MyFunctions::echoArray($_POST);
-                $_POST['EventsRegistration']['country'] = 'au';
-                $model = new EventsRegistration();
-                $model->attributes = $_POST['EventsRegistration'];
-                if (isset($_POST['Dietary'])) {
-                    $model->dietary_requirements = CJSON::encode($_POST['Dietary']);
-                }
-                $model->ticket = CJSON::encode($_POST['EventsRegistration']['price']);
-                $model->invoice_description = substr($model->invoiceDescription(), 0, 60);
-                $model->created_dt=new CDbExpression('NOW()');
-                $model->terms_report = 1;
-                // MyFunctions::echoArray($model->attributes);
-                if ($model->save()) {
+                    $model = new EventsRegistration();
+
+                    $model->attributes = $_POST['EventsRegistration'];
+                    $model->country_title = Country::getCountryName($model->country);
+
+                    // Include VAT if user is from australia
+                    $vatMultiplicator = 1.00;
+                    if ($model->country == 'au') {
+                        $vatMultiplicator = 1.10;
+                    }
+
+                    $sum = 0.00;
+                    $ticket = array();
+                    foreach (SimpleCart::fullCartItemsList() as $cartItem) {
+                        $itemAttributes = $cartItem->attributes;
+                        $itemAttributes['price'] = $cartItem->price($vatMultiplicator);
+                        $ticket[] = $itemAttributes;
+
+                        $sum += $cartItem->total($vatMultiplicator);
+                    }
+
+                    $model->ticket = CJSON::encode($ticket);
+                    $model->price = $sum;
+
+                    $model->invoice_no = $model->getMaxInvoiceNumber() + 1;
+                    $model->invoice_date = date('Y-m-d');
+                    $model->invoice_reference = $model->invoice_no . date('-y');
+                    $model->invoice_description = $model->invoiceDescription();
+
+                    $model->terms = 1;
+                    $model->terms_report = 1;
+
+// MyFunctions::echoArray($model->attributes, $_POST, $ticket);
+// MyFunctions::echoArray($model->attributes, $_POST, SimpleCart::fullCartItemsList());
+
+                    if (!$model->save()) {
+                        $this->controller->redirect('/');
+                        Yii::app()->end();
+                    }
+
+                    SimpleCart::setEventRegistrationID($model->id);
+
+// MyFunctions::echoArray($model->attributes, $model->errors);
+
+                    $this->TotalAmount = $sum;
+                    $this->InvoiceNumber = $model->id;
+                    $this->InvoiceReference = $model->invoice_reference;
                     $this->InvoiceDescription = $model->invoice_description;
-                    $this->dietaryRequirements = $model->dietaryRequirementsText();
 
-                    Yii::app()->session['events.registration.model'] = $model->attributes;
+                    //Populate values for LineItems
+                    foreach (SimpleCart::fullCartItemsList() as $cartItem) {
+                        $item = new LineItem();
+                        $item->SKU = "SKU" . $cartItem->id;
+                        if (empty($cartItem->category)) {
+                            $item->Description = $cartItem->name;
+                        } else {
+                            $item->Description = $cartItem->category . ': ' . $cartItem->name;
+                        }
+                        $this->InvoiceItems[] = $item;
+                    }
 
-                    if ($this->getAccessCode()) {
+                    if ($this->prepareAccessCode()) {
                         $params['Response'] = $this->response;
                         $params['TotalAmount'] = $this->TotalAmount;
                         $params['InvoiceNumber'] = $this->InvoiceNumber;
                         $params['InvoiceReference'] = $this->InvoiceReference;
-                        $params['DietaryRequirements'] = $this->dietaryRequirements;
                         $params['ShowDebugInfo'] = $this->service->APIConfig['ShowDebugInfo'];
                         // MyFunctions::echoArray($params);
                     } else {
                         $viewfile = 'payment_error';
                     }
-                };
             }
         } elseif (isset($_GET['AccessCode'])) {
             $success = $this->prepareShowResult();
@@ -95,15 +136,18 @@ class EWayRapid3Widget extends AodWidget
             //MyFunctions::echoArray($settings);
             if ($success) {
 
+
+                // Reset cart
+                SimpleCart::resetCart();
+
                 $this->sendConfirmationMail($settings);
 
-                if (substr($this->InvoiceReference, 0, 3) == 'rpt') { // report purchase
-                    $this->message = $settings['report.purchase.api.aprooved']['value'];
-                } else {
-                    $this->message = $settings['api.aprooved']['value'];
-                }
+                $this->message = $settings['api.aprooved']['value'];
             } else {
                 $this->message = $settings['api.not.aprooved']['value'];
+            }
+            if ( ! empty($this->errorHTML)) {
+                $this->message .= '<br />' . $this->errorHTML;
             }
             // MyFunctions::echoArray(array(
             //     'settings'=>$settings,
@@ -125,25 +169,8 @@ class EWayRapid3Widget extends AodWidget
         $this->html = $ret;
     }
 
-    private function getAccessCode()
+    private function prepareAccessCode()
     {
-            $ref = '';
-            if (isset($_SERVER['HTTP_REFERER'])) {
-                $ref = $_SERVER['HTTP_REFERER'];
-                $ref = str_replace(Yii::app()->getBaseUrl(true).'/', '', $ref);
-            }
-            if ($ref == 'research-purchase-report') {
-                $ref = 'rpt-'.time();
-            } else {
-                $ref = 'event-'.time();
-            }
-                // MyFunctions::echoArray($ref, $_POST, $_SERVER);
-
-            $this->InvoiceNumber = $ref;
-            $this->InvoiceReference = $ref;
-
-            $this->TotalAmount = $_POST['EventsRegistration']['price'];
-
             //Create AccessCode Request Object
             $request = new CreateAccessCodeRequest();
 
@@ -164,7 +191,7 @@ class EWayRapid3Widget extends AodWidget
             $request->Customer->State = $_POST['EventsRegistration']['state'];
             $request->Customer->PostalCode = $_POST['EventsRegistration']['postcode'];
             //Note: Country is Required Field When Create/Update a TokenCustomer
-            $request->Customer->Country = 'AU';// $_POST['EventsRegistration']['country'];
+            $request->Customer->Country = strtoupper($_POST['EventsRegistration']['country']);
             $request->Customer->Email = $_POST['EventsRegistration']['email'];
             $request->Customer->Phone = $_POST['EventsRegistration']['telephone'];
             $request->Customer->Mobile = $_POST['EventsRegistration']['mobile'];
@@ -188,14 +215,7 @@ class EWayRapid3Widget extends AodWidget
             $request->ShippingAddress->ShippingMethod = "LowCost";
         */
             //Populate values for LineItems
-            $item1 = new LineItem();
-            $item1->SKU = "SKU1";
-            $item1->Description = "Description1";
-            //$item2 = new LineItem();
-            //$item2->SKU = "SKU2";
-            //$item2->Description = "Description2";
-            $request->Items->LineItem[0] = $item1;
-            //$request->Items->LineItem[1] = $item2;
+            $request->Items->LineItem = $this->InvoiceItems;
 
             //Populate values for Options
             $opt1 = new Option();
@@ -205,7 +225,6 @@ class EWayRapid3Widget extends AodWidget
 
             //Populate values for Payment Object
             //Note: TotalAmount is a Required Field When Process a Payment, TotalAmount should set to "0" or leave EMPTY when Create/Update A TokenCustomer
-            //$request->Payment->TotalAmount = $_POST['EventsRegistration']['price'];
             $request->Payment->TotalAmount = $this->TotalAmount * 100;
             $request->Payment->InvoiceNumber = $this->InvoiceNumber;
             $request->Payment->InvoiceDescription = $this->InvoiceDescription;
@@ -231,7 +250,7 @@ class EWayRapid3Widget extends AodWidget
             //$_SESSION['Response'] = $result;
 
             //Check if any error returns
-            if(isset($result->Errors))
+            if( ! empty($result->Errors))
             {
                 //Get Error Messages from Error Code. Error Code Mappings are in the Config.ini file
                 $ErrorArray = explode(",", $result->Errors);
@@ -266,10 +285,15 @@ class EWayRapid3Widget extends AodWidget
         $result = $this->service->GetAccessCodeResult($request);
         $this->response = $result;
         $this->InvoiceReference = $result->InvoiceReference;
+        $this->systemMessage = $this->service->APIConfig[$result->ResponseMessage];
         //Check if any error returns
-        // MyFunctions::echoArray(array('errors'=>$result->Errors, 'report message'=>$result->ResponseMessage));
+        // MyFunctions::echoArray(array(
+        //     'result'            => $result,
+        //     'errors'            => $result->Errors,
+        //     'report message'    => $result->ResponseMessage,
+        // ));
         // if(isset($result->Errors))
-        if(isset($result->ResponseMessage))
+        if( ! empty($result->Errors))
         {
             //Get Error Messages from Error Code. Error Code Mappings are in the Config.ini file
             $ErrorArray = explode(",", $result->ResponseMessage);
@@ -284,18 +308,17 @@ class EWayRapid3Widget extends AodWidget
             }
 
             $this->errorHTML = $lblError;
-            $this->systemMessage = $lblError;
 
             return false;
         }
 
         // Prepare message
-        $this->systemMessage = $this->service->APIConfig[$result->ResponseMessage];
         // MyFunctions::echoArray(array(
-        //     'result'=>$result,
-        //     'ResponseMessage'=>$result->ResponseMessage,
-        //     'systemMessage'=>$this->systemMessage,
-        //     'errorHTML'=>@$this->errorHTML
+        //     'result'            => $result,
+        //     'errors'            => $result->Errors,
+        //     'ResponseMessage'   => $result->ResponseMessage,
+        //     'systemMessage'     => $this->systemMessage,
+        //     'errorHTML'         => @$this->errorHTML
         // ));
 
         return $result->TransactionStatus;
@@ -304,12 +327,12 @@ class EWayRapid3Widget extends AodWidget
 
     private function sendConfirmationMail($settings)
     {
-        if (!isset(Yii::app()->session['events.registration.model'])) {
+        if (is_null(SimpleCart::getEventRegistrationID())) {
             return false;
-            //MyFunctions::echoArray($this->model->attributes);
         }
+
         $model = new EventsRegistration();
-        $model->attributes = Yii::app()->session['events.registration.model'];
+        $model->attributes = SimpleCart::getEventRegistrationAttributes();
         $data = $model->attributes;
 
         // prepare $to parameter

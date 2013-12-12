@@ -45,7 +45,7 @@ if ($ShowDebugInfo) {
                         </dl><br class="clear" />
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblCountry">Country</label></dt>
-                            <dd class="floatR mb10 mt10"><label id="lblCountry"><?php echo $Response->Customer->Country ?></label></dd>
+                            <dd class="floatR mb10 mt10"><label id="lblCountry"><?php echo Country::getCountryName($Response->Customer->Country) ?></label></dd>
                         </dl><br class="clear" />
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblEmail">Email</label></dt>
@@ -65,11 +65,11 @@ if ($ShowDebugInfo) {
                         </div>
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblAmount">Total Amount</label></dt>
-                            <dd class="floatR mb10 mt10"><label id="lblAmount">$<?php echo $TotalAmount ?></label></dd>
+                            <dd class="floatR mb10 mt10"><label id="lblAmount">$<?php echo number_format($TotalAmount) ?></label></dd>
                         </dl><br class="clear" />
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblInvoiceReference">Invoice Reference</label></dt>
-                            <dd class="floatR mb10 mt10"><label id="lblInvoiceReference"><?php echo $InvoiceNumber ?></label></dd>
+                            <dd class="floatR mb10 mt10"><label id="lblInvoiceReference"><?php echo $InvoiceReference ?></label></dd>
                         </dl><br class="clear" />
                     </div>
 
