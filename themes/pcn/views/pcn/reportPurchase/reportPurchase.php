@@ -40,7 +40,7 @@ $form=$this->beginWidget('CActiveForm', array(
             <em class="blue" style="font-size: 200%;">$ <?php echo number_format($reportItem['price']); ?></em>
         </dt>
 
-        <dt class="floatL ml5">
+        <dt class="floatL ml5 checkBoxLabel">
             <label><?php echo $reportItem['label']?></label>
         </dt>
     </dl>
