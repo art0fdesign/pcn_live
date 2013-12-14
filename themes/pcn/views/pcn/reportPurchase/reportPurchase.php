@@ -10,6 +10,9 @@ if (isset($model['items'])) {
 <div class="wide floatL dotedL">
 <div class="pl20 pr0">
 <h1 class="dotedB contactTitle aboutTitle mb15"><?php echo empty($model['header']) ? 'Select Report(s) to Purchase' : $model['header'] ?></h1>
+<div class="flashMessage"<?php if (!isset($displayFlashMessage) || $displayFlashMessage != true): ?> style="display:none"<?php endif; ?>>
+    <p>Item added to shopping cart. Continue shopping or checkout by clicking on your cart above.<p>
+</div>
 <?php
 
 $form=$this->beginWidget('CActiveForm', array(
@@ -33,7 +36,7 @@ $form=$this->beginWidget('CActiveForm', array(
         <dd class="floatL mt10">
             <input id="" class="styled" type="checkbox" name="ReportPurchase[items][]" value="<?php echo $key; ?>" />
         </dd>
-        <dt class="floatL ml5">
+        <dt class="floatL ml5 checkBoxLabel">
             <em class="blue" style="font-size: 200%;">$ <?php echo number_format($reportItem['price']); ?></em>
         </dt>
 
@@ -99,6 +102,10 @@ if (!empty($model['terms_popup_file']) && file_exists(dirname(__FILE__) . DIRECT
                 return false;
             }
         });
+
+        setTimeout(function(){
+            jQuery(".flashMessage").fadeOut()
+        },3000);
     });
     /*]]>*/
 </script>
