@@ -73,6 +73,8 @@ class ReportPurchaseWidget extends AodWidget {
                         $cartItem->price        = (int)$report['price'];
                         // MyFunctions::echoArray($cartItem);
                         SimpleCart::addCartItem($cartItem);
+
+                        $displayFlashMessage = true;
                     }
                 }
 
@@ -82,6 +84,7 @@ class ReportPurchaseWidget extends AodWidget {
         $this->html = $this->render('reportPurchase', array(
             'model' => $model,
             'validationErrors' => $this->_validationErrors,
+            'displayFlashMessage' => $displayFlashMessage,
         ),true);
     }
 
