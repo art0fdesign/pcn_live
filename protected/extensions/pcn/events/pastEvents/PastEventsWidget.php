@@ -1,5 +1,5 @@
 <?php
-class EventsListWidget extends AodWidget
+class PastEventsWidget extends AodWidget
 {
     public $pageSize = 5;
     protected $_settings = array();
@@ -21,8 +21,8 @@ class EventsListWidget extends AodWidget
         // MyFunctions::echoArray( $this->_settings );
         if( isset( $this->_settings['page-size']['set_value'] ) )
             $this->pageSize = intval($this->_settings['page-size']['set_value']);
-        if( isset( $this->_settings['upcoming-category-id']['set_value'] ) )
-            $this->_categoryID = intval($this->_settings['upcoming-category-id']['set_value']);
+        if( isset( $this->_settings['past-category-id']['set_value'] ) )
+            $this->_categoryID = intval($this->_settings['past-category-id']['set_value']);
         // register pager css file
         $this->registerScripts();
     }
