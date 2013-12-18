@@ -2,7 +2,7 @@
 $baseLink = Yii::app()->request->baseUrl;
 ?>
 <div class="wide floatL dotedR events">
-    <h1 class="dotedB contactTitle eventsTitle mb15">Upcoming Events</h1>
+    <h1 class="dotedB contactTitle eventsTitle mb15">Past Events</h1>
 
 <?php foreach( $models as $model ):?>
     <div class="dotedB" id="<?php echo $model->item_seo?>">
