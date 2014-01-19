@@ -105,7 +105,7 @@ if (!empty($model['terms_popup_file']) && file_exists(dirname(__FILE__) . DIRECT
 
         setTimeout(function(){
             jQuery(".flashMessage").fadeOut()
-        },3000);
+        },10000);
     });
     /*]]>*/
 </script>
