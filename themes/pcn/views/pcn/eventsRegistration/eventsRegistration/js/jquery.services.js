@@ -35,6 +35,7 @@ $(document).ready(function() {
         if (termsError) {
             return false;
         }
+        console.log($('#registration_price'));
         if ($('#registration_price').val() == 0) {
             $('#priceErrorMessage').show();
             return false;
