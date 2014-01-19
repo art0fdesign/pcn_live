@@ -182,8 +182,8 @@ class MailChimpWidget extends CWidget
             $groupsArray = array();
             if( !empty($data['group1']) ) $groupsArray[] = $this->group1Name;
             if( !empty($data['group2']) ) $groupsArray[] = $this->group2Name;
-            if( !empty($data['group3']) && !empty($this->group3Name) ) $groupsArray[] = $this->group3Name;
-            if( !empty($data['group4']) && !empty($this->group4Name) ) $groupsArray[] = $this->group4Name;
+            // if( !empty($data['group3']) && !empty($this->group3Name) ) $groupsArray[] = $this->group3Name;
+            // if( !empty($data['group4']) && !empty($this->group4Name) ) $groupsArray[] = $this->group4Name;
             $groups = '';
             if (!empty($groupsArray)) $groups = implode(',', $groupsArray);
             // prepare merge_vars
@@ -200,13 +200,13 @@ class MailChimpWidget extends CWidget
                     //array('id'=>'11749', 'groups'=>'Quarterly'),
                 )
             );
-            if( isset($data['group3']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>'Events' ); }
+            if( isset($data['group3']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>$this->eventsName1 ); }
             else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>'' ); }
-            if( isset($data['group4']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>'News' );}
+            if( isset($data['group4']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>$this->newsName1 );}
             else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>'' );}
             // MyFunctions::echoArray($merge_vars);
-                // echo CJSON::encode( $merge_vars );
-                // Yii::app()->end();
+                echo CJSON::encode( $merge_vars );
+                Yii::app()->end();
 
             // By default this sends a confirmation email - you will not see new members
             // until the link contained in it is clicked!
@@ -231,13 +231,14 @@ class MailChimpWidget extends CWidget
         $result = '';
         $email = @$data['email'];
         if( !empty( $email )){
-            // repare groupings part of merge_vars array
+            // Prepare groupings part of merge_vars array
+            $groupsArray = array();
+            if( !empty($data['group1']) ) $groupsArray[] = $this->group1Name;
+            if( !empty($data['group2']) ) $groupsArray[] = $this->group2Name;
+            // if( !empty($data['group3']) && !empty($this->group3Name) ) $groupsArray[] = $this->group3Name;
+            // if( !empty($data['group4']) && !empty($this->group4Name) ) $groupsArray[] = $this->group4Name;
             $groups = '';
-            if( isset($data['group1']) ) $groups = $this->group1Name;
-            if( isset($data['group2']) ){
-                if( $groups != '' ) $groups .= ',';
-                $groups .= $this->group2Name;
-            }
+            if (!empty($groupsArray)) $groups = implode(',', $groupsArray);
             // prepare merge_vars
             $merge_vars = array(
                 'FNAME'=>$data['first_name'],
