@@ -4,42 +4,50 @@ class MailChimpWidget extends CWidget
     public $html    = '';
     public $params = array();
     public $type = '';
-    
+
     protected $_settings = array();
-    
+
     protected $apikey = 'ea5794a86d070e040f20efce6f0e4151-us5'; // aod
     protected $listID = '7fbd5f1541'; // aod - lista1
-    //protected $newsListID = '37e3bcde57';
-    //protected $eventsListID = '6d508d8636';
     //protected $apiUrl = 'http://api.mailchimp.com/1.3/';
     // groupings
-    protected $listGroupingID = '11749';
-    protected $group1Name = 'Quarterly';
-    protected $group2Name = 'Daily'; 
-    protected $eventsGroupingID = '12593';
-    protected $newsGroupingID = '12597';
-    
+    protected $listGroupingID   = '12945';
+    protected $group1Name       = 'Quarterly';
+    protected $group2Name       = 'Daily';
+    protected $group3Name       = '';
+    protected $group4Name       = '';
+    protected $eventsGroupingID = '12949';
+    protected $eventsName1      = 'Events';
+    protected $newsGroupingID   = '12953';
+    protected $newsName1        = 'News';
+
     protected $_result = 99; // subscription result
-    
+
     public function init()
     {
         $modID = ModRegister::getModuleID('mailChimp');
         $sets = ModSetting::getSettingsArray( $modID );
         $this->_settings = $sets;
-        $this->apikey = $sets['api-key']['value'];
-        $this->listID = $sets['list-id']['value'];
-        $this->listGroupingID = $sets['grouping-id']['value'];
-        $this->group1Name = $sets['group1-name']['value'];
-        $this->group2Name = $sets['group2-name']['value'];
-        //MyFunctions::echoArray( $sets );        
+        if (!empty($sets['api-key']))           $this->apikey           = $sets['api-key']['value'];
+        if (!empty($sets['list-id']))           $this->listID           = $sets['list-id']['value'];
+        if (!empty($sets['grouping-id']))       $this->listGroupingID   = $sets['grouping-id']['value'];
+        if (!empty($sets['group1-name']))       $this->group1Name       = $sets['group1-name']['value'];
+        if (!empty($sets['group2-name']))       $this->group2Name       = $sets['group2-name']['value'];
+        if (!empty($sets['group3-name']))       $this->group3Name       = $sets['group3-name']['value'];
+        if (!empty($sets['group4-name']))       $this->group4Name       = $sets['group4-name']['value'];
+        if (!empty($sets['events-group-id']))   $this->eventsGroupingID = $sets['events-group-id']['value'];
+        if (!empty($sets['events-name-1']))     $this->eventsName1      = $sets['events-name-1']['value'];
+        if (!empty($sets['news-group-id']))     $this->newsGroupingID   = $sets['news-group-id']['value'];
+        if (!empty($sets['news-name-1']))       $this->newsName1        = $sets['news-name-1']['value'];
+        //MyFunctions::echoArray( $sets );
         $this->registerScripts();
-        Yii::import('ext.mailChimp.mailChimp.MCAPI');        
-    } 
-    
+        Yii::import('ext.mailChimp.mailChimp.MCAPI');
+    }
+
     public function run()
     {
         if( Yii::app()->getRequest()->getIsAjaxRequest() ){
-            if( isset( $_GET['Newsletter'] ) ){ 
+            if( isset( $_GET['Newsletter'] ) ){
                 $response = $this->subscribe( $_GET['Newsletter'] );
                 echo CJSON::encode( $response );
                 Yii::app()->end();
@@ -49,19 +57,19 @@ class MailChimpWidget extends CWidget
         $this->html = $this->render('mailChimp', array('settings'=>$this->_settings), true);
         //MyFunctions::echoArray( array('path'=>$this->getViewPath(), 'file'=>$this->getViewFile('mailChimp')), $this->html );
     }
-    
+
     /**
      * Subscribe user and return result/message pair
      */
     private function subscribe( $data )
     {
         $msg = ''; // common error
-        // only if there are data AND they are valid 
+        // only if there are data AND they are valid
         if( $data !== null && $this->validateData( $data ) ){
             $email = $data['email'];
             // check is user already subscribed
             $memberStatus = $this->getMemberInfo( $email );
-        //MyFunctions::echoArray( array( 'valid'=>$this->validateData( $data ), 'status'=>$memberStatus ), $data );       
+        //MyFunctions::echoArray( array( 'valid'=>$this->validateData( $data ), 'status'=>$memberStatus ), $data );
             // if returned in error
             if( !empty( $memberStatus['apiErrorCode'] ) ){
                 $msg = $memberStatus['apiErrorMsg'];
@@ -74,13 +82,13 @@ class MailChimpWidget extends CWidget
                 } else { // already subscribed
                     switch( $memberStatus['status'] ){
                         case 'pending': // do nothing
-                            $this->_result = 1001; break;                            
+                            $this->_result = 1001; break;
                         case 'unsubscribed': // subscribe
-                            $this->_result = 1002; 
+                            $this->_result = 1002;
                             $msg = $this->doMemberSubscription( $data );
                             break;
                         case 'subscribed': // do update member
-                            $this->_result = 1003; 
+                            $this->_result = 1003;
                             $msg = $this->doMemberUpdate( $data );
                             break;
                     }// switch( $memberStatus['status'] )
@@ -96,13 +104,13 @@ class MailChimpWidget extends CWidget
             case 1001: $msg = "Your status is 'pending' - check inbox to finish subscription"; break;
             case 1002: $msg = "Your status is 'unsubscribed' - check inbox to finish re-subscription"; break;
             case 1003: $msg = "Your profile is updated"; break;
-            default:                 
+            default:
         }
         $return = array( 'result'=>$this->_result, 'message'=>$msg );
         //
         return $return;
     }
-    
+
     private function validateData( $data )
     {
         $bValid = true;
@@ -114,7 +122,7 @@ class MailChimpWidget extends CWidget
             $bValid = false;
             $this->_result = 2;
         }
-        // 
+        //
         if( $bValid ){
             $validator = new CEmailValidator;
             if( ! $validator->validateValue( $data['email'] ) ){
@@ -125,10 +133,10 @@ class MailChimpWidget extends CWidget
         //
         return $bValid;
     }
-    
-    /** 
+
+    /**
      * Retrieve member info
-     * 
+     *
      */
     private function getMemberInfo( $email = null )
     {
@@ -161,33 +169,34 @@ class MailChimpWidget extends CWidget
         }
         return $data;
     }
-    
+
     /**
-     * Do subscription 
+     * Do subscription
      */
     private function doMemberSubscription( $data = array() )
     {
         $result = '';
         $email = @$data['email'];
         if( !empty( $email )){
-            // repare groupings part of merge_vars array
+            // Prepare groupings part of merge_vars array
+            $groupsArray = array();
+            if( !empty($data['group1']) ) $groupsArray[] = $this->group1Name;
+            if( !empty($data['group2']) ) $groupsArray[] = $this->group2Name;
+            if( !empty($data['group3']) && !empty($this->group3Name) ) $groupsArray[] = $this->group3Name;
+            if( !empty($data['group4']) && !empty($this->group4Name) ) $groupsArray[] = $this->group4Name;
             $groups = '';
-            if( isset($data['group1']) ) $groups = $this->group1Name;
-            if( isset($data['group2']) ){
-                if( $groups != '' ) $groups .= ',';
-                $groups .= $this->group2Name;
-            }
+            if (!empty($groupsArray)) $groups = implode(',', $groupsArray);
             // prepare merge_vars
             /** TODO: Switch betweeen merge_vars variations */
             $merge_vars = array(
-                'FNAME'=>$data['first_name'],  
-                'LNAME'=>$data['last_name'],  
-                'COMPANY'=>$data['company'],  
+                'FNAME'=>$data['first_name'],
+                'LNAME'=>$data['last_name'],
+                'COMPANY'=>$data['company'],
                 'POSITION'=>$data['job_title'],
-                //'API_DATE'=>date('Y-m-d'),  
-                'API_DATE'=>date('m/d/Y'),  
-                'GROUPINGS'=>array( 
-                    array( 'id'=>$this->listGroupingID, 'groups'=>$groups ), 
+                //'API_DATE'=>date('Y-m-d'),
+                'API_DATE'=>date('m/d/Y'),
+                'GROUPINGS'=>array(
+                    array( 'id'=>$this->listGroupingID, 'groups'=>$groups ),
                     //array('id'=>'11749', 'groups'=>'Quarterly'),
                 )
             );
@@ -195,25 +204,27 @@ class MailChimpWidget extends CWidget
             else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>'' ); }
             if( isset($data['group4']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>'News' );}
             else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>'' );}
-            //MyFunctions::echoArray($merge_vars);
+            // MyFunctions::echoArray($merge_vars);
+                // echo CJSON::encode( $merge_vars );
+                // Yii::app()->end();
 
             // By default this sends a confirmation email - you will not see new members
             // until the link contained in it is clicked!
             $api = new MCAPI($this->apikey);
             //
             $retval = $api->listSubscribe( $this->listID, $email, $merge_vars );
-            
+
             if ($api->errorCode){
                 $this->_result = $api->errorCode;
                 $result = $api->errorMessage;
             }
-            
+
         }
         return $result;
     }
-    
+
     /**
-     * Do Member Update 
+     * Do Member Update
      */
     private function doMemberUpdate( $data = array() )
     {
@@ -229,20 +240,21 @@ class MailChimpWidget extends CWidget
             }
             // prepare merge_vars
             $merge_vars = array(
-                'FNAME'=>$data['first_name'],  
-                'LNAME'=>$data['last_name'],  
-                'COMPANY'=>$data['company'],  
+                'FNAME'=>$data['first_name'],
+                'LNAME'=>$data['last_name'],
+                'COMPANY'=>$data['company'],
                 'POSITION'=>$data['job_title'],
-                //'API_DATE'=>date('Y-m-d'),  
-                'API_DATE'=>date('m/d/Y'),  
-                'GROUPINGS'=>array( 
-                    array( 'id'=>$this->listGroupingID, 'groups'=>$groups ), 
+                //'API_DATE'=>date('Y-m-d'),
+                'API_DATE'=>date('m/d/Y'),
+                'GROUPINGS'=>array(
+                    array( 'id'=>$this->listGroupingID, 'groups'=>$groups ),
                     //array('id'=>'11749', 'groups'=>'Quarterly'),
                 )
             );
-            if( isset($data['group3']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>'Events' ); }
+
+            if( isset($data['group3']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>$this->eventsName1 ); }
             else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>'' ); }
-            if( isset($data['group4']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>'News' );}
+            if( isset($data['group4']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>$this->newsName1 );}
             else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>'' );}
 
             // By default this sends a confirmation email - you will not see new members
@@ -250,17 +262,17 @@ class MailChimpWidget extends CWidget
             $api = new MCAPI($this->apikey);
             //
             $retval = $api->listUpdateMember( $this->listID, $email, $merge_vars, 'html', true );
-            
+
             if ($api->errorCode){
                 $this->_result = $api->errorCode;
                 $result = $api->errorMessage;
             }
-            
+
         }
         return $result;
     }
-    
-    
+
+
     /** Register scripts */
     private function registerScripts()
     {
@@ -289,7 +301,7 @@ class MailChimpWidget extends CWidget
             return Yii::app()->getTheme()->viewPath . $dir;
         } else {
             return parent::getViewPath(false);
-        }        
+        }
     }
-    
+
 }
