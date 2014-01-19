@@ -205,8 +205,8 @@ class MailChimpWidget extends CWidget
             if( isset($data['group4']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>$this->newsName1 );}
             else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>'' );}
             // MyFunctions::echoArray($merge_vars);
-                echo CJSON::encode( $merge_vars );
-                Yii::app()->end();
+                // echo CJSON::encode( $merge_vars );
+                // Yii::app()->end();
 
             // By default this sends a confirmation email - you will not see new members
             // until the link contained in it is clicked!
