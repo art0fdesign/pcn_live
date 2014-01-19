@@ -43,7 +43,11 @@ class DefaultController extends CController
      */
     public function isLive()
     {
-        return $_SERVER['SERVER_ADDR'] != '127.0.0.1' && $_SERVER['SERVER_ADDR'] != '::1';
+        return !$this->isLocal();
+    }
+    public function isLocal()
+    {
+        return ($_SERVER['SERVER_ADDR'] == '127.0.0.1' || $_SERVER['SERVER_ADDR'] == '::1');
     }
 
     /**
