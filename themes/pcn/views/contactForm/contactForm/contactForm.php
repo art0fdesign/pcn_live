@@ -1,8 +1,8 @@
 <div class="floatL">
 
-	<h1 class="dotedB contactTitle mb15">Contact</h1>
+    <h1 class="dotedB contactTitle mb15">Contact</h1>
 
-<?php echo empty($message)? @$sets['text-before-form']['set_value']: $message ?> 
+<?php echo empty($message)? @$sets['text-before-form']['set_value']: $message ?>
 
 <?php
 $form=$this->beginWidget('CActiveForm', array(
@@ -36,12 +36,12 @@ $form=$this->beginWidget('CActiveForm', array(
             <?php echo $form->textField( $model, 'email', array('class'=>'textbox' )); ?>
         </dd>
     </dl><br class="clear" />
-	
-	<dl class="floatL mb10">
+
+    <dl class="floatL mb10">
         <dt class="floatL mr20"><label>Phone:</label></dt>
         <dd class="floatR">
-            <?php echo $form->error( $model, 'email' ) ?>
-            <?php echo $form->textField( $model, 'email', array('class'=>'textbox' )); ?>
+            <?php echo $form->error( $model, 'phone' ) ?>
+            <?php echo $form->textField( $model, 'phone', array('class'=>'textbox' )); ?>
         </dd>
     </dl><br class="clear" />
 
@@ -67,7 +67,7 @@ $form=$this->beginWidget('CActiveForm', array(
         <dt class="floatL mr20"><label>Enter code:</label></dt>
         <dd class="floatR mr40">
             <?php echo $form->error($model, 'verifyCode')?>
-            <?php echo $form->textField($model, 'verifyCode', array('class'=>'textbox'))?>            
+            <?php echo $form->textField($model, 'verifyCode', array('class'=>'textbox'))?>
         </dd>
     </dl>
     <dl class="floatL mb10">
@@ -77,14 +77,14 @@ $form=$this->beginWidget('CActiveForm', array(
     </dl>
     <?php endif;*/?>
 
-					
-	<dl class="floatL mb20" style="margin-left:90px;">
-	<dd><input type="submit" value="SUBMIT"class="submit btn_blue mr20" style="width:100px;" /></dd>
-	</dl>
+
+    <dl class="floatL mb20" style="margin-left:90px;">
+    <dd><input type="submit" value="SUBMIT"class="submit btn_blue mr20" style="width:100px;" /></dd>
+    </dl>
 
 </fieldset>
 <?php $this->endWidget(); ?>
-		
-<?=@$sets['text-after-form']['set_value']; ?> 
-    
+
+<?=@$sets['text-after-form']['set_value']; ?>
+
 </div>
