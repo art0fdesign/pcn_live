@@ -1,4 +1,4 @@
-<div class="wide floatL dotedR">
+<div class="floatL">
 
 	<h1 class="dotedB contactTitle mb15">Contact</h1>
 
@@ -36,6 +36,15 @@ $form=$this->beginWidget('CActiveForm', array(
             <?php echo $form->textField( $model, 'email', array('class'=>'textbox' )); ?>
         </dd>
     </dl><br class="clear" />
+	
+	<dl class="floatL mb10">
+        <dt class="floatL mr20"><label>Phone:</label></dt>
+        <dd class="floatR">
+            <?php echo $form->error( $model, 'email' ) ?>
+            <?php echo $form->textField( $model, 'email', array('class'=>'textbox' )); ?>
+        </dd>
+    </dl><br class="clear" />
+
 
     <dl class="floatL mb10">
         <dt class="floatL mr20"><label>Subject:</label></dt>
@@ -69,7 +78,7 @@ $form=$this->beginWidget('CActiveForm', array(
     <?php endif;*/?>
 
 					
-	<dl class="floatR mr40 mb20">
+	<dl class="floatL mb20" style="margin-left:90px;">
 	<dd><input type="submit" value="SUBMIT"class="submit btn_blue mr20" style="width:100px;" /></dd>
 	</dl>
 
