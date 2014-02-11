@@ -1,45 +1,23 @@
 <?php
 class MailChimpWidget extends CWidget
 {
-    public $html    = '';
+    public $html   = '';
     public $params = array();
-    public $type = '';
+    public $type   = '';
 
-    protected $_settings = array();
+    protected $_settings   = array();
+    protected $_apikey     = 'ea5794a86d070e040f20efce6f0e4151-us5'; // aod
+    protected $_email      = null;
+    protected $_merge_vars = array();
 
-    protected $apikey = 'ea5794a86d070e040f20efce6f0e4151-us5'; // aod
-    protected $listID = '7fbd5f1541'; // aod - lista1
-    //protected $apiUrl = 'http://api.mailchimp.com/1.3/';
-    // groupings
-    protected $listGroupingID   = '12945';
-    protected $group1Name       = 'Quarterly';
-    protected $group2Name       = 'Daily';
-    protected $group3Name       = '';
-    protected $group4Name       = '';
-    protected $eventsGroupingID = '12949';
-    protected $eventsName1      = 'Events';
-    protected $newsGroupingID   = '12953';
-    protected $newsName1        = 'News';
-
-    protected $_result = 99; // subscription result
+    protected $_result     = 99; // subscription result
 
     public function init()
     {
         $modID = ModRegister::getModuleID('mailChimp');
         $sets = ModSetting::getSettingsArray( $modID );
         $this->_settings = $sets;
-        if (!empty($sets['api-key']))           $this->apikey           = $sets['api-key']['value'];
-        if (!empty($sets['list-id']))           $this->listID           = $sets['list-id']['value'];
-        if (!empty($sets['grouping-id']))       $this->listGroupingID   = $sets['grouping-id']['value'];
-        if (!empty($sets['group1-name']))       $this->group1Name       = $sets['group1-name']['value'];
-        if (!empty($sets['group2-name']))       $this->group2Name       = $sets['group2-name']['value'];
-        if (!empty($sets['group3-name']))       $this->group3Name       = $sets['group3-name']['value'];
-        if (!empty($sets['group4-name']))       $this->group4Name       = $sets['group4-name']['value'];
-        if (!empty($sets['events-group-id']))   $this->eventsGroupingID = $sets['events-group-id']['value'];
-        if (!empty($sets['events-name-1']))     $this->eventsName1      = $sets['events-name-1']['value'];
-        if (!empty($sets['news-group-id']))     $this->newsGroupingID   = $sets['news-group-id']['value'];
-        if (!empty($sets['news-name-1']))       $this->newsName1        = $sets['news-name-1']['value'];
-        //MyFunctions::echoArray( $sets );
+        if (!empty($sets['api-key'])) $this->_apikey = $sets['api-key']['value'];
         $this->registerScripts();
         Yii::import('ext.mailChimp.mailChimp.MCAPI');
     }
@@ -59,41 +37,134 @@ class MailChimpWidget extends CWidget
     }
 
     /**
+     * Prepares MergeVars Array for creating mailChimp request
+     * @param  Array $data GET array
+     * @return Array|null
+     */
+    private function prepareMergeVars( $data = null )
+    {
+        if ( is_null($this->_settings) || is_null($data) )
+            return null;
+
+        $vars = array();
+        for ( $i = 1; $i <= 4; $i++ ) {
+            if ( isset($this->_settings['opt' . $i . '-list-id']) ) {
+                $listID    = $this->_settings['opt' . $i . '-list-id']['value'];
+                $groupID   = $this->_settings['opt' . $i . '-group-id']['value'];
+
+
+                if ( empty($groupID) && ! isset($vars[$listID]) ) {
+                    $vars[$listID] = array();
+                }
+
+                if ( ! empty($groupID) && ! isset($vars[$listID])
+                     || ( isset($vars[$listID]) && ! in_array($groupID, $vars[$listID]) )
+                ) {
+                    $vars[$listID][] = $groupID;
+                }
+            }
+        }
+
+        // Full lists empty merge_vars
+        if ( ! empty($vars)) {
+            foreach ($vars as $listID => $list) {
+                $groupings = array();
+                foreach ($list as $groupID) {
+                    if ( ! empty($groupID) ) {
+                        $groupings[] = array(
+                            'id'     => $groupID,
+                            'groups' => '',
+                        );
+                    }
+                }
+                $this->_merge_vars[$listID] = array(
+                    'FNAME'     => $data['first_name'],
+                    'LNAME'     => $data['last_name'],
+                    'COMPANY'   => $data['company'],
+                    'POSITION'  => $data['job_title'],
+                    'API_DATE'  => date('m/d/Y'),
+                );
+                if ( ! empty($groupings) )
+                    $this->_merge_vars[$listID]['GROUPINGS'] = $groupings;
+            }
+        }
+
+        $vars = array();
+        for ( $i = 1; $i <= 4; $i++ ) {
+            if ( isset($data['opt' . $i . '']) ) {
+                $listID    = $this->_settings['opt' . $i . '-list-id']['value'];
+                $groupID   = $this->_settings['opt' . $i . '-group-id']['value'];
+                $groupName = $this->_settings['opt' . $i . '-group-name']['value'];
+
+                $vars[$listID][$groupID][] = $groupName;
+            }
+        }
+
+        // If groupings ARE selected
+        if ( ! empty($vars)) {
+            foreach ($vars as $listID => $list) {
+                foreach ($list as $groupID => $group) {
+                    $groupNames = array();
+                    foreach ($group as $groupName) {
+                        $groupNames[] = $groupName;
+                    }
+                    $groups = implode( ',', $groupNames );
+
+                    // Update GROUPINGS groups value
+                    foreach ($this->_merge_vars[$listID]['GROUPINGS'] as $index => $grouping) {
+                        if ( $grouping['id'] == $groupID ) {
+                            $this->_merge_vars[$listID]['GROUPINGS'][$index]['groups'] = $groups;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->_merge_vars;
+    }
+
+    /**
      * Subscribe user and return result/message pair
      */
     private function subscribe( $data )
     {
         $msg = ''; // common error
+
+        $merge_vars = $this->prepareMergeVars($data);
+        // MyFunctions::echoArray($merge_vars);
         // only if there are data AND they are valid
-        if( $data !== null && $this->validateData( $data ) ){
-            $email = $data['email'];
-            // check is user already subscribed
-            $memberStatus = $this->getMemberInfo( $email );
-        //MyFunctions::echoArray( array( 'valid'=>$this->validateData( $data ), 'status'=>$memberStatus ), $data );
-            // if returned in error
-            if( !empty( $memberStatus['apiErrorCode'] ) ){
-                $msg = $memberStatus['apiErrorMsg'];
-                $this->_result = $memberStatus['apiErrorCode'];
-            } else { // succeeded
-                if( !$memberStatus['success'] ){ // not yet subscribed
-                    // do subscribe
-                    $msg = $this->doMemberSubscription( $data );
-                    if( $msg == '' ) $this->_result = 0;
-                } else { // already subscribed
-                    switch( $memberStatus['status'] ){
-                        case 'pending': // do nothing
-                            $this->_result = 1001; break;
-                        case 'unsubscribed': // subscribe
-                            $this->_result = 1002;
-                            $msg = $this->doMemberSubscription( $data );
-                            break;
-                        case 'subscribed': // do update member
-                            $this->_result = 1003;
-                            $msg = $this->doMemberUpdate( $data );
-                            break;
-                    }// switch( $memberStatus['status'] )
-                } // if( $memberStatus['succeeded'] )
-            } // if( !empty( $memberStatus['apiErrorCode'] ) )
+        if( $data !== null && $this->validateData( $data ) && ! is_null($merge_vars) ){
+            $this->_email = $data['email'];
+            foreach ($this->_merge_vars as $listID => $merge_vars) {
+                // check is user already subscribed
+                $memberStatus = $this->getMemberInfo( $listID, $this->_email );
+            //MyFunctions::echoArray( array( 'valid'=>$this->validateData( $data ), 'status'=>$memberStatus ), $data );
+                // if returned in error
+                if( !empty( $memberStatus['apiErrorCode'] ) ){
+                    $msg = $memberStatus['apiErrorMsg'];
+                    $this->_result = $memberStatus['apiErrorCode'];
+                } else { // succeeded
+                    if( !$memberStatus['success'] ){ // not yet subscribed
+                        // do subscribe
+                        $msg = $this->doMemberSubscription( $listID, $data );
+                        if( $msg == '' ) $this->_result = 0;
+                    } else { // already subscribed
+                        switch( $memberStatus['status'] ){
+                            case 'pending': // do nothing
+                                $this->_result = 1001; break;
+                            case 'unsubscribed': // subscribe
+                                $this->_result = 1002;
+                                $msg = $this->doMemberSubscription( $listID, $data );
+                                break;
+                            case 'subscribed': // do update member
+                                $this->_result = 1003;
+                                $msg = $this->doMemberUpdate( $listID, $data );
+                                break;
+                        }// switch( $memberStatus['status'] )
+                    } // if( $memberStatus['succeeded'] )
+                } // if( !empty( $memberStatus['apiErrorCode'] ) )
+            }
         }
         switch( $this->_result ){
             case 0: $msg = 'Subscribed - look for the confirmation email!'; break;
@@ -138,16 +209,16 @@ class MailChimpWidget extends CWidget
      * Retrieve member info
      *
      */
-    private function getMemberInfo( $email = null )
+    private function getMemberInfo( $listID = null, $email = null )
     {
         $data = array(
             'apiErrorCode' => '0',
             'apiErrorMsg'  =>  '',
         );
         if( !empty($email) ){
-            $api = new MCAPI($this->apikey);
+            $api = new MCAPI($this->_apikey);
             //
-            $retval = $api->listMemberInfo( $this->listID, array($email) );
+            $retval = $api->listMemberInfo( $listID, array($email) );
             //
             if ($api->errorCode){
                 $data['apiErrorCode'] = $api->errorCode;
@@ -173,52 +244,24 @@ class MailChimpWidget extends CWidget
     /**
      * Do subscription
      */
-    private function doMemberSubscription( $data = array() )
+    private function doMemberSubscription( $listID = null, $data = array() )
     {
-        $result = '';
-        $email = @$data['email'];
-        if( !empty( $email )){
-            // Prepare groupings part of merge_vars array
-            $groupsArray = array();
-            if( !empty($data['group1']) ) $groupsArray[] = $this->group1Name;
-            if( !empty($data['group2']) ) $groupsArray[] = $this->group2Name;
-            // if( !empty($data['group3']) && !empty($this->group3Name) ) $groupsArray[] = $this->group3Name;
-            // if( !empty($data['group4']) && !empty($this->group4Name) ) $groupsArray[] = $this->group4Name;
-            $groups = '';
-            if (!empty($groupsArray)) $groups = implode(',', $groupsArray);
-            // prepare merge_vars
-            /** TODO: Switch betweeen merge_vars variations */
-            $merge_vars = array(
-                'FNAME'=>$data['first_name'],
-                'LNAME'=>$data['last_name'],
-                'COMPANY'=>$data['company'],
-                'POSITION'=>$data['job_title'],
-                //'API_DATE'=>date('Y-m-d'),
-                'API_DATE'=>date('m/d/Y'),
-                'GROUPINGS'=>array(
-                    array( 'id'=>$this->listGroupingID, 'groups'=>$groups ),
-                    //array('id'=>'11749', 'groups'=>'Quarterly'),
-                )
-            );
-            if( isset($data['group3']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>$this->eventsName1 ); }
-            else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>'' ); }
-            if( isset($data['group4']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>$this->newsName1 );}
-            else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>'' );}
-            // MyFunctions::echoArray($merge_vars);
-                // echo CJSON::encode( $merge_vars );
-                // Yii::app()->end();
-
+        $result = null;
+        if( !empty($this->_email) && ! empty($this->_merge_vars[$listID]) ){
             // By default this sends a confirmation email - you will not see new members
             // until the link contained in it is clicked!
-            $api = new MCAPI($this->apikey);
+            $api = new MCAPI($this->_apikey);
+
+            // MyFunctions::echoArray($merge_vars);
+            // echo CJSON::encode( $merge_vars );
+            // Yii::app()->end();
             //
-            $retval = $api->listSubscribe( $this->listID, $email, $merge_vars );
+            $retval = $api->listSubscribe( $listID, $this->_email, $this->_merge_vars[$listID] );
 
             if ($api->errorCode){
                 $this->_result = $api->errorCode;
                 $result = $api->errorMessage;
             }
-
         }
         return $result;
     }
@@ -226,49 +269,20 @@ class MailChimpWidget extends CWidget
     /**
      * Do Member Update
      */
-    private function doMemberUpdate( $data = array() )
+    private function doMemberUpdate( $listID = null, $data = array() )
     {
         $result = '';
-        $email = @$data['email'];
-        if( !empty( $email )){
-            // Prepare groupings part of merge_vars array
-            $groupsArray = array();
-            if( !empty($data['group1']) ) $groupsArray[] = $this->group1Name;
-            if( !empty($data['group2']) ) $groupsArray[] = $this->group2Name;
-            // if( !empty($data['group3']) && !empty($this->group3Name) ) $groupsArray[] = $this->group3Name;
-            // if( !empty($data['group4']) && !empty($this->group4Name) ) $groupsArray[] = $this->group4Name;
-            $groups = '';
-            if (!empty($groupsArray)) $groups = implode(',', $groupsArray);
-            // prepare merge_vars
-            $merge_vars = array(
-                'FNAME'=>$data['first_name'],
-                'LNAME'=>$data['last_name'],
-                'COMPANY'=>$data['company'],
-                'POSITION'=>$data['job_title'],
-                //'API_DATE'=>date('Y-m-d'),
-                'API_DATE'=>date('m/d/Y'),
-                'GROUPINGS'=>array(
-                    array( 'id'=>$this->listGroupingID, 'groups'=>$groups ),
-                    //array('id'=>'11749', 'groups'=>'Quarterly'),
-                )
-            );
-
-            if( isset($data['group3']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>$this->eventsName1 ); }
-            else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->eventsGroupingID, 'groups'=>'' ); }
-            if( isset($data['group4']) ) { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>$this->newsName1 );}
-            else  { $merge_vars['GROUPINGS'][] = array( 'id'=>$this->newsGroupingID, 'groups'=>'' );}
-
+        if( !empty($this->_email) && ! empty($this->_merge_vars[$listID]) ){
             // By default this sends a confirmation email - you will not see new members
             // until the link contained in it is clicked!
-            $api = new MCAPI($this->apikey);
-            //
-            $retval = $api->listUpdateMember( $this->listID, $email, $merge_vars, 'html', true );
+            $api = new MCAPI($this->_apikey);
+
+            $retval = $api->listUpdateMember( $listID, $this->_email, $this->_merge_vars[$listID], 'html', true );
 
             if ($api->errorCode){
                 $this->_result = $api->errorCode;
-                $result = $api->errorMessage;
+                $result = $api->errorMessage . '; listID: ' . $listID . ', ' . json_encode($this->_merge_vars[$listID]);
             }
-
         }
         return $result;
     }

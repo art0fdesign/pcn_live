@@ -47,21 +47,29 @@ $imgUrl = Yii::app()->theme->getBaseUrl() . '/img/';
                 <input type="email" tabindex="50" class="textbox" style="width:270px;" name="Newsletter[email]" placeholder="Enter Your e-mail Address" />
             </dd><br class="clear" /><br />
 
-            <dd class="floatL mr10 mt10"><input type="checkbox" checked="checked" id="ch1" class="styled" name="Newsletter[group1]" /></dd>
-            <dt class="floatL"><label for="ch1"><?php echo $settings['group1-title']['value']?></label></dt><br class="clear" />
-            <dd class="pl30"><?php echo $settings['group1-description']['value']?></dd><br class="clear" />
+            <?php if ( !empty($settings['opt1-list-id']) ): ?>
+            <dd class="floatL mr10 mt10"><input type="checkbox" checked="checked" id="ch1" class="styled" name="Newsletter[opt1]" /></dd>
+            <dt class="floatL"><label for="ch1"><?php echo CHtml::encode($settings['opt1-title']['value'])?></label></dt><br class="clear" />
+            <dd class="pl30"><?php echo CHtml::encode($settings['opt1-description']['value'])?></dd><br class="clear" />
+            <?php endif; ?>
 
-            <dd class="floatL mr10 mt10"><input type="checkbox" checked="checked" id="ch2" class="styled" name="Newsletter[group2]" /></dd>
-            <dt class="floatL"><label for="ch2"><?php echo $settings['group2-title']['value']?></label></dt><br class="clear" />
-            <dd class="pl30"><?php echo $settings['group2-description']['value']?></dd><br class="clear" />
+            <?php if ( !empty($settings['opt2-list-id']) ): ?>
+            <dd class="floatL mr10 mt10"><input type="checkbox" checked="checked" id="ch2" class="styled" name="Newsletter[opt2]" /></dd>
+            <dt class="floatL"><label for="ch2"><?php echo CHtml::encode($settings['opt2-title']['value'])?></label></dt><br class="clear" />
+            <dd class="pl30"><?php echo CHtml::encode($settings['opt2-description']['value'])?></dd><br class="clear" />
+            <?php endif; ?>
 
-            <dd class="floatL mr10 mt10"><input type="checkbox" checked="checked" id="ch4" class="styled" name="Newsletter[group4]" /></dd>
-            <dt class="floatL"><label for="ch4"><?php echo $settings['group4-title']['value']?></label></dt><br class="clear" />
-            <dd class="pl30"><?php echo $settings['group4-description']['value']?></dd><br class="clear" />
+            <?php if ( !empty($settings['opt3-list-id']) ): ?>
+            <dd class="floatL mr10 mt10"><input type="checkbox" checked="checked" id="ch3" class="styled" name="Newsletter[opt3]" /></dd>
+            <dt class="floatL"><label for="ch3"><?php echo CHtml::encode($settings['opt3-title']['value'])?></label></dt><br class="clear" />
+            <dd class="pl30"><?php echo CHtml::encode($settings['opt3-description']['value'])?></dd><br class="clear" />
+            <?php endif; ?>
 
-            <dd class="floatL mr10 mt10"><input type="checkbox" checked="checked" id="ch3" class="styled" name="Newsletter[group3]" /></dd>
-            <dt class="floatL"><label for="ch3"><?php echo $settings['group3-title']['value']?></label></dt><br class="clear" />
-            <dd class="pl30"><?php echo $settings['group3-description']['value']?></dd><br class="clear" />
+            <?php if ( !empty($settings['opt4-list-id']) ): ?>
+            <dd class="floatL mr10 mt10"><input type="checkbox" checked="checked" id="ch4" class="styled" name="Newsletter[opt4]" /></dd>
+            <dt class="floatL"><label for="ch4"><?php echo CHtml::encode($settings['opt4-title']['value'])?></label></dt><br class="clear" />
+            <dd class="pl30"><?php echo CHtml::encode($settings['opt4-description']['value'])?></dd><br class="clear" />
+            <?php endif; ?>
 
         </dl>
        </fieldset>
