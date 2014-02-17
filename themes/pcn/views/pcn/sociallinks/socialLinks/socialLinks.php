@@ -8,8 +8,7 @@
     <?php if ($this->controller->isLive()): ?>
     <ul class="soc" id="socialShareLinks">
         <li><script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
-            <!--<script type="IN/FollowCompany" data-id="2884818" data-counter="none"></script>-->
-            <script type="IN/Share" data-id="2884818" data-counter="right"></script>
+            <script type="IN/FollowCompany" data-id="2884818" data-counter="right"></script>
         </li>
         <li><div class="fb-like" data-href="http://www.facebook.com/pages/Payments-Consulting-Network/267363763392274" data-send="false" data-layout="button_count" data-width="75" data-show-faces="false" data-font="arial" style="z-index:10;"></div>
         </li>
