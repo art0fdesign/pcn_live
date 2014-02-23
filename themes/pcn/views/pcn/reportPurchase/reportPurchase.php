@@ -29,7 +29,11 @@ $form=$this->beginWidget('CActiveForm', array(
     <em class="grey" style="font-size: 140%;">N.B. Please note that all prices quoted are in AUD and exclusive of GST. </em><br /><br class="clear" />
     <p class="mb0" style="font-size: 100%;">I would like to order:</p>
     <div id ="reportItemsWrapper">
-<?php foreach ($reportItems as $key => $reportItem): ?>
+<?php
+if (isset($model['tmp_file']) && file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . $model['tmp_file'])) {
+    include($model['tmp_file']);
+} else {
+    foreach ($reportItems as $key => $reportItem) { ?>
     <div class="clear"></div>
     <dl class="floatL mt20 ml15">
 
@@ -44,7 +48,7 @@ $form=$this->beginWidget('CActiveForm', array(
             <label><?php echo $reportItem['label']?></label>
         </dt>
     </dl>
-<?php endforeach; ?>
+<?php }} ?>
     </div>
     <div class="clear"></div>
 
