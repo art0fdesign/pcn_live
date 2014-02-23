@@ -14,7 +14,7 @@ $form=$this->beginWidget('CActiveForm', array(
 <fieldset class="mt30 mb30 dotedB">
 
     <dl class="floatL mb10">
-        <dt class="floatL mr20"><label>First Name:</label></dt>
+        <dt class="floatL mr20"><label>First Name</label></dt>
         <dd class="floatR">
             <?php echo $form->error( $model, 'first_name' ) ?>
             <?php echo $form->textField( $model, 'first_name', array('class'=>'textbox' )); ?>
@@ -22,7 +22,7 @@ $form=$this->beginWidget('CActiveForm', array(
     </dl><br class="clear" />
 
     <dl class="floatL mb10">
-        <dt class="floatL mr20"><label>Last Name:</label></dt>
+        <dt class="floatL mr20"><label>Last Name</label></dt>
         <dd class="floatR">
             <?php echo $form->error( $model, 'last_name' ) ?>
             <?php echo $form->textField( $model, 'last_name', array('class'=>'textbox' )); ?>
@@ -30,7 +30,7 @@ $form=$this->beginWidget('CActiveForm', array(
     </dl><br class="clear" />
 
     <dl class="floatL mb10">
-        <dt class="floatL mr20"><label>Mail:</label></dt>
+        <dt class="floatL mr20"><label>Mail</label></dt>
         <dd class="floatR">
             <?php echo $form->error( $model, 'email' ) ?>
             <?php echo $form->textField( $model, 'email', array('class'=>'textbox' )); ?>
@@ -38,7 +38,7 @@ $form=$this->beginWidget('CActiveForm', array(
     </dl><br class="clear" />
 
     <dl class="floatL mb10">
-        <dt class="floatL mr20"><label>Phone:</label></dt>
+        <dt class="floatL mr20"><label>Phone</label></dt>
         <dd class="floatR">
             <?php echo $form->error( $model, 'phone' ) ?>
             <?php echo $form->textField( $model, 'phone', array('class'=>'textbox' )); ?>
@@ -47,7 +47,7 @@ $form=$this->beginWidget('CActiveForm', array(
 
 
     <dl class="floatL mb10">
-        <dt class="floatL mr20"><label>Subject:</label></dt>
+        <dt class="floatL mr20"><label>Subject</label></dt>
         <dd class="floatR">
             <?php echo $form->error( $model, 'subject' ) ?>
             <?php echo $form->textField( $model, 'subject', array('class'=>'textbox' )); ?>
@@ -55,7 +55,7 @@ $form=$this->beginWidget('CActiveForm', array(
     </dl><br class="clear" />
 
     <dl class="floatL mb10">
-        <dt class="floatL mr20"><label>Message:</label></dt>
+        <dt class="floatL mr20"><label>Message</label></dt>
         <dd class="floatR">
             <?php echo $form->error( $model, 'message' ) ?>
             <?php echo $form->textArea( $model, 'message', array('class'=>'textarea textbox' )); ?>
