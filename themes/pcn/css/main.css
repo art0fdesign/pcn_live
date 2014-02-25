@@ -1830,3 +1830,18 @@ ul.accordionMenuLevel2 a {
     -moz-border-radius:4px;
     -webkit-border-radius:4px;
 }
+
+.newsTable{
+    width:560px;
+	margin:15px 0 0 15px;
+}
+.newsTable th,
+.newsTable td {
+    border-collapse: collapsed;
+	border: solid 1px #cccccc;
+	padding:5px 8px;
+}
+.newsTable th{
+    color:#2f2f2f !important;
+	background-color: #f2f2f2 !important;
+}

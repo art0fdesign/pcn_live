@@ -1,4 +1,4 @@
-<table style="width: 500px;">
+<table class="newsTable">
 	<tr>
 		<th>DAILY NEWSLETTER</th>
 		<th>Size</th>
