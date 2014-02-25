@@ -97,9 +97,6 @@
                     <li><?php echo CHtml::link('Menus', array('/menuBuilder/menu/list')) ?></li>
                     <li><?php echo CHtml::link('Assignment', array('/webAssign/index')) ?></li>
                     <li><?php echo CHtml::link('Mails', array('/modMail/list')) ?></li>
-    <?php if($frontendTheme == 'pcn'): ?>
-                    <li><?php echo CHtml::link('Events Registration', array('/eventsRegistration/index')); ?></li>
-    <?php endif; ?>
                 </ul>
             </li>
 
@@ -178,6 +175,11 @@
                     <li><?php echo CHtml::link('Our team', array('/aodListing/listingPcnCategoryItem/index')) ?></li>
                     <li><?php echo CHtml::link('Functional expertize', array('/aodListing/listingPcnCategory/index', 'parent_id'=>'1')) ?></li>
                     <li><?php echo CHtml::link('Industry expertize', array('/aodListing/listingPcnCategory/index', 'parent_id'=>'2')) ?></li>
+                </ul>
+            </li>
+            <li <?php if($module == 'pcn' && in_array($controler, array('eway'))) echo 'class="active"' ?>><?php echo CHtml::link('Invoices<span>List of registration invoices</span>', '#', array('class'=>'exp accordionButton contents')) ?>
+                <ul class="menu1 accordionContent">
+                    <li><?php echo CHtml::link('Invoices', array('/pcn/eway/index')) ?></li>
                 </ul>
             </li>
 <?php endif; ?>

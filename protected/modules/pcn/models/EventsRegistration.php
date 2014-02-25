@@ -30,6 +30,8 @@
  * @property string $invoice_reference
  * @property string $invoice_date
  * @property string $invoice_description
+ * @property string $api_response_message
+ * @property string $api_response
  * @property string $created_dt
  */
 class EventsRegistration extends CActiveRecord
@@ -80,6 +82,7 @@ class EventsRegistration extends CActiveRecord
             array('terms, terms_report', 'in', 'range'=>array(1), 'message' => 'You must agree to the registration Terms and Conditions'),
             array('id, dietary_requirements, dietary_other, ticket, invoice_description, created_dt', 'safe'),
             array('invoice_no, invoice_reference, invoice_date', 'safe'),
+            array('api_response_message, api_response', 'safe'),
         );
     }
 
@@ -126,6 +129,8 @@ class EventsRegistration extends CActiveRecord
             'invoice_description' => 'Invoice Description',
             'terms'=>'Terms',
             'terms_report'=>'Terms',
+            'api_response_message'=>'Response Code',
+            'api_response'=>'Full Response',
             'created_dt' => 'Created Time',
         );
     }
@@ -203,6 +208,22 @@ class EventsRegistration extends CActiveRecord
             $max = 0;
         }
         return $max;
+    }
+
+    /**
+     * Display Items on Invoice listing page
+     * @return  array
+     */
+    public function invoiceItemsArray()
+    {
+        if (empty($this->ticket)) {
+            return null;
+        }
+
+        $tickets = CJSON::decode($this->ticket);
+
+        // MyFunctions::echoArray($tickets);
+        return $tickets;
     }
 
     /**

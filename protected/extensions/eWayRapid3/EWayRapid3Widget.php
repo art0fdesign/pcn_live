@@ -98,9 +98,9 @@ class EWayRapid3Widget extends AodWidget
 // MyFunctions::echoArray($model->attributes, $model->errors);
 
                     $this->TotalAmount = $sum;
-                    $this->InvoiceNumber = $model->id;
-                    $this->InvoiceReference = $model->invoice_reference;
-                    $this->InvoiceDescription = $model->invoice_description;
+                    $this->InvoiceNumber = $model->invoice_no;
+                    $this->InvoiceReference = $model->id;
+                    // $this->InvoiceDescription = $model->invoice_description;
 
                     //Populate values for LineItems
                     foreach (SimpleCart::fullCartItemsList() as $cartItem) {
@@ -286,11 +286,23 @@ class EWayRapid3Widget extends AodWidget
         $this->response = $result;
         $this->InvoiceReference = $result->InvoiceReference;
         $this->systemMessage = $this->service->APIConfig[$result->ResponseMessage];
+
+        // Update EventsRegistration model with response values
+        if (isset($result->InvoiceReference) && !empty($result->InvoiceReference)) {
+            $model = EventsRegistration::model()->findByPk((int)$result->InvoiceReference);
+            if ($model) {
+                $model->api_response_message = $result->ResponseMessage;
+                $model->api_response         = CJSON::encode($result);
+                $model->save();
+            }
+            unset($model);
+        }
         //Check if any error returns
         // MyFunctions::echoArray(array(
         //     'result'            => $result,
         //     'errors'            => $result->Errors,
         //     'report message'    => $result->ResponseMessage,
+        //     'result json'       => CJSON::encode($result),
         // ));
         // if(isset($result->Errors))
         if( ! empty($result->Errors))

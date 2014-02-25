@@ -1,19 +1,19 @@
 ﻿
 /* =====  Dynamic tables  ===== */
 
-.dTable thead, .dAjaxTable thead  { 
-	/*background: #efefef url(../img/backgrounds/titleBg.png) repeat-x 0 0;*/ 
+.dTable thead, .dAjaxTable thead  {
+	/*background: #efefef url(../img/backgrounds/titleBg.png) repeat-x 0 0;*/
 	background: -moz-linear-gradient(center top , #fff 0%, #e4e4e4 45%, #d7d7d7 65%, #d0d0d0) repeat scroll 0 0 transparent;
 	background: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(0.45, #e4e4e4), color-stop(0.65, #d7d7d7), to(#d0d0d0));
 	background-color:#ededed;
 	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.4);
 }
-.dTable thead th, .dAjaxTable thead th { 
-	/*background: #efefef url(../img/backgrounds/titleBg.png) repeat-x 0 0;*/ 
+.dTable thead th, .dAjaxTable thead th {
+	/*background: #efefef url(../img/backgrounds/titleBg.png) repeat-x 0 0;*/
 	border-left:none;
 	text-align:left;
 }
-.dTable thead tr, .dAjaxTable thead tr {  
+.dTable thead tr, .dAjaxTable thead tr {
 	border-bottom:none !important;
 }
 
@@ -26,25 +26,25 @@
 .dataTables_paginate { width: auto; margin-right:5px; }
 .dataTables_info { padding: 7px 0 0 80px; color: #878787; }
 
-table.display thead th { padding: 4px 8px 3px 8px; cursor: pointer; * cursor: hand; font-size: 12px; text-transform:uppercase; 
+table.display thead th { padding: 4px 8px 3px 8px; cursor: pointer; * cursor: hand; font-size: 12px; text-transform:uppercase;
 	border-right:inset 1px #ececec;
 	border-left: inset 1px #ececec;
 }
 
-div.dataTables_wrapper .ui-widget-header { 
-	font-weight: normal; 
+div.dataTables_wrapper .ui-widget-header {
+	font-weight: normal;
 	/*background: #efefef url(../img/backgrounds/titleBg.png) repeat-x;*/
 	background: -moz-linear-gradient(center top , #F7F7F7 0%, #EBEBEB 45%, #E5E5E5 65%, #E0E0E0) repeat scroll 0 0 #EDEDED;
 	background-color:#f0f0f0;
-	border-top: 1px solid #D5D5D5; 
-	margin-top: -1px;	 
+	border-top: 1px solid #D5D5D5;
+	margin-top: -1px;
 	border-right: none; }
 
 
-table.display thead th div.DataTables_sort_wrapper { 
-	position: relative; 
-	padding-right: 18px; 
-	color: #3d4143; 
+table.display thead th div.DataTables_sort_wrapper {
+	position: relative;
+	padding-right: 18px;
+	color: #3d4143;
     font-size: 12px;
     font-weight: bold;
     text-transform: uppercase;
@@ -57,28 +57,28 @@ table.display thead th div.DataTables_sort_wrapper span { position: absolute; to
 /* ===== Datatable styles ===== */
 
 .dataTables_wrapper { position: relative; _height: 302px; min-width:400px;}
-.dataTables_processing { 
+.dataTables_processing {
     position: absolute; top: 0px; left: 50%; width: 250px; margin-left: -125px; border: 2px solid #ddd; text-align: center; color: #999; font-size: 11px; padding: 2px 0;
 }
-.dataTables_length { 
+.dataTables_length {
 color: #3D4142; /*margin: 10px 0 5px 10px;*/ position: absolute; left: 10px; bottom: 5px; }
 div.ajaxLength div.dataTables_length{ bottom: 30px; }
 .itemsPerPage { display: block; float: left; margin: 0 5px 0 0; font-size:12px; font-family:arial;}
 .dataTables_length label { padding-top: 10px; font-size: 11px; }
 .dataTables_length select { font-size: 11px; margin: 0 5px; }
-.dataTables_filter { 
+.dataTables_filter {
 text-align: left; margin: 7px 6px 2px 10px; position: absolute; right: 2px; top: -33px; color: #fff; font-size: 11px; }
 .dataTables_filter input[type="text"] { padding: 3px 20px 3px 5px!important; border: 1px solid #f4f5f9; width: 170px!important; position: relative; margin: 1px 0 0 6px; color: #878787;background-color:#f4f5f9; height:10px;}
-.dataTables_filter .srch { 
-	position: absolute; 
-	right: 0px; 
-	top: 1px; 
-	background: url(../img/searchSmall.png) no-repeat 0 0; 
-	border: none; 
-	width: 18px; 
-	height: 18px; 
+.dataTables_filter .srch {
+	position: absolute;
+	right: 0px;
+	top: 1px;
+	background: url(../img/searchSmall.png) no-repeat 0 0;
+	border: none;
+	width: 18px;
+	height: 18px;
 }
-.dataTables_info { 
+.dataTables_info {
     display: block;
     font-size:11px;
 	height:20px;
@@ -104,6 +104,7 @@ table.display tfoot th { padding: 3px 0px 3px 10px; font-weight: bold; font-weig
 table.display tr.heading2 td { border-bottom: 1px solid #aaa; }
 table.display td { padding: 8px; }
 table.display td.center, table.display th.center { text-align: center !important; margin: 0 auto;}
+table.display td.right, table.display th.right { text-align: right !important;}
 
 
 /* DataTables sorting */
@@ -153,23 +154,23 @@ td.group { background-color: #d1cfd0; border-bottom: 2px solid #A19B9E; border-t
 td.details { background-color: #d1cfd0; border: 2px solid #A19B9E; }
 
 .example_alt_pagination div.dataTables_info { width: 40%; }
-.paging_full_numbers span.paginate_button, 
-.paging_full_numbers span.paginate_active { 
-	padding:3px 0 0 0; 
-	margin:0; 
-	cursor: pointer; 
+.paging_full_numbers span.paginate_button,
+.paging_full_numbers span.paginate_active {
+	padding:3px 0 0 0;
+	margin:0;
+	cursor: pointer;
 	text-align:center;
 	display:inline-block;
 	height:24px;
 	width:27px;
 }
-.paging_full_numbers span.paginate_button { 
+.paging_full_numbers span.paginate_button {
 	background: url(../img/pag.png) no-repeat center center;
 }
-.paging_full_numbers span.paginate_button:hover { 
+.paging_full_numbers span.paginate_button:hover {
 	background: url(../img/pag_hover.png) no-repeat center center;
 }
-.paging_full_numbers span.paginate_active { 
+.paging_full_numbers span.paginate_active {
 	background: url(../img/pag_active.png) no-repeat center center;
 }
 
@@ -179,7 +180,7 @@ table.display tr.odd.row_selected td { background-color: #9FAFD1; }
 .tableThumb{
     margin: 39px 0 23px 0!important;
 }
-/* Sorting classes for columns. For the standard odd/even 
+/* Sorting classes for columns. For the standard odd/even
 tr.odd td.sorting_1 { background-color: #D3D6FF; }
 tr.odd td.sorting_2 { background-color: #DADCFF; }
 tr.odd td.sorting_3 { background-color: #E0E2FF; }
@@ -198,7 +199,7 @@ tr.even td.sorting_3 { background-color: #F9F9FF; }*/
 	Level 2:
 	  dd > d1
 	  ee > e2
- 
+
 tr.odd.gradeA td.sorting_1 { background-color: #f4f4f4; }
 tr.odd.gradeA td.sorting_2 { background-color: #d1ffd1; }
 tr.odd.gradeA td.sorting_3 { background-color: #d1ffd1; }
@@ -215,7 +216,7 @@ tr.even.gradeC td.sorting_1 { background-color: #d5d5ff; }
 tr.even.gradeC td.sorting_2 { background-color: #e2e2ff; }
 tr.even.gradeC td.sorting_3 { background-color: #e2e2ff; }
 
-tr.odd.gradeX td.sorting_1 { background-color: #ffc4c4; } 
+tr.odd.gradeX td.sorting_1 { background-color: #ffc4c4; }
 tr.odd.gradeX td.sorting_2 { background-color: #ffd1d1; }
 tr.odd.gradeX td.sorting_3 { background-color: #ffd1d1; }
 
