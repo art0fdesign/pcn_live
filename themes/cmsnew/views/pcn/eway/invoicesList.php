@@ -12,6 +12,7 @@
                 <!-- <th class="center">ID</th> -->
                 <th class="center">No.</th>
                 <th>Date</th>
+                <th>Client</th>
                 <th>Items</th>
                 <th class="right">Amount</th>
                 <!-- <th>Response</th> -->
@@ -24,7 +25,8 @@
         <tr class='gradeA'>
         <!-- <td class="center"><?php echo $item->primaryKey;?></td> -->
         <td class="center"><?php echo $item->invoice_no;?></td>
-        <td><?php echo $item->invoice_date;?></td>
+        <td><?php echo date('d-m-y', strtotime($item->invoice_date));?></td>
+        <td><?php echo $this->renderPartial('_client', array('item'=>$item)); ?></td>
         <td><?php echo $this->renderPartial('_items', array('items'=>$item->invoiceItemsArray())); ?></td>
         <td class="right"><?php echo $item->price;?></td>
         <!-- <td><?php echo $item->api_response_message;?></td> -->
