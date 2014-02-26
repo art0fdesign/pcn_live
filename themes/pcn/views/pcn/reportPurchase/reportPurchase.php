@@ -14,9 +14,10 @@ if (isset($model['items'])) {
     <p>Item added to shopping cart. Continue shopping or checkout by clicking on your cart above.<p>
 </div>
 <?php
-
+$id = 'report-purchase-form';
+if ( isset($model['purchase_form_id']) ) $id = $model['purchase_form_id'];
 $form=$this->beginWidget('CActiveForm', array(
-  'id'=>'report-purchase-form',
+  'id'=>$id,
   // 'action' => $url,
   // 'enableClientValidation' => true,
   // 'clientOptions'=> array('validateOnSubmit'=>true),
@@ -26,30 +27,32 @@ $form=$this->beginWidget('CActiveForm', array(
 ?>
 
 <fieldset class="mt30 pb30">
-    <em class="grey" style="font-size: 140%;">N.B. Please note that all prices quoted are in AUD and exclusive of GST. </em><br /><br class="clear" />
-    <p class="mb0" style="font-size: 100%;">I would like to order:</p>
-    <div id ="reportItemsWrapper">
 <?php
 if (isset($model['tmp_file']) && file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . $model['tmp_file'])) {
     include($model['tmp_file']);
 } else {
+?>
+    <em class="grey" style="font-size: 140%;">N.B. Please note that all prices quoted are in AUD and exclusive of GST. </em><br /><br class="clear" />
+    <p class="mb0" style="font-size: 100%;">I would like to order:</p>
+    <div id ="reportItemsWrapper">
+<?php
     foreach ($reportItems as $key => $reportItem) { ?>
-    <div class="clear"></div>
-    <dl class="floatL mt20 ml15">
+        <div class="clear"></div>
+        <dl class="floatL mt20 ml15">
 
-        <dd class="floatL mt10">
-            <input id="" class="styled" type="checkbox" name="ReportPurchase[items][]" value="<?php echo $key; ?>" />
-        </dd>
-        <dt class="floatL ml5 checkBoxLabel">
-            <em class="blue" style="font-size: 200%;">$ <?php echo number_format($reportItem['price']); ?></em>
-        </dt>
+            <dd class="floatL mt10">
+                <input id="" class="styled" type="checkbox" name="ReportPurchase[items][]" value="<?php echo $key; ?>" />
+            </dd>
+            <dt class="floatL ml5 checkBoxLabel">
+                <em class="blue" style="font-size: 200%;">$ <?php echo number_format($reportItem['price']); ?></em>
+            </dt>
 
-        <dt class="floatL ml5 checkBoxLabel">
-            <label><?php echo $reportItem['label']?></label>
-        </dt>
-    </dl>
-<?php }} ?>
+            <dt class="floatL ml5 checkBoxLabel">
+                <label><?php echo $reportItem['label']?></label>
+            </dt>
+        </dl>
     </div>
+<?php }} ?>
     <div class="clear"></div>
 
     <div class="errorMessage ml40 blue" id="priceErrorMessage"<?php if (empty($validationErrors['items'])): ?> style="display:none;"<?php endif; ?>><?php echo empty($model['price_error_msg']) ? 'Please select at least one report to purchase' : $model['price_error_msg'] ?></div>
