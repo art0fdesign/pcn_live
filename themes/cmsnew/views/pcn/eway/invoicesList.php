@@ -25,7 +25,7 @@
         <tr class='gradeA'>
         <!-- <td class="center"><?php echo $item->primaryKey;?></td> -->
         <td class="center"><?php echo $item->invoice_no;?></td>
-        <td><?php echo date('d-m-y', strtotime($item->invoice_date));?></td>
+        <td><?php echo date('d-m-Y', strtotime($item->invoice_date));?></td>
         <td><?php echo $this->renderPartial('_client', array('item'=>$item)); ?></td>
         <td><?php echo $this->renderPartial('_items', array('items'=>$item->invoiceItemsArray())); ?></td>
         <td class="right"><?php echo $item->price;?></td>
