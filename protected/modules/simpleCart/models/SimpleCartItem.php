@@ -12,6 +12,7 @@
  * @property string $description
  * @property string $quantity
  * @property string $price
+ * @property string $description
  * @property string $created_dt
  * @property string $changed_dt
  *
@@ -52,7 +53,7 @@ class SimpleCartItem extends CActiveRecord
             array('category', 'length', 'max'=>100),
             array('name, item_id', 'length', 'max'=>255),
             array('quantity, price', 'numerical'),
-            array('description, created_dt, changed_dt', 'safe'),
+            array('description, details, created_dt, changed_dt', 'safe'),
         );
     }
 
@@ -83,6 +84,7 @@ class SimpleCartItem extends CActiveRecord
             'description' => 'Description',
             'quantity' => 'Quantity',
             'price' => 'Price',
+            'details' => 'Item JSON details',
             'created_dt' => 'Created Time',
             'changed_dt' => 'Changed Time',
         );
@@ -139,6 +141,51 @@ class SimpleCartItem extends CActiveRecord
     public function total($vatMultiplicator = 1.00)
     {
         return $this->price * $this->quantity * $vatMultiplicator;
+    }
+
+    public function description()
+    {
+        $description = CJSON::decode($this->description);
+
+        if (empty($description) || ! is_array($description)) {
+            return null;
+        }
+
+        return $this->formatDescriptionHTML($description);
+        $descriptionHTML = $this->formatDescriptionHTML($description);
+
+        MyFunctions::echoArray($description, $descriptionHTML);
+
+        return $this->description;
+    }
+
+    /**
+     * Recursive function to create description HTML output
+     * @param  array  $descriptionArray Array of descriptions
+     * @return string
+     */
+    private function formatDescriptionHTML($descriptionArray = array())
+    {
+        $return = array('<ul>');
+        foreach ($descriptionArray as $key => $descriptionItem) {
+            if ($key === 'Location') {
+                $return[] = '<li>Location: ' . Chtml::encode($descriptionItem) . '</li>';
+                continue;
+            }
+
+            if (is_array($descriptionItem)) {
+                $recursiveArray = '<li>' . $descriptionItem['name'];
+                $recursiveArray .= $this->formatDescriptionHTML($descriptionItem['items']) . '</li>';
+
+                $return[] = $recursiveArray;
+                continue;
+            }
+
+            $return[] = '<li>' . Chtml::encode($descriptionItem) . '</li>';
+        }
+        $return[] = '</ul>';
+
+        return implode('', $return);
     }
 
 }

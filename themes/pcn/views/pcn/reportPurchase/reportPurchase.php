@@ -52,10 +52,10 @@ if (isset($model['tmp_file']) && file_exists(dirname(__FILE__) . DIRECTORY_SEPAR
             </dt>
         </dl>
     </div>
-<?php }} ?>
     <div class="clear"></div>
 
     <div class="errorMessage ml40 blue" id="priceErrorMessage"<?php if (empty($validationErrors['items'])): ?> style="display:none;"<?php endif; ?>><?php echo empty($model['price_error_msg']) ? 'Please select at least one report to purchase' : $model['price_error_msg'] ?></div>
+<?php }} ?>
 
     <br class="clear" />
 

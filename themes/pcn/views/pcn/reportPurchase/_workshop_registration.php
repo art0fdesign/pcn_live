@@ -73,29 +73,33 @@ $json = CJSON::encode($arr);
             <dl id="location_select_wrapper" class="floatL mb10 mr10">
                 <dt class="floatL mr10" style="width: 120px;"><label>Choose Location:</label></dt>
                 <dd class="floatL mt0">
+                    <input type="hidden" name="ReportPurchase[location_required]" value="yes" />
                     <select id="location_select" class="styled" name="ReportPurchase[location]">
-                        <option value="" disabled="disabled" selected="selected">---select---</option>
+                        <option value="none" disabled="disabled" selected="selected">---select---</option>
                         <option value="rpt_41_11"><?php echo $model['items']['rpt_41_11']['name']; ?></option>
                         <option value="rpt_41_12"><?php echo $model['items']['rpt_41_12']['name']; ?></option>
                         <option value="rpt_41_13"><?php echo $model['items']['rpt_41_13']['name']; ?></option>
-                    </select>
+                    </select><br />
+                    <span id="locationError" class="errorMessage ml0 blue"<?php if (empty($validationErrors['location'])): ?> style="display:none;"<?php endif; ?>>Please select location</span>
                 </dd>
             </dl>
 
-            <dl id="ticket_type_select_wrapper" class="floatL mb10 mr10 hidden">
+            <dl id="ticket_type_select_wrapper" class="floatL mb10 mr10" style="display:none;">
                 <dt class="floatL mr10" style="width: 120px;"><label>Choose Ticket Type:</label></dt>
                 <dd class="floatL mt0">
-                    <select id="ticket_type_select" class="styled" name="ReportPurchase[ticket_type]">
-                        <option value="" disabled="disabled" selected="selected">---select---</option>
+                    <select id="ticket_type_select" class="styled" name="ReportPurchase[items][]">
+                        <option value="none" disabled="disabled" selected="selected">---select---</option>
                         <?php foreach ($ticketTypeArray as $key => $ticketTypeItem): ?>
                         <option value="<?php echo CHtml::encode($key); ?>" data-sessions='<?php echo CHtml::encode($ticketTypeItem['sessions']); ?>'><?php echo CHtml::encode($ticketTypeItem['caption']); ?></option>
                         <?php endforeach; ?>
-                    </select>
+                    </select><br />
+                    <span id="ticketTypeError" class="errorMessage ml0 blue"<?php if (empty($validationErrors['items'])): ?> style="display:none;"<?php endif; ?>>Please select ticket type</span>
                 </dd>
             </dl>
 
             <div class="clear"></div>
-            <div id="sessions_wrapper" class="hidden">
+            <input type="hidden" name="ReportPurchase[sessions_required]" value="yes" />
+            <div id="sessions_wrapper" style="display:none;">
                 <br /><em class="grey" style="font-size: 100%;">N.B. Select the number of sessions you have registered for above and then <strong>either a Training or Workshop modules for that session</strong>.</em>
                 <?php
                 foreach ($model['items'] as $key => $reportItem) {
@@ -110,7 +114,7 @@ $json = CJSON::encode($arr);
                     <dd class="floatL mt10">
                         <table class="workshopRegTable">
                             <tr>
-                                <td class="nepar"><input id="<?php echo $key . '_training'; ?>" class="styled" type="checkbox" name="ReportPurchase[items][]" value="<?php echo $key . '_training'; ?>" /></td>
+                                <td class="nepar"><input id="<?php echo $key . '_training'; ?>" class="styled" type="checkbox" name="ReportPurchase[sessions][]" value="<?php echo $key . '_training'; ?>" /></td>
                                 <td class="par">
                                     <ul>
                                     <?php foreach( $arr['training'] as $training ) { ?>
@@ -118,7 +122,7 @@ $json = CJSON::encode($arr);
                                     <?php } ?>
                                     </ul>
                                 </td>
-                                <td class="nepar"><input id="<?php echo $key . '_workshop'; ?>" class="styled" type="checkbox" name="ReportPurchase[items][]" value="<?php echo $key . '_workshop'; ?>" /></td>
+                                <td class="nepar"><input id="<?php echo $key . '_workshop'; ?>" class="styled" type="checkbox" name="ReportPurchase[sessions][]" value="<?php echo $key . '_workshop'; ?>" /></td>
                                 <td class="par">
                                     <ul>
                                     <?php foreach( $arr['workshop'] as $workshop ) { ?>
@@ -131,6 +135,7 @@ $json = CJSON::encode($arr);
                     </dd>
                 </dl>
                 <?php } ?>
+                <span id="sessionsError" class="errorMessage ml35 mt5 blue"<?php if (empty($validationErrors['sessions'])): ?> style="display:none;"<?php endif; ?>>Please select exactly <span id="sessionsRequired">X</span> training(s) or workshop(s)</span>
             </div>
         </div>
     </div>
@@ -138,24 +143,46 @@ $json = CJSON::encode($arr);
     /*<![CDATA[*/
     jQuery(function($) {
         jQuery('#location_select').change(function(){
-            jQuery('#ticket_type_select_wrapper').removeClass('hidden');
+            jQuery('#locationError').hide();
+            jQuery('#ticket_type_select_wrapper').show();
         });
 
         jQuery('#ticket_type_select').change(function(){
-            jQuery('#sessions_wrapper').removeClass('hidden');
+            var ticketTypeSessionsRequired = jQuery('#ticket_type_select option:selected').data('sessions');
+            jQuery('#ticketTypeError').hide();
+            jQuery('#sessions_wrapper').show();
+            jQuery('#sessionsError').hide();
+            jQuery('#sessionsRequired').html(ticketTypeSessionsRequired);
+        });
+
+        jQuery('#sessions_wrapper input[type=checkbox]').change(function(){
+            jQuery('#sessionsError').hide();
         });
 
         jQuery("#workshop-purchase-form").submit(function(){
-            /*
-                TODO:
-                    - select list validation & error display
-                    - complex selected sessions manipulation
-             */
-            var ticketTypeSessionsCount = jQuery('#ticket_type_select option:selected').data('sessions');
-            console.log('ticket selected: ' + jQuery('#ticket_type_select option:selected').val());
-            console.log('sessions count: ' + ticketTypeSessionsCount);
-            console.log('sesions selected: ' + jQuery('#sessions_wrapper input[type=checkbox]:checked').size());
-            return false;
+
+            if (jQuery('#location_select option:selected').val() === 'none') {
+                jQuery('#locationError').show()
+                return false;
+            }
+
+            if (jQuery('#ticket_type_select option:selected').val() === 'none') {
+                jQuery('#ticketTypeError').show()
+                return false;
+            }
+
+            var ticketTypeSessionsRequired = jQuery('#ticket_type_select option:selected').data('sessions');
+            var ticketTypeSessionsSelected = jQuery('#sessions_wrapper input[type=checkbox]:checked').length;
+            if ((ticketTypeSessionsSelected === 0) || (ticketTypeSessionsRequired !== ticketTypeSessionsSelected)) {
+                jQuery('#sessionsError').show()
+                return false;
+            }
+
+            if ( ! jQuery('#terms').is(':checked')) {
+                jQuery('#termsErrorMessage').show();
+                return false;
+            }
+
         });
     });
     /*]]>*/

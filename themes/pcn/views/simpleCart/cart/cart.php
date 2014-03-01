@@ -40,7 +40,8 @@
             <td class="text1">
                 <?php echo CHtml::encode($model->name); ?>
                 <?php if (!empty($model->description)): ?>
-                <span><?php echo CHtml::encode($model->description); ?></span>
+                <!-- <br /><span><?php //echo CHtml::encode($model->description()); ?></span> -->
+                <br /><span><?php echo $model->description(); ?></span>
                 <?php endif; ?>
             </td>
             <td class="numbers">$<?php echo CHtml::encode(number_format($model->price)); ?></td>

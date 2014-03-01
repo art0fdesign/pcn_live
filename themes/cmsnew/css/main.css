@@ -43,17 +43,17 @@
     color: #49A7F3;
     cursor: pointer;
 }
-html { 
-	height: 100% !important; 
+html {
+	height: 100% !important;
 	background-color:#f8f8f8;
 }
-body { 
+body {
 	height: 100%;
-	font-size: 12px; 
-	color: #595959; 
+	font-size: 12px;
+	color: #595959;
 	font-family: Arial, Helvetica, sans-serif;
-	line-height: 20px; 
-	position: relative; 
+	line-height: 20px;
+	position: relative;
 }
 .wraper {
     height: auto !important;
@@ -303,7 +303,7 @@ header a:hover{
 .admin {background: url(../img/btn_admin.png) no-repeat 13px -2px;}
 .menu {
 	/*border-top: 1px solid #1c252b;*/
-	position:relative; 
+	position:relative;
 	width:180px;
     margin-bottom: 40px;
 	text-indent:15px;
@@ -336,7 +336,7 @@ header a:hover{
 	color:#e8e8e8;
 	font-size:13px;
 	line-height:13px;
-	
+
 	text-decoration:none;
 	font-style:italic;
 	font-weight:bold;
@@ -438,15 +438,15 @@ header a:hover{
 }
 
 /*======================= WIDGETES =============================== */
-.rightWidget { 
+.rightWidget {
 	width:236px;
-	min-height:100px; 
+	min-height:100px;
 }
-.widget { 
-	background-color: #fcfcfc; 
-	border: 1px solid #cdcdcd; 
+.widget {
+	background-color: #fcfcfc;
+	border: 1px solid #cdcdcd;
 	margin-top: 20px;
-	clear: both; 
+	clear: both;
 	position:relative;
 	box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
 	-moz-box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
@@ -455,14 +455,14 @@ header a:hover{
 .widget .fm{
     width:
 }
-.widget .title { 
-	height: 30px;  
-	border-bottom: 1px solid #cdcdcd; 
+.widget .title {
+	height: 30px;
+	border-bottom: 1px solid #cdcdcd;
 	background: url(../img/bgr_version.png) repeat-x scroll left top transparent;
 	/*background-size:100% 100%;*/
 }
-.rightWidget .title, .widget .title1 {   
-	border-bottom: none !important; 
+.rightWidget .title, .widget .title1 {
+	border-bottom: none !important;
     background: url(../img/widget-title-bgr.png) repeat-x scroll left 1px transparent;
     font-size: 11px !important;
     height: 40px;
@@ -498,15 +498,15 @@ header a:hover{
 	right:-24px;
 	top:1px;
 }     */
-.widget .title span a, .widget .title1 span a, 
-.widget .title h6, .widget .title1 h6 { 
-	float: left; 
-	font-size: 12px; 
-	font-weight: normal; 
-	padding: 5px 12px; 
+.widget .title span a, .widget .title1 span a,
+.widget .title h6, .widget .title1 h6 {
+	float: left;
+	font-size: 12px;
+	font-weight: normal;
+	padding: 5px 12px;
 	color:#fff;
-} 
-.rightWidget .title  h6, .widget .title1 h6{   
+}
+.rightWidget .title  h6, .widget .title1 h6{
 	padding:0 !important;
 	margin:3px auto 0 auto;
     float: none !important;
@@ -531,15 +531,15 @@ header a:hover{
 
 
 /*======================= FORMS =============================== */
-.formRow { 
-	padding: 5px 4px 5px 18px; 
+.formRow {
+	padding: 5px 4px 5px 18px;
 	clear: both;
-	position: relative; 
+	position: relative;
 }
-/*.formRow:first-child { 
-	border-top: none; 
+/*.formRow:first-child {
+	border-top: none;
 }
-.formRow:last-child { 
+.formRow:last-child {
 	border-bottom: none;
 }*/
 a.BtnDelete,a.BtnEdit,a.BtnRead,a.BtnView,a.BtnAdmin{
@@ -576,19 +576,19 @@ a.BtnDelete:hover, a.BtnEdit:hover, a.BtnRead:hover, a.BtnView:hover,a.BtnAdmin:
 .BtnAdmin {
     background-image: url(../img/ico_view.png);
 }
-.form input, 
+.form input,
 .form textarea,
-.form select { 
-	font-size: 11px; 
-	padding:5px; 
-	background-color: #fafafc; 
-	border: 1px solid #cfcfcf; 
-	font-family: Arial, Helvetica, sans-serif; 
-	color: #656565; 
-} 
+.form select {
+	font-size: 11px;
+	padding:5px;
+	background-color: #fafafc;
+	border: 1px solid #cfcfcf;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #656565;
+}
 .rightWidget input,
-.form .widget input { 
-	width: 188px; 
+.form .widget input {
+	width: 188px;
 }
 .middleContent .widget select {
     width: 220px;
@@ -598,55 +598,55 @@ a.BtnDelete:hover, a.BtnEdit:hover, a.BtnRead:hover, a.BtnView:hover,a.BtnAdmin:
 }
 .middleContent .widget select {
 	width: 200px;
-	font-size: 11px; 
-	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 .middleContent .widget textarea, .middleContent .widget .longText {
     width: 288px;
 }
 .form .longWidget input,
-.form .longWidget textarea { 
+.form .longWidget textarea {
 	width: 315px;
 	max-width: 320px;
 }
-.form input:hover, 
-.form textarea:hover { 
-	border-color: #d5d9dc; 
+.form input:hover,
+.form textarea:hover {
+	border-color: #d5d9dc;
 }
-.form input:focus, 
-.form textarea:focus { 
-	border-color: #cfcfcf; 
-	background-color: #fff; 
+.form input:focus,
+.form textarea:focus {
+	border-color: #cfcfcf;
+	background-color: #fff;
 	box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
 	-moz-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
 	-webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
 }
-.formRow .formRight { 
-	display: block; 
-	float: left; 
+.formRow .formRight {
+	display: block;
+	float: left;
 	width: 250px;
 	margin-right:15px;
 }
-.rightWidget .formRow .formRight { 
-	width: 80% !important; 
-	margin-right: 55px; 
+.rightWidget .formRow .formRight {
+	width: 80% !important;
+	margin-right: 55px;
 	margin-left:10px;
 }
-.formRow > label { 
-	padding: 4px 0 0 0; 
-	display: block; 
-	width: 100px; 
-	float: left; 
+.formRow > label {
+	padding: 4px 0 0 0;
+	display: block;
+	width: 100px;
+	float: left;
 }
-.formRight label { 
-	float: left; 
-	margin-right: 24px; 
-	padding: 4px 0 0 0; 
-	cursor: pointer; 
+.formRight label {
+	float: left;
+	margin-right: 24px;
+	padding: 4px 0 0 0;
+	cursor: pointer;
 }
 .widget .select {
     background: url(../img/bgr_select.jpg) no-repeat scroll right center #f8f8f8;
-	border: 1px solid #cfcfcf; 
+	border: 1px solid #cfcfcf;
     color: #656565;
     float: left;
     font-family: Arial,Helvetica,sans-serif;
@@ -868,13 +868,21 @@ footer .footertext a:hover{
 	color: #000;
 }
 
+/* PCN INVOICES */
+.invoiceDetails ul {
+	font-style: italic;
+	font-size: 0.9em;
+	line-height: 1.3em;
+	margin-left: 15px;
+}
+
 /* RESIZE
 ================================================== */
 
-/* Increasing space between widgets and general wrapper paddings 
+/* Increasing space between widgets and general wrapper paddings
 
 @media only screen and (min-width: 980px) and (max-width: 1280px) {
-	
+
 	.oneTwo { width: 46%; }
 	.wrapper { margin: 0 4%; }
 	.oneThree { width: 29%; margin-left: 6.5%; }
@@ -884,36 +892,36 @@ footer .footertext a:hover{
 	.rightWidget .formRow .formRight { width: 100%; }
 	.SRC_NumBox { width: 10%; }
 	.SRC_CodeBox { width: 90%; }
-	
+
 }*/
 
-/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) 
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers)
 @media only screen and (max-width: 1024px) {
-	
+
 	html { -webkit-text-size-adjust: 100%; }
 	.statsDetailed { top: 60px; }
 	.withCheck thead tr td:first-child { width: 37px; }
-	.oneTwo, .oneTwo:first-child, .oneThree, .oneThree:first-child, .oneFour, oneFour:first-child, .twoOne, .twoOne:first-child { 
-		width: auto; 
-		float: none; 
-		margin: 0 0 18px 0; 
-		clear: both; 
+	.oneTwo, .oneTwo:first-child, .oneThree, .oneThree:first-child, .oneFour, oneFour:first-child, .twoOne, .twoOne:first-child {
+		width: auto;
+		float: none;
+		margin: 0 0 18px 0;
+		clear: both;
 	}
-	.oneTwo input, .oneThree input, .oneFour input, .twoOne input { 
-		margin: 0 0 8px 0;  
+	.oneTwo input, .oneThree input, .oneFour input, .twoOne input {
+		margin: 0 0 8px 0;
 	}
 	.loginWrapper .formRow > label { float: left; padding: 4px 0; }
 	.loginInput { margin-right: 4px; }
 	.loginPage { min-height: 500px; }
-	
+
 	.chzn-search { text-align: center; }
 	.chzn-container-single .chzn-search input { width: 89%!important; }
 
 }*/
 
-/* Devices and browsers with min of 800px and max of 979px 
+/* Devices and browsers with min of 800px and max of 979px
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
-	
+
 	.wrapper { margin: 0 2.3%; }
 	.oneTwo, .oneTwo:first-child, .oneThree, .oneThree:first-child, .oneFour, oneFour:first-child, .twoOne, .twoOne:first-child { width: auto; float: none; margin: 0; clear: both; width: 100%; }
 	table thead td span { background-position: 100%; }
@@ -922,33 +930,33 @@ footer .footertext a:hover{
 	.formRow .inputImg { top: auto; bottom: 26px; }
 	.req { float: none; margin-left: 0; display: inline; }
 	.chzn-container { width: 100%!important; }
-	
+
 	.topNav { display: inline-block; }
 	.userNav { margin-right: 214px!important; }
-	
+
 	.welcome { display: none; }
 	.dataTables_filter input[type="text"] { width: 110px!important; }
-	
+
 	.sItem { width: 186px; }
-	
+
 	table thead td span { display: none; }
 	.sTable thead td.sortCol { text-align: center; padding: 3px 14px 2px 14px; }
-	
+
 	.chzn-container-single .chzn-search { text-align: center; }
 	.chzn-container-single .chzn-search input { width: 94%!important; }
-	
+
 	table.display thead th div.DataTables_sort_wrapper { line-height: 14px; font-size: 11px;}
 
 }
 
 @media only screen and (max-width: 1000px) {
-	
+
 	.dataTop  {width:100px; margin:15px 0 0 210px;}
 	.dataTop  span {display: none;}
 	.dataTop  a:before,.dataTop  a:after {content:"\00a0\00b7\00b7\00b7\00a0"}
 }*/
 
-/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) 
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers)
 @media only screen and (min-width: 600px) and (max-width: 1024px) {
 
 	.userNav { float: none; margin-right: 0; border: none; }
@@ -963,25 +971,25 @@ footer .footertext a:hover{
 
 }*/
 
-/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) 
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers)
 @media only screen and (min-width: 768px) {
-	
+
 	.errorPage .welcome { display: block; }
 	.errorPage .userNav { margin-right: 0!important; float: right; }
-	
+
 }*/
-	
-/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) 
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers)
 @media only screen and (max-width: 767px) {
-	
+
 	.resp { display: block; }
 	.bottomline .arrowleft{ display: none; }
 	.respHead { text-align: center; }
 	.respHead > a { margin: 20px 0; display: block; }
-	
+
 	.topNav, header { position: static; }
 	.bottomline { position: relative; }
-	
+
 	#leftSide, .welcome { display: none; }
 	.dn { display: block; }
 	body { background: none; }
@@ -992,7 +1000,7 @@ footer .footertext a:hover{
 	.dataTop  a:before,.dataTop  a:after {content:"\00a0\00b7\00b7\00b7\00a0"}
 	header .version {padding-left:10px;}
 	.mask {display: none;}
-	
+
 	.bottomline{margin:0;}
 	.bottomline .mainCom {margin:9px 40px 0 0;}
 	.bottomline input { margin-top:-1px; right:105px; }
@@ -1003,8 +1011,8 @@ footer .footertext a:hover{
 	.formRow > label { float: none; padding: 0 0 5px 0; }
 	.req { float: none; margin-left: 0; display: inline; }
 	.step h1 { display: none; }
-	
-	
+
+
 	.sItem { margin: 1px 0 0 0; width: 100%; }
 	.sItem > h2 { width: 50%; border-right: 1px solid #D5D5D5; }
 	.changes { padding: 14px 0 5px 0; float: none; }
@@ -1012,41 +1020,41 @@ footer .footertext a:hover{
 	.changes .negative { background-image: url(../img/negArrow.png); }
 	.changes .positive { background-image: url(../img/posArrow.png); }
 	.changes .zero { background-image: url(../img/zero.png); }
-	
+
 	.statsDetailed { margin-left: -111px; }
-	
+
 	#footer .wrapper { padding: 0 12px 12px 12px!important; }
 	.leftPart .selector, .rightPart .selector { display: none; }
 	.chzn-container { width: 100%!important; }
 	div.uploader { width: 220px; }
 	.formRow .checker, .formRow .radio { clear: both; }
-	
+
 	.errorWrapper .errorNum { font-size: 180px; padding: 100px 0 65px 0; }
 	.errorWrapper .offline { font-size: 115px; padding: 80px 0 45px 0; }
-	
+
 	.sTable, .dTable { table-layout: fixed; }
 	.sTable tbody td, .dTable tbody td { overflow: hidden; padding: 8px; }
 	.sTable thead td { overflow: hidden; }
-		
-	.goTo { 
-		display: block; 
-		width: auto; 
-		height: auto; 
-		font-size: 14px; 
-		color: #e8e8e8; 
-		padding: 4px 0; 
-		cursor: pointer; 
+
+	.goTo {
+		display: block;
+		width: auto;
+		height: auto;
+		font-size: 14px;
+		color: #e8e8e8;
+		padding: 4px 0;
+		cursor: pointer;
 		margin: 0 35px}
-	.goTo:hover, .goTo:active { 	color: #fff;  } 
+	.goTo:hover, .goTo:active { 	color: #fff;  }
 	.goTo > img { margin: 3px 16px 0 0; float: left; }
 	.pInfo { max-width: 70%; }
-	.searchWidget input[type="text"] { width: 92%!important; }	
+	.searchWidget input[type="text"] { width: 92%!important; }
 	table.display thead th div.DataTables_sort_wrapper { line-height: 14px; font-size: 11px;}
 }*/
 
-/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) 
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers)
 @media only screen and (min-width: 600px) and (max-width: 767px) {
-	
+
 	.form input[type="text"], .form input[type="password"], .form textarea { width: 90%; }
 	.formRow { padding: 0px 8px 7px 24px; }
 	.changes .negative, .changes .positive, .changes .zero { padding-left: 56%!important; background-position: 72% 6px!important; }
@@ -1057,13 +1065,13 @@ footer .footertext a:hover{
 
 }*/
 
-/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) 
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers)
 @media only screen and (max-width: 599px) {
-	
+
 	#rightSide { padding-bottom: 74px; }
-	
+
 	.userNav ul li span { display: none; }
-	.topNav { margin: 0; padding: 0; }	
+	.topNav { margin: 0; padding: 0; }
 	.dataTop  {width:auto; margin:15px 0 0 35px;}
 	.dataTop  span {display: none;}
 	.dataTop  a:before,.dataTop  a:after {content:"\00a0\00b7\00b7\00b7\00a0"}
@@ -1076,15 +1084,15 @@ footer .footertext a:hover{
 	ul.userDropdown { left: -53px; }
 	ul.userDropdown li { margin: 0; text-align: left; }
 	ul.userDropdown li a { padding: 6px 10px 7px 32px; }
-	
+
 	.rightWidget{ display: none;}
-	
+
 	.itemActions { margin: 16px auto 8px auto; float: none; clear: both; display: block; width: 210px; }
 	.tPagination { padding: 16px 12px; float: none; clear: both; }
-	
+
 	.invButtons .bFirst, .invButtons .bLast { float: none; }
 	.invButtons .bLast { margin-top: 10px; }
-	
+
 	.plupload_scroll .plupload_filelist_header .plupload_file_action, .plupload_scroll .plupload_filelist_footer .plupload_file_action { margin-right: 0; margin-left: 0; width: 0; }
 	.plupload_file_size, .plupload_file_status, .plupload_progress { width: auto; }
 	.plupload_file_size { margin: 0 10px; }
@@ -1095,30 +1103,30 @@ footer .footertext a:hover{
 	.ui-buttonset .ui-button { margin: 0 2px; }
 	.dataTables_paginate .ui-button { margin-right: 0; }
 	.widget .title:first-child, ul.tabs, .toggle .title:first-child { min-height: 65px;}
-	
+
 	table.display thead th div.DataTables_sort_wrapper { text-align: center; padding-right: 10px; }
 	table.display thead th div.DataTables_sort_wrapper span, .dataTables_length .itemsPerPage, table thead td span { display: none; }
-	
+
 	.form input[type="text"], .form input[type="password"], .form textarea { width: 90%; }
-	
+
 	div.tagsinput { padding: 0; width: 99%!important; }
-	
+
 	.filter > input[type=text] { width: 75%; }
 	.leftPart, .rightPart { float: none; width: 100%; max-width: 100%; }
 	.leftPart { margin-bottom: 20px; }
 	.rightPart { margin-top: 30px; }
 	.countLabel { text-align: center; }
-	
+
 	.dualControl { width: auto; margin: 0; position: static; left: 0; margin-left: 0; }
-	
+
 	.SRC_CodeBox { width: 90%; }
 	.SRC_NumBox { width: 10%; }
-	
+
 	.el-finder-nav { width: 40%; }
-	
+
 }*/
 
-/* Fixing login panel for mobile devices 
+/* Fixing login panel for mobile devices
 @media only screen and (max-width: 480px) {
 
 .loginWrapper { margin: -119px 0 0 -141px; }
@@ -1129,7 +1137,7 @@ footer .footertext a:hover{
 .chzn-container .chzn-drop { width: 99.6%!important; }
 .chzn-container-single .chzn-search { text-align: center; }
 .chzn-container-single .chzn-search input { width: 89%!important; }
-	
+
 }*/
 /* ===== Text editor ===== */
 

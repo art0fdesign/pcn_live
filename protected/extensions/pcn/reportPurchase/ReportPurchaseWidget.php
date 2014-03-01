@@ -39,12 +39,18 @@ class ReportPurchaseWidget extends AodWidget {
 
         if (Yii::app()->request->isPostRequest) {
             if (isset($_POST['ReportPurchase'])) {
-        // MyFunctions::echoArray($_POST);
+                // MyFunctions::echoArray($_POST);
                 if (empty($_POST['ReportPurchase']['terms'])) {
                     $this->_validationErrors['terms'] = 'Please confirm that you agree to Terms & Conditions';
                 }
                 if (empty($_POST['ReportPurchase']['items'])) {
                     $this->_validationErrors['items'] = 'Please select at least one report to purchase';
+                }
+                if (isset($_POST['ReportPurchase']['location_required']) && empty($_POST['ReportPurchase']['location'])) {
+                    $this->_validationErrors['location'] = 'Please select location';
+                }
+                if (isset($_POST['ReportPurchase']['sessions_required']) && empty($_POST['ReportPurchase']['sessions'])) {
+                    $this->_validationErrors['sessions'] = 'Please select ticket type session count sessions';
                 }
                 // MyFunctions::echoArray($this->_validationErrors, $_POST);
                 if (empty($this->_validationErrors)) {
@@ -54,6 +60,63 @@ class ReportPurchaseWidget extends AodWidget {
                         }
                         // Prepare report 'model'
                         $report = $model['items'][$item];
+
+                        $detailsArray = array(); /* JSON description preparation array */
+                        $descriptionArray = array(); /* Description preparation array */
+                        if (isset($_POST['ReportPurchase']['location_required'])) {
+                            $locationID = $_POST['ReportPurchase']['location'];
+                            $detailsArray['location'] = $model['items'][$locationID];
+                            $descriptionArray['Location'] = $model['items'][$locationID]['name'];
+                        }
+                        if (isset($_POST['ReportPurchase']['sessions_required'])) {
+                            foreach ($_POST['ReportPurchase']['sessions'] as $session) {
+                                $sessionID = $session;
+                                $sessionType = 'session';
+                                $lastUnderscorePosition = strrpos($session, '_');
+                                if ($lastUnderscorePosition !== false && strlen($session) != 9) {
+                                    $sessionID = substr($session, 0, $lastUnderscorePosition);
+                                    $sessionType = substr($session, $lastUnderscorePosition + 1);
+                                }
+
+                                if (isset($model['items'][$sessionID])) {
+                                    $detailsArray['sessions'][$session] = $model['items'][$sessionID];
+                                    $detailsArray['sessions'][$session]['type_selected'] = $sessionType;
+
+                                    if (isset($model['items'][$sessionID]['json']) && in_array($sessionType, array('training', 'workshop'))) {
+                                        $descriptionArray[$session] = $model['items'][$sessionID]['name'] . ' - ' . $sessionType;
+
+                                        $json = CJSON::decode($model['items'][$sessionID]['json']);
+                                        $desc = array(
+                                            'name' => $model['items'][$sessionID]['name'] . ' - ' . $sessionType,
+                                            'items' => array(),
+                                        );
+                                        if (isset($json[$sessionType])) {
+                                            foreach ($json[$sessionType] as $sessionItem) {
+                                                $desc['items'][] = $sessionItem;
+                                            }
+
+                                        }
+                                        if ( ! empty($desc)) {
+                                            $descriptionArray[$session] = $desc;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if ( ! empty($detailsArray)) {
+                            $report['details'] = CJSON::encode($detailsArray);
+                        }
+                        if ( ! empty($descriptionArray)) {
+                            $report['description'] = CJSON::encode($descriptionArray);
+                        }
+
+                        // MyFunctions::echoArray(array(
+                        //     'lastUnderscorePosition' => $lastUnderscorePosition,
+                        //     'session' => $session,
+                        //     'sessionID' => $sessionID,
+                        //     'sessionType' => $sessionType,
+                        //     'json' => $report['details'],
+                        // ), $report, $_POST);
 
                         // Try to load already added item
                         $cartItem = SimpleCartItem::model()->findByAttributes(array(
@@ -71,6 +134,7 @@ class ReportPurchaseWidget extends AodWidget {
                         $cartItem->description  = $report['description'];
                         $cartItem->quantity    += (int)$report['quantity'];
                         $cartItem->price        = (int)$report['price'];
+                        $cartItem->details      = $report['details'];
                         // MyFunctions::echoArray($cartItem);
                         SimpleCart::addCartItem($cartItem);
 
