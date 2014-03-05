@@ -67,9 +67,15 @@ class ReportPurchaseWidget extends AodWidget {
                             $locationID = $_POST['ReportPurchase']['location'];
                             $detailsArray['location'] = $model['items'][$locationID];
                             $descriptionArray['Location'] = $model['items'][$locationID]['name'];
+                            // Separate items by sessions selected
+                            $item .= '|' . $locationID;
+
                         }
                         if (isset($_POST['ReportPurchase']['sessions_required'])) {
                             foreach ($_POST['ReportPurchase']['sessions'] as $session) {
+                                // Separate items by sessions selected
+                                $item .= '|' . $session;
+
                                 $sessionID = $session;
                                 $sessionType = 'session';
                                 $lastUnderscorePosition = strrpos($session, '_');
@@ -79,6 +85,7 @@ class ReportPurchaseWidget extends AodWidget {
                                 }
 
                                 if (isset($model['items'][$sessionID])) {
+
                                     $detailsArray['sessions'][$session] = $model['items'][$sessionID];
                                     $detailsArray['sessions'][$session]['type_selected'] = $sessionType;
 
@@ -121,7 +128,7 @@ class ReportPurchaseWidget extends AodWidget {
                         // Try to load already added item
                         $cartItem = SimpleCartItem::model()->findByAttributes(array(
                             'cart_id' => SimpleCart::cartID(),
-                            'item_id' => $item,
+                            'item_id' => substr($item, 0, 254),
                             'price'   => (int)$report['price'],
                         ));
                         if (empty($cartItem)) {
@@ -137,6 +144,11 @@ class ReportPurchaseWidget extends AodWidget {
                         $cartItem->details      = $report['details'];
                         // MyFunctions::echoArray($cartItem);
                         SimpleCart::addCartItem($cartItem);
+
+                        if (isset($model['purchase_form_url'])) {
+                            $this->controller->redirect($model['purchase_form_url']);
+                            Yii::app()->end();
+                        }
 
                         $displayFlashMessage = true;
                     }
