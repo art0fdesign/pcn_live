@@ -4,14 +4,14 @@
 		<table class="newsTable">
 			<tr>
 				<th>DAILY NEWSLETTER</th>
-				<th>Size</th>
-				<th>1 week</th>
-				<th>2 weeks</th>
 				<th>1 month</th>
+				<th>2 months</th>
+				<th class="empty"></th>
+				<th class="empty"></th>
 			</tr>
 			<tr>
-				<td></td>
 				<td>Large banner</td>
+<?php /*
 				<td>
 					<input id="rpt_40_11" type="checkbox" name="ReportPurchase[items][]" value="rpt_40_11" />
 					<em class="blue" style="font-size: 100%;">$ <?php echo number_format($model['items']['rpt_40_11']['price']); ?></em>
@@ -20,14 +20,21 @@
 					<input id="rpt_40_12" type="checkbox" name="ReportPurchase[items][]" value="rpt_40_12" />
 					<em class="blue" style="font-size: 100%;">$ <?php echo number_format($model['items']['rpt_40_12']['price']); ?></em>
 				</td>
+*/ ?>
 				<td>
 					<input id="rpt_40_13" type="checkbox" name="ReportPurchase[items][]" value="rpt_40_13" />
 					<em class="blue" style="font-size: 100%;">$ <?php echo number_format($model['items']['rpt_40_13']['price']); ?></em>
 				</td>
+				<td>
+					<input id="rpt_40_14" type="checkbox" name="ReportPurchase[items][]" value="rpt_40_14" />
+					<em class="blue" style="font-size: 100%;">$ <?php echo number_format($model['items']['rpt_40_14']['price']); ?></em>
+				</td>
+				<td class="empty"></td>
+				<td class="empty"></td>
 			</tr>
 			<tr>
-				<td></td>
 				<td>Medium banner</td>
+<?php /*
 				<td>
 					<input id="rpt_40_21" type="checkbox" name="ReportPurchase[items][]" value="rpt_40_21" />
 					<em class="blue" style="font-size: 100%;">$ <?php echo number_format($model['items']['rpt_40_21']['price']); ?></em>
@@ -36,10 +43,17 @@
 					<input id="rpt_40_22" type="checkbox" name="ReportPurchase[items][]" value="rpt_40_22" />
 					<em class="blue" style="font-size: 100%;">$ <?php echo number_format($model['items']['rpt_40_22']['price']); ?></em>
 				</td>
+*/ ?>
 				<td>
 					<input id="rpt_40_23" type="checkbox" name="ReportPurchase[items][]" value="rpt_40_23" />
 					<em class="blue" style="font-size: 100%;">$ <?php echo number_format($model['items']['rpt_40_23']['price']); ?></em>
 				</td>
+				<td>
+					<input id="rpt_40_24" type="checkbox" name="ReportPurchase[items][]" value="rpt_40_24" />
+					<em class="blue" style="font-size: 100%;">$ <?php echo number_format($model['items']['rpt_40_24']['price']); ?></em>
+				</td>
+				<td class="empty"></td>
+				<td class="empty"></td>
 			</tr>
 			<tr>
 				<th>QUARTERLY NEWSLETTER</th>
