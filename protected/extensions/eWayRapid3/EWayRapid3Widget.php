@@ -295,7 +295,7 @@ class EWayRapid3Widget extends AodWidget
             $model = EventsRegistration::model()->findByPk((int)$result->InvoiceReference);
             if ($model) {
 
-                if (empty($result->Errors)) {
+                if (isset($result->TransactionStatus) && $result->TransactionStatus === true) {
                     $model->invoice_no = $model->getMaxInvoiceNumber() + 1;
                     $model->invoice_date = date('Y-m-d');
                     $model->invoice_reference = $model->invoice_no . date('-y');
