@@ -27,7 +27,7 @@
             <th class="text">Price</th>
             <th class="text">Qty</th>
             <th class="text">Total</th>
-            <th class="commands">Controls</th>
+            <th class="commands">Edit/Delete</th>
         </tr>
         </thead>
 
@@ -63,19 +63,32 @@
 
         <tfoot>
         <tr>
-            <td class="text"> </td>
-            <td class="text"> </td>
-            <td class="text"> </td>
-            <td class="text"> </td>
+            <td colspan="4" class="text"></td>
+            <td>Merchandise:</td>
+            <td class="numbers">$<?php echo CHtml::encode(number_format($total['NoTax'])); ?></td>
+        </tr>
+        <tr>
+            <td colspan="4" class="text"></td>
+            <td>GST:</td>
+            <td class="numbers">$<?php echo CHtml::encode(number_format($total['Tax'])); ?></td>
+        </tr>
+        <tr>
+            <td colspan="4" class="text"></td>
             <td>Total:</td>
-            <td class="numbers">$<?php echo CHtml::encode(number_format($total)); ?></td>
+            <td class="numbers">$<?php echo CHtml::encode(number_format($total['Full'])); ?></td>
         </tr>
         </tfoot>
 
     </table><br class="clear" />
 
     <?php if (count($models)): ?>
-    <a href="/my-cart/checkout" class="btn_blue floatR mt20 mr15 mb40 pt20 pb20 pr25 pl25"><b class="larger">check out</b></a>
+    <a href="/my-cart/checkout" class="btn_blue floatR mt20 mb40 pt20 pb20 pr25 pl25"><b class="larger">check out</b></a>
+    <a href="/" class="btn_blue floatR mt20 mr15 mb40 pt20 pb20 pr25 pl25"><b class="larger">continue shopping</b></a>
+    <br class="clear" />
+    <a href="http://www.credit-card-logos.com" class="floatR mb40">
+        <img alt="" title="" src="<?php echo Yii::app()->theme->baseUrl; ?>/img/eway_logo.jpg" width="116" height="35" border="0" />
+        <img alt="" title="" src="http://www.credit-card-logos.com/images/visa_credit-card-logos/visa_mastercard_2.gif" width="116" height="35" border="0" />
+    </a>
     <?php endif; ?>
 
 </div>

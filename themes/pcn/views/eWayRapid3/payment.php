@@ -65,7 +65,8 @@ if ($ShowDebugInfo) {
                         </div>
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblAmount">Total Amount</label></dt>
-                            <dd class="floatR mb10 mt10"><label id="lblAmount">$<?php echo number_format($TotalAmount) ?></label></dd>
+                            <?php $amount = number_format($TotalAmount) . ((isset($TaxIncluded) && $TaxIncluded) ? ' ( GST Included )' : ' ( GST NOT Included )'); ?>
+                            <dd class="floatR mb10 mt10"><label id="lblAmount">$<?php echo $amount ?></label></dd>
                         </dl><br class="clear" />
                         <dl class="floatL">
                             <dt class="floatL mr20"><label for="lblInvoiceReference">Invoice Reference</label></dt>
@@ -213,12 +214,12 @@ if ($ShowDebugInfo) {
                         </dl>
                     </div>
                     <div class="paymentbutton floatR mr40">
-                        <br />
-                        <br />
+                        <p class="floatR">Click SUBMIT for your credit card to be processed. You will receive a Tax Invoice to your nominated email address</p>
+                        <br class="clear" />
                         <input type='submit' name='btnSubmit' value="Submit" class="btn_blue floatR"/>
                         <br class="clear" />
                         <br />
-                        <a href="http://www.credit-card-logos.com">
+                        <a href="http://www.credit-card-logos.com" class="floatR">
                             <img alt="" title="" src="<?php echo Yii::app()->theme->baseUrl; ?>/img/eway_logo.jpg" width="116" height="35" border="0" />
                             <img alt="" title="" src="http://www.credit-card-logos.com/images/visa_credit-card-logos/visa_mastercard_2.gif" width="116" height="35" border="0" />
                         </a>

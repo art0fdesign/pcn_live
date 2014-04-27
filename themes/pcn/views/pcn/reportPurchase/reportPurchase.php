@@ -36,6 +36,7 @@ if (isset($model['tmp_file']) && file_exists(dirname(__FILE__) . DIRECTORY_SEPAR
     <p class="mb0" style="font-size: 100%;">I would like to order:</p>
     <div id ="reportItemsWrapper">
 <?php
+// MyFunctions::echoArray($reportItems);
     foreach ($reportItems as $key => $reportItem) { ?>
         <div class="clear"></div>
         <dl class="floatL mt20 ml15">
@@ -51,11 +52,12 @@ if (isset($model['tmp_file']) && file_exists(dirname(__FILE__) . DIRECTORY_SEPAR
                 <label><?php echo $reportItem['label']?></label>
             </dt>
         </dl>
+<?php } ?>
     </div>
-    <div class="clear"></div>
 
+    <div class="clear"></div>
     <div class="errorMessage ml40 blue" id="priceErrorMessage"<?php if (empty($validationErrors['items'])): ?> style="display:none;"<?php endif; ?>><?php echo empty($model['price_error_msg']) ? 'Please select at least one report to purchase' : $model['price_error_msg'] ?></div>
-<?php }} ?>
+<?php } ?>
 
     <br class="clear" />
 
@@ -75,6 +77,16 @@ if (isset($model['tmp_file']) && file_exists(dirname(__FILE__) . DIRECTORY_SEPAR
     <dl class="floatL mb20 ml15">
         <dd>
             <input class="submit btn_blue" style="width: 100px;" type="submit" value="SUBMIT" />
+        </dd>
+    </dl>
+    <div class="clear"></div>
+
+    <dl class="floatL mb20 ml15">
+        <dd>
+            <a href="http://www.credit-card-logos.com">
+                <img alt="" title="" src="<?php echo Yii::app()->theme->baseUrl; ?>/img/eway_logo.jpg" width="116" height="35" border="0" />
+                <img alt="" title="" src="http://www.credit-card-logos.com/images/visa_credit-card-logos/visa_mastercard_2.gif" width="116" height="35" border="0" />
+            </a>
         </dd>
     </dl>
 </fieldset>

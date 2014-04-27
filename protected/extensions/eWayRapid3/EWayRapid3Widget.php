@@ -60,7 +60,9 @@ class EWayRapid3Widget extends AodWidget
 
                     // Include VAT if user is from australia
                     $vatMultiplicator = 1.00;
+                    $taxIncluded = false;
                     if ($model->country == 'au') {
+                        $taxIncluded = true;
                         $vatMultiplicator = 1.10;
                     }
 
@@ -77,10 +79,10 @@ class EWayRapid3Widget extends AodWidget
                     $model->ticket = CJSON::encode($ticket);
                     $model->price = $sum;
 
-                    $model->invoice_no = $model->getMaxInvoiceNumber() + 1;
-                    $model->invoice_date = date('Y-m-d');
-                    $model->invoice_reference = $model->invoice_no . date('-y');
-                    $model->invoice_description = $model->invoiceDescription();
+                    // $model->invoice_no = $model->getMaxInvoiceNumber() + 1;
+                    // $model->invoice_date = date('Y-m-d');
+                    // $model->invoice_reference = $model->invoice_no . date('-y');
+                    // $model->invoice_description = $model->invoiceDescription();
 
                     $model->terms = 1;
                     $model->terms_report = 1;
@@ -117,6 +119,7 @@ class EWayRapid3Widget extends AodWidget
                     if ($this->prepareAccessCode()) {
                         $params['Response'] = $this->response;
                         $params['TotalAmount'] = $this->TotalAmount;
+                        $params['TaxIncluded'] = $taxIncluded;
                         $params['InvoiceNumber'] = $this->InvoiceNumber;
                         $params['InvoiceReference'] = $this->InvoiceReference;
                         $params['ShowDebugInfo'] = $this->service->APIConfig['ShowDebugInfo'];
@@ -291,6 +294,15 @@ class EWayRapid3Widget extends AodWidget
         if (isset($result->InvoiceReference) && !empty($result->InvoiceReference)) {
             $model = EventsRegistration::model()->findByPk((int)$result->InvoiceReference);
             if ($model) {
+
+                if (empty($result->Errors)) {
+                    $model->invoice_no = $model->getMaxInvoiceNumber() + 1;
+                    $model->invoice_date = date('Y-m-d');
+                    $model->invoice_reference = $model->invoice_no . date('-y');
+                    $model->invoice_description = $model->invoiceDescription();
+                }
+
+
                 $model->api_response_message = $result->ResponseMessage;
                 $model->api_response         = CJSON::encode($result);
                 $model->save();

@@ -140,7 +140,16 @@ class ReportPurchaseWidget extends AodWidget {
                         $cartItem->name         = $report['name'];
                         $cartItem->description  = $report['description'];
                         $cartItem->quantity    += (int)$report['quantity'];
+
                         $cartItem->price        = (int)$report['price'];
+                        // If early bird...
+                        if (isset($model['early_bird_date'])
+                            && isset($report['price_eb'])
+                            && (strtotime($model['early_bird_date'] . ' 23:59:59') > time())
+                        ) {
+                            $cartItem->price    = (int)$report['price_eb'];
+                        }
+
                         $cartItem->details      = $report['details'];
                         // MyFunctions::echoArray($cartItem);
                         SimpleCart::addCartItem($cartItem);

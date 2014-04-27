@@ -23,15 +23,14 @@ class SimpleCart
         return $itemsCount;
     }
 
-    public static function total()
+    public static function total($vatMultiplicator = 1.00)
     {
         $total = 0.00;
         $items = self::fullCartItemsList();
         foreach ($items as $cartItem) {
-            $total += $cartItem->total();
+            $total += $cartItem->total($vatMultiplicator);
         }
         return $total;
-
     }
 
     // Retrieve full items list

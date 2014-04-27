@@ -1732,7 +1732,7 @@ ul.accordionMenuLevel2 a {
 
 /*================ TABLE FORM STYLING ================*/
 .order{
-    margin:25px 0 120px 0;
+    margin:25px 0 160px 0;
     float:left;
     width:100%;
     font-size:14px;
@@ -1755,7 +1755,7 @@ ul.accordionMenuLevel2 a {
     text-indent: 10px !important;
 }
 .order .numbers, .order .text, .order .commands {
-    text-align: center !important;
+    text-align: center;
     text-indent: 0 !important;
     width:10%;
 }
@@ -1801,15 +1801,15 @@ ul.accordionMenuLevel2 a {
 .order tfoot {
     position:absolute;
     right:0;
-    padding:15px 26px;
-    font-size:25px;
+    padding:15px 10px;
+    font-size:18px;
     font-weight:bold;
     color:#595959;
     background-color:#ffffff;
     border: solid 1px #ededed;
     border-bottom: solid 5px #e0e0e0;
     margin:15px 0 0 0;
-    width:24.5%;
+    width:28%;
 }
 .order tfoot td.text{
     display:none;
@@ -1819,6 +1819,7 @@ ul.accordionMenuLevel2 a {
 }
 .order tfoot td.numbers{
     padding:10px 10px 10px 50px;
+    text-align: right !important;
 }
 
 .flashMessage {
@@ -1876,4 +1877,9 @@ td.text1 span {
 }
 td.text1 span ul {
     margin-left: 20px;
+}
+
+.paymentbutton p {
+    max-width:280px;
+    text-align: right;
 }

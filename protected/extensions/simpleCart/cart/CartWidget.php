@@ -38,8 +38,12 @@ class CartWidget extends AodWidget
 
 
 
-        $models = SimpleCart::fullCartItemsList();
-        $total  = SimpleCart::total();
+        $models     = SimpleCart::fullCartItemsList();
+        $total = array(
+            'NoTax' => SimpleCart::total(),
+            'Tax'   => SimpleCart::total(0.1),
+            'Full'  => SimpleCart::total(1.1),
+        );
         // MyFunctions::echoArray(array('total'=>$total), $models);
 
         $this->html = $this->render('cart', array(
